@@ -2,6 +2,7 @@
 <html lang="tr">
 
 <head>
+    
 
     <meta charset="UTF-8">
 
@@ -18,6 +19,7 @@
     >
 
     <style>
+    
 
         body {
             min-height: 100vh;
@@ -195,12 +197,16 @@
             letter-spacing: .2px;
         }
 
+    
+     151}
+
     </style>
 
 </head>
 
 
 <body>
+    
 
 
 <div class="login-page">
@@ -208,7 +214,10 @@
     <div class="login-container">
 
 
-        <!-- MESAJ -->
+
+        <!-- =================================================
+             MESAJ
+        ================================================== -->
 
         <div
             id="message"
@@ -216,7 +225,9 @@
         ></div>
 
 
-        <!-- LOGO -->
+        <!-- =================================================
+             LOGO / ANA GÖRSEL
+        ================================================== -->
 
         <div class="login-logo">
 
@@ -229,7 +240,9 @@
         </div>
 
 
-        <!-- GİRİŞ -->
+        <!-- =================================================
+             GİRİŞ KARTI
+        ================================================== -->
 
         <div class="login-card">
 
@@ -246,7 +259,9 @@
             </div>
 
 
-            <!-- E-POSTA -->
+            <!-- =================================================
+                 E-POSTA
+            ================================================== -->
 
             <div class="form-group">
 
@@ -265,7 +280,9 @@
             </div>
 
 
-            <!-- ŞİFRE -->
+            <!-- =================================================
+                 ŞİFRE
+            ================================================== -->
 
             <div class="form-group">
 
@@ -283,7 +300,9 @@
             </div>
 
 
-            <!-- GİRİŞ -->
+            <!-- =================================================
+                 GİRİŞ
+            ================================================== -->
 
             <button
                 id="girisBtn"
@@ -300,7 +319,11 @@
         </div>
 
 
-        <!-- KAYIT -->
+
+
+        <!-- =================================================
+             KAYIT
+        ================================================== -->
 
         <div class="register-card">
 
@@ -335,7 +358,9 @@
         </div>
 
 
-        <!-- ALT BİLGİ -->
+        <!-- =================================================
+             ALT BİLGİ
+        ================================================== -->
 
         <div class="footer-yazilim">
             © 2026 Çobantürk Yazılım
@@ -370,20 +395,6 @@ import {
     doc,
     getDoc
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-
-
-/* =====================================================
-   ADMIN E-POSTA
-===================================================== */
-
-/*
-   BURAYA FIREBASE AUTHENTICATION'DAKİ
-   ADMIN HESABININ E-POSTA ADRESİNİ YAZ.
-*/
-
-const ADMIN_EMAIL =
-    "BURAYA_ADMIN_EMAIL";
 
 
 
@@ -465,7 +476,7 @@ function mesajTemizle() {
 
 
 /* =====================================================
-   KULLANICI YÖNLENDİR
+   KULLANICI TİPİNİ BUL
 ===================================================== */
 
 async function kullaniciYonlendir(
@@ -473,58 +484,6 @@ async function kullaniciYonlendir(
 ) {
 
     try {
-
-
-        /* =================================================
-           FIREBASE AUTH KULLANICISI
-        ================================================= */
-
-        const user =
-            auth.currentUser;
-
-
-        /*
-           ADMIN KONTROLÜ
-
-           Firebase Authentication'daki
-           e-posta adresi admin e-postasıyla
-           aynıysa direkt admin.html açılır.
-
-           Böylece Firestore'da admin belgesi
-           olmasa bile admin tanınır.
-        */
-
-        if (
-            user &&
-            ADMIN_EMAIL !==
-            "BURAYA_ADMIN_EMAIL" &&
-            user.email &&
-            user.email
-                .trim()
-                .toLowerCase() ===
-            ADMIN_EMAIL
-                .trim()
-                .toLowerCase()
-        ) {
-
-            console.log(
-                "ADMIN hesabı otomatik tanındı."
-            );
-
-
-            window.location.href =
-                "admin.html";
-
-
-            return true;
-
-        }
-
-
-
-        /* =================================================
-           NORMAL KULLANICI KAYDI
-        ================================================= */
 
         const kullaniciRef =
             doc(
@@ -563,42 +522,6 @@ async function kullaniciYonlendir(
             data
         );
 
-
-
-        /* =================================================
-           PASİF HESAP
-        ================================================= */
-
-        if (
-            data.aktif === false
-        ) {
-
-            mesaj(
-                "Hesabınız şu anda pasif durumda. Yönetici ile iletişime geçin.",
-                "error"
-            );
-
-            return false;
-
-        }
-
-
-
-        /* =================================================
-           ADMIN — FIRESTORE
-        ================================================= */
-
-        if (
-            data.tip ===
-            "admin"
-        ) {
-
-            window.location.href =
-                "admin.html";
-
-            return true;
-
-        }
 
 
 
@@ -687,12 +610,19 @@ onAuthStateChanged(
         }
 
 
+        /*
+           Kullanıcı zaten giriş yaptıysa
+           doğru panele gönder.
+        */
+
         await kullaniciYonlendir(
             user.uid
         );
 
     }
 );
+
+
 
 
 
@@ -718,7 +648,7 @@ async function girisYap() {
 
 
     /* =================================================
-       E-POSTA
+       E-POSTA KONTROL
     ================================================= */
 
     if (!email) {
@@ -754,7 +684,7 @@ async function girisYap() {
 
 
     /* =================================================
-       ŞİFRE
+       ŞİFRE KONTROL
     ================================================= */
 
     if (!sifre) {
@@ -807,38 +737,7 @@ async function girisYap() {
 
 
         /* =================================================
-           ADMIN KONTROLÜ
-        ================================================= */
-
-        if (
-            sonuc.user.email &&
-            ADMIN_EMAIL !==
-            "BURAYA_ADMIN_EMAIL" &&
-            sonuc.user.email
-                .trim()
-                .toLowerCase() ===
-            ADMIN_EMAIL
-                .trim()
-                .toLowerCase()
-        ) {
-
-            console.log(
-                "Admin girişi başarılı."
-            );
-
-
-            window.location.href =
-                "admin.html";
-
-
-            return;
-
-        }
-
-
-
-        /* =================================================
-           NORMAL KULLANICI YÖNLENDİRME
+           KULLANICI PANELİ
         ================================================= */
 
         const yonlendirildi =
@@ -870,6 +769,10 @@ async function girisYap() {
         let hata =
             "E-posta veya şifre yanlış.";
 
+
+        /* =================================================
+           FIREBASE HATALARI
+        ================================================= */
 
         if (
             error.code ===
@@ -937,17 +840,6 @@ async function girisYap() {
         }
 
 
-        else if (
-            error.code ===
-            "auth/user-disabled"
-        ) {
-
-            hata =
-                "Bu hesap devre dışı bırakılmış.";
-
-        }
-
-
         mesaj(
             "❌ " + hata,
             "error"
@@ -987,7 +879,7 @@ girisBtn.addEventListener(
 
 
 /* =====================================================
-   ENTER
+   ENTER İLE GİRİŞ
 ===================================================== */
 
 emailInput.addEventListener(
@@ -1079,7 +971,7 @@ emailInput.addEventListener(
 
 
 /* =====================================================
-   ŞİFRE
+   ŞİFRE BOŞLUKLARINI ENGELLE
 ===================================================== */
 
 sifreInput.addEventListener(
@@ -1087,7 +979,12 @@ sifreInput.addEventListener(
     function() {
 
         /*
-           Şifreyi değiştirmiyoruz.
+           Şifrenin içindeki boşlukları
+           otomatik silmiyoruz.
+
+           Çünkü Firebase'de kayıt olurken
+           kullanıcı şifresinde boşluk kullandıysa
+           aynı şifreyle giriş yapabilmesi gerekir.
         */
 
     }
@@ -1096,16 +993,18 @@ sifreInput.addEventListener(
 
 
 /* =====================================================
-   BAŞLANGIÇ
+   SAYFA YÜKLENDİ
 ===================================================== */
 
 console.log(
     "Paketimvar giriş sistemi hazır."
 );
 
+
 </script>
 
 
 </body>
+
 
 </html>
