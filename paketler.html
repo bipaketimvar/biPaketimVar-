@@ -1,0 +1,2231 @@
+<!DOCTYPE html>  
+<html lang="tr">  
+  
+<head>  
+  
+    <meta charset="UTF-8">  
+  
+    <meta  
+        name="viewport"  
+        content="width=device-width, initial-scale=1.0"  
+    >  
+  
+    <title>Paketimvar - Paketler</title>  
+  
+    <link  
+        rel="stylesheet"  
+        href="style.css"  
+    >  
+  
+    <style>  
+  
+        .packages-header {  
+            display:flex;  
+            align-items:center;  
+            justify-content:space-between;  
+            gap:10px;  
+            margin-bottom:12px;  
+        }  
+  
+        .packages-header h2 {  
+            margin:0;  
+            font-size:18px;  
+        }  
+  
+        .packages-count {  
+            margin-top:4px;  
+            color:#6b7280;  
+            font-size:11px;  
+        }  
+  
+        .filter-tabs {  
+            display:flex;  
+            gap:6px;  
+            overflow-x:auto;  
+            padding-bottom:7px;  
+            margin-bottom:12px;  
+            scrollbar-width:thin;  
+        }  
+  
+        .filter-tab {  
+            flex:0 0 auto;  
+            border:1px solid #e5e7eb;  
+            background:#fff;  
+            color:#4b5563;  
+            border-radius:10px;  
+            padding:9px 12px;  
+            font-size:11px;  
+            font-weight:700;  
+            cursor:pointer;  
+        }  
+  
+        .filter-tab.active {  
+            background:#2563eb;  
+            border-color:#2563eb;  
+            color:#fff;  
+        }  
+  
+        .package-card {  
+            background:#fff;  
+            border:1px solid #e5e7eb;  
+            border-radius:15px;  
+            padding:13px;  
+            margin-bottom:10px;  
+            box-shadow:0 3px 12px rgba(15,23,42,.04);  
+        }  
+  
+        .package-top {  
+            display:flex;  
+            justify-content:space-between;  
+            align-items:flex-start;  
+            gap:10px;  
+            margin-bottom:10px;  
+        }  
+  
+        .package-title {  
+            color:#111827;  
+            font-size:14px;  
+            font-weight:800;  
+        }  
+  
+        .package-date {  
+            color:#9ca3af;  
+            font-size:10px;  
+            margin-top:4px;  
+        }  
+  
+        .package-status {  
+            flex-shrink:0;  
+            border-radius:20px;  
+            padding:6px 9px;  
+            font-size:10px;  
+            font-weight:800;  
+        }  
+  
+        .status-bekliyor {  
+            background:#fef3c7;  
+            color:#92400e;  
+        }  
+  
+        .status-atandi {  
+            background:#dbeafe;  
+            color:#1d4ed8;  
+        }  
+  
+        .status-alindi {  
+            background:#e0e7ff;  
+            color:#4338ca;  
+        }  
+  
+        .status-yolda {  
+            background:#ede9fe;  
+            color:#6d28d9;  
+        }  
+  
+        .status-teslim {  
+            background:#dcfce7;  
+            color:#166534;  
+        }  
+  
+        .status-iptal {  
+            background:#fee2e2;  
+            color:#991b1b;  
+        }  
+  
+        .customer-summary {  
+            display:flex;  
+            align-items:center;  
+            justify-content:space-between;  
+            gap:10px;  
+            padding:10px;  
+            background:#f8fafc;  
+            border-radius:10px;  
+            margin-bottom:10px;  
+        }  
+  
+        .customer-name {  
+            color:#111827;  
+            font-size:13px;  
+            font-weight:800;  
+        }  
+  
+        .customer-phone {  
+            color:#6b7280;  
+            font-size:10px;  
+            margin-top:3px;  
+        }  
+  
+        .fee-box {  
+            text-align:right;  
+            flex-shrink:0;  
+        }  
+  
+        .fee-label {  
+            color:#9ca3af;  
+            font-size:9px;  
+            font-weight:700;  
+        }  
+  
+        .fee-value {  
+            color:#16a34a;  
+            font-size:15px;  
+            font-weight:900;  
+            margin-top:2px;  
+        }  
+  
+        .order-value {  
+            color:#6b7280;  
+            font-size:10px;  
+            margin-top:2px;  
+        }  
+  
+        .route-box {  
+            border:1px solid #f0f0f0;  
+            border-radius:10px;  
+            overflow:hidden;  
+            margin-bottom:10px;  
+        }  
+  
+        .route-row {  
+            display:flex;  
+            gap:9px;  
+            padding:9px;  
+        }  
+  
+        .route-row + .route-row {  
+            border-top:1px solid #f0f0f0;  
+        }  
+  
+        .route-icon {  
+            width:27px;  
+            height:27px;  
+            flex:0 0 27px;  
+            display:flex;  
+            align-items:center;  
+            justify-content:center;  
+            background:#f3f4f6;  
+            border-radius:8px;  
+        }  
+  
+        .route-label {  
+            color:#9ca3af;  
+            font-size:9px;  
+            font-weight:700;  
+            margin-bottom:2px;  
+        }  
+  
+        .route-address {  
+            color:#374151;  
+            font-size:11px;  
+            line-height:1.4;  
+            word-break:break-word;  
+        }  
+  
+        .courier-box {  
+            background:#f8fafc;  
+            border-radius:10px;  
+            padding:9px;  
+            margin-bottom:10px;  
+        }  
+  
+        .courier-label {  
+            color:#9ca3af;  
+            font-size:9px;  
+            font-weight:700;  
+        }  
+  
+        .courier-name {  
+            color:#374151;  
+            font-size:11px;  
+            font-weight:800;  
+            margin-top:3px;  
+        }  
+  
+        .package-note {  
+            background:#fffbeb;  
+            color:#92400e;  
+            border-radius:9px;  
+            padding:8px 9px;  
+            margin-bottom:10px;  
+            font-size:10px;  
+            line-height:1.4;  
+        }  
+  
+        .package-actions {  
+            display:flex;  
+            gap:7px;  
+        }  
+  
+        .package-action {  
+            flex:1;  
+            min-height:38px;  
+            border:0;  
+            border-radius:9px;  
+            font-size:10px;  
+            font-weight:800;  
+            cursor:pointer;  
+        }  
+  
+        .map-action {  
+            background:#eff6ff;  
+            color:#1d4ed8;  
+        }  
+  
+        .detail-action {  
+            background:#f3f4f6;  
+            color:#374151;  
+        }  
+  
+        .cancel-action {  
+            background:#fef2f2;  
+            color:#b91c1c;  
+        }  
+  
+        .empty-box {  
+            text-align:center;  
+            background:#fff;  
+            border:1px solid #e5e7eb;  
+            border-radius:15px;  
+            padding:32px 18px;  
+        }  
+  
+        .empty-icon {  
+            font-size:35px;  
+            margin-bottom:8px;  
+        }  
+  
+        .empty-title {  
+            color:#111827;  
+            font-size:14px;  
+            font-weight:800;  
+        }  
+  
+        .empty-text {  
+            color:#6b7280;  
+            font-size:11px;  
+            line-height:1.5;  
+            margin-top:5px;  
+        }  
+  
+        .modal {  
+            position:fixed;  
+            inset:0;  
+            z-index:9999;  
+            display:none;  
+            align-items:flex-end;  
+            justify-content:center;  
+            padding:12px;  
+            background:rgba(15,23,42,.48);  
+        }  
+  
+        .modal.show {  
+            display:flex;  
+        }  
+  
+        .modal-box {  
+            width:100%;  
+            max-width:460px;  
+            max-height:88vh;  
+            overflow-y:auto;  
+            background:#fff;  
+            border-radius:18px;  
+            padding:17px;  
+        }  
+  
+        .modal-head {  
+            display:flex;  
+            align-items:center;  
+            justify-content:space-between;  
+            gap:10px;  
+            margin-bottom:10px;  
+        }  
+  
+        .modal-head h3 {  
+            margin:0;  
+            font-size:16px;  
+        }  
+  
+        .modal-close {  
+            width:34px;  
+            height:34px;  
+            border:0;  
+            border-radius:9px;  
+            background:#f3f4f6;  
+            cursor:pointer;  
+        }  
+  
+        .detail-row {  
+            padding:10px 0;  
+            border-bottom:1px solid #f1f5f9;  
+        }  
+  
+        .detail-label {  
+            color:#9ca3af;  
+            font-size:9px;  
+            font-weight:700;  
+            margin-bottom:3px;  
+        }  
+  
+        .detail-value {  
+            color:#374151;  
+            font-size:12px;  
+            line-height:1.45;  
+            word-break:break-word;  
+        }  
+  
+        .detail-money {  
+            color:#16a34a;  
+            font-size:15px;  
+            font-weight:900;  
+        }  
+  
+        @media (min-width:700px) {  
+  
+            .modal {  
+                align-items:center;  
+            }  
+  
+            .package-card {  
+                padding:16px;  
+            }  
+  
+            .package-action {  
+                min-height:42px;  
+                font-size:11px;  
+            }  
+  
+        }  
+  
+    </style>  
+  
+</head>  
+  
+  
+<body>  
+  
+  
+<header class="topbar">  
+  
+    <div class="logo">  
+        📦 Paketim<span>var</span>  
+    </div>  
+  
+    <button  
+        id="geriBtn"  
+        class="btn btn-light"  
+        style="width:auto;min-height:36px;"  
+    >  
+        ← Geri  
+    </button>  
+  
+</header>  
+  
+  
+<main class="page">  
+  
+  
+    <div class="packages-header">  
+  
+        <div>  
+  
+            <h2>  
+                📦 Paketlerim  
+            </h2>  
+  
+            <div  
+                id="packagesCount"  
+                class="packages-count"  
+            >  
+                Paketler yükleniyor...  
+            </div>  
+  
+        </div>  
+  
+  
+        <button  
+            id="newPackageBtn"  
+            class="btn btn-primary"  
+            style="width:auto;min-height:38px;padding:0 13px;"  
+        >  
+            + Paket  
+        </button>  
+  
+    </div>  
+  
+  
+    <div class="filter-tabs">  
+  
+        <button  
+            class="filter-tab active"  
+            data-filter="tum"  
+        >  
+            Tümü  
+        </button>  
+  
+        <button  
+            class="filter-tab"  
+            data-filter="bekliyor"  
+        >  
+            Bekleyen  
+        </button>  
+  
+        <button  
+            class="filter-tab"  
+            data-filter="kurye_atandi"  
+        >  
+            Kurye Atandı  
+        </button>  
+  
+        <button  
+            class="filter-tab"  
+            data-filter="paket_alindi"  
+        >  
+            Paket Alındı  
+        </button>  
+  
+        <button  
+            class="filter-tab"  
+            data-filter="teslimata_cikti"  
+        >  
+            Yolda  
+        </button>  
+  
+        <button  
+            class="filter-tab"  
+            data-filter="teslim_edildi"  
+        >  
+            Teslim  
+        </button>  
+  
+    </div>  
+  
+  
+    <div  
+        id="message"  
+        class="message"  
+    ></div>  
+  
+  
+    <div id="packagesList"></div>  
+  
+  
+</main>  
+  
+  
+<nav class="bottom-nav">  
+  
+    <button  
+        class="nav-item"  
+        id="homeBtn"  
+    >  
+        <span class="icon">🏠</span>  
+        Ana Sayfa  
+    </button>  
+  
+  
+    <button  
+        class="nav-item"  
+        id="createBtn"  
+    >  
+        <span class="icon">➕</span>  
+        Paket Oluştur  
+    </button>  
+  
+  
+    <button  
+        class="nav-item active"  
+    >  
+        <span class="icon">📦</span>  
+        Paketler  
+    </button>  
+  
+  
+    <button  
+        class="nav-item"  
+        id="profileBtn"  
+    >  
+        <span class="icon">👤</span>  
+        Profil  
+    </button>  
+  
+</nav>  
+  
+  
+<div  
+    id="detailModal"  
+    class="modal"  
+>  
+  
+    <div class="modal-box">  
+  
+        <div class="modal-head">  
+  
+            <h3>  
+                📦 Paket Detayı  
+            </h3>  
+  
+            <button  
+                id="closeModal"  
+                class="modal-close"  
+            >  
+                ✕  
+            </button>  
+  
+        </div>  
+  
+        <div id="detailContent"></div>  
+  
+    </div>  
+  
+</div>  
+<script type="module">  
+  
+import {  
+    auth,  
+    db,  
+    onAuthStateChanged,  
+    collection,  
+    query,  
+    where,  
+    onSnapshot,  
+    doc,  
+    updateDoc  
+} from "./firebase.js";  
+  
+  
+let aktifKullanici = null;  
+  
+let tumPaketler = [];  
+  
+let aktifFiltre = "tum";  
+  
+let unsubscribe = null;  
+  
+  
+const packagesList =  
+    document.getElementById(  
+        "packagesList"  
+    );  
+  
+  
+const packagesCount =  
+    document.getElementById(  
+        "packagesCount"  
+    );  
+  
+  
+const message =  
+    document.getElementById(  
+        "message"  
+    );  
+  
+  
+const detailModal =  
+    document.getElementById(  
+        "detailModal"  
+    );  
+  
+  
+const detailContent =  
+    document.getElementById(  
+        "detailContent"  
+    );  
+  
+  
+/* =====================================================  
+   MESAJ  
+===================================================== */  
+  
+function mesajGoster(  
+    text,  
+    type = "error"  
+) {  
+  
+    message.textContent = text;  
+  
+    message.className =  
+        "message show " + type;  
+  
+}  
+  
+  
+/* =====================================================  
+   GİRİŞ KONTROLÜ  
+===================================================== */  
+  
+onAuthStateChanged(  
+    auth,  
+    function(user) {  
+  
+        console.log(  
+            "Auth kullanıcı:",  
+            user  
+        );  
+  
+  
+        if (!user) {  
+  
+            window.location.href =  
+                "index.html";  
+  
+            return;  
+  
+        }  
+  
+  
+        aktifKullanici = user;  
+  
+        paketleriDinle();  
+  
+    }  
+);  
+  
+  
+/* =====================================================  
+   PAKETLERİ DİNLE  
+===================================================== */  
+  
+function paketleriDinle() {  
+  
+    packagesCount.textContent =  
+        "Paketler yükleniyor...";  
+  
+  
+    packagesList.innerHTML = `  
+  
+        <div class="empty-box">  
+  
+            <div class="empty-icon">  
+                ⏳  
+            </div>  
+  
+            <div class="empty-title">  
+                Paketler yükleniyor  
+            </div>  
+  
+            <div class="empty-text">  
+                Paketleriniz kontrol ediliyor...  
+            </div>  
+  
+        </div>  
+  
+    `;  
+  
+  
+    if (!aktifKullanici) {  
+  
+        return;  
+  
+    }  
+  
+  
+    if (unsubscribe) {  
+  
+        unsubscribe();  
+  
+        unsubscribe = null;  
+  
+    }  
+  
+  
+    try {  
+  
+        const paketRef =  
+            collection(  
+                db,  
+                "paketler"  
+            );  
+  
+  
+        const paketQuery =  
+            query(  
+                paketRef,  
+                where(  
+                    "isletmeId",  
+                    "==",  
+                    aktifKullanici.uid  
+                )  
+            );  
+  
+  
+        unsubscribe =  
+            onSnapshot(  
+  
+                paketQuery,  
+  
+                function(snapshot) {  
+  
+                    console.log(  
+                        "Firestore paket sayısı:",  
+                        snapshot.size  
+                    );  
+  
+  
+                    tumPaketler = [];  
+  
+  
+                    snapshot.forEach(  
+                        function(item) {  
+  
+                            tumPaketler.push({  
+  
+                                id:  
+                                    item.id,  
+  
+                                ...item.data()  
+  
+                            });  
+  
+                        }  
+                    );  
+  
+  
+                    tumPaketler.sort(  
+                        function(a, b) {  
+  
+                            return zamanDegeri(  
+                                b.tarih  
+                            )  
+                            -  
+                            zamanDegeri(  
+                                a.tarih  
+                            );  
+  
+                        }  
+                    );  
+  
+  
+                    paketleriGoster();  
+  
+                },  
+  
+  
+                function(error) {  
+  
+                    console.error(  
+                        "Firestore paket hatası:",  
+                        error  
+                    );  
+  
+  
+                    packagesCount.textContent =  
+                        "Paketler yüklenemedi";  
+  
+  
+                    packagesList.innerHTML = `  
+  
+                        <div class="empty-box">  
+  
+                            <div class="empty-icon">  
+                                ⚠️  
+                            </div>  
+  
+                            <div class="empty-title">  
+                                Paketler yüklenemedi  
+                            </div>  
+  
+                            <div class="empty-text">  
+                                ${escapeHtml(  
+                                    error.message ||  
+                                    "Firebase bağlantısı veya yetkiler kontrol edilmeli."  
+                                )}  
+                            </div>  
+  
+                        </div>  
+  
+                    `;  
+  
+                }  
+  
+            );  
+  
+    }  
+  
+    catch (error) {  
+  
+        console.error(  
+            "Sorgu oluşturma hatası:",  
+            error  
+        );  
+  
+  
+        packagesCount.textContent =  
+            "Hata oluştu";  
+  
+  
+        packagesList.innerHTML = `  
+  
+            <div class="empty-box">  
+  
+                <div class="empty-icon">  
+                    ❌  
+                </div>  
+  
+                <div class="empty-title">  
+                    Firebase bağlantı hatası  
+                </div>  
+  
+                <div class="empty-text">  
+                    ${escapeHtml(  
+                        error.message ||  
+                        "Bilinmeyen hata."  
+                    )}  
+                </div>  
+  
+            </div>  
+  
+        `;  
+  
+    }  
+  
+}  
+  
+  
+/* =====================================================  
+   PAKETLERİ GÖSTER  
+===================================================== */  
+  
+function paketleriGoster() {  
+  
+    let liste =  
+        tumPaketler;  
+  
+  
+    if (  
+        aktifFiltre !== "tum"  
+    ) {  
+  
+        liste =  
+            tumPaketler.filter(  
+                function(paket) {  
+  
+                    return paket.durum ===  
+                        aktifFiltre;  
+  
+                }  
+            );  
+  
+    }  
+  
+  
+    packagesCount.textContent =  
+        tumPaketler.length +  
+        " paket";  
+  
+  
+    if (  
+        liste.length === 0  
+    ) {  
+  
+        packagesList.innerHTML = `  
+  
+            <div class="empty-box">  
+  
+                <div class="empty-icon">  
+                    📦  
+                </div>  
+  
+                <div class="empty-title">  
+                    Paket bulunamadı  
+                </div>  
+  
+                <div class="empty-text">  
+  
+                    ${  
+                        aktifFiltre === "tum"  
+                            ? "Henüz paket oluşturmadınız."  
+                            : "Bu kategoride paket bulunmuyor."  
+                    }  
+  
+                </div>  
+  
+                <br>  
+  
+                <button  
+                    class="btn btn-primary"  
+                    id="emptyCreateBtn"  
+                >  
+                    ➕ Yeni Paket Oluştur  
+                </button>  
+  
+            </div>  
+  
+        `;  
+  
+  
+        const emptyCreateBtn =  
+            document.getElementById(  
+                "emptyCreateBtn"  
+            );  
+  
+  
+        if (emptyCreateBtn) {  
+  
+            emptyCreateBtn.onclick =  
+                function() {  
+  
+                    window.location.href =
+                    "paket-ekle.html";  
+  
+                };  
+  
+        }  
+  
+  
+        return;  
+  
+    }  
+  
+  
+    packagesList.innerHTML =  
+        liste  
+            .map(  
+                paketKarti  
+            )  
+            .join("");  
+  
+  
+    liste.forEach(  
+        function(paket) {  
+  
+            butonlariBagla(  
+                paket  
+            );  
+  
+        }  
+    );  
+  
+}  
+  
+  
+/* =====================================================  
+   PAKET KARTI  
+===================================================== */  
+  
+function paketKarti(  
+    paket  
+) {  
+  
+    const durum =  
+        paket.durum ||  
+        "bekliyor";  
+  
+  
+    let durumMetni =  
+        paket.durumMetni ||  
+        "Kurye bekleniyor";  
+  
+  
+    let durumClass =  
+        "status-bekliyor";  
+  
+  
+    if (  
+        durum === "kurye_atandi"  
+    ) {  
+  
+        durumMetni =  
+            paket.durumMetni ||  
+            "Kurye Atandı";  
+  
+        durumClass =  
+            "status-atandi";  
+  
+    }  
+  
+  
+    else if (  
+        durum === "paket_alindi"  
+    ) {  
+  
+        durumMetni =  
+            paket.durumMetni ||  
+            "Paket Alındı";  
+  
+        durumClass =  
+            "status-alindi";  
+  
+    }  
+  
+  
+    else if (  
+        durum === "teslimata_cikti"  
+    ) {  
+  
+        durumMetni =  
+            paket.durumMetni ||  
+            "Teslimata Çıktı";  
+  
+        durumClass =  
+            "status-yolda";  
+  
+    }  
+  
+  
+    else if (  
+        durum === "teslim_edildi"  
+    ) {  
+  
+        durumMetni =  
+            paket.durumMetni ||  
+            "Teslim Edildi";  
+  
+        durumClass =  
+            "status-teslim";  
+  
+    }  
+  
+  
+    else if (  
+        durum === "iptal" ||  
+        durum === "iptal_edildi"  
+    ) {  
+  
+        durumMetni =  
+            paket.durumMetni ||  
+            "İptal Edildi";  
+  
+        durumClass =  
+            "status-iptal";  
+  
+    }  
+  
+  
+    const kuryeUcreti =  
+        paraFormatla(  
+            paket.kuryeUcreti  
+        );  
+  
+  
+    const siparisTutari =  
+        paraFormatla(  
+            paket.siparisTutari  
+        );  
+return `  
+  
+        <div  
+            class="package-card"  
+            data-package-id="${escapeAttr(  
+                paket.id  
+            )}"  
+        >  
+  
+            <div class="package-top">  
+  
+                <div>  
+  
+                    <div class="package-title">  
+  
+                        📦 ${  
+                            escapeHtml(  
+                                paket.paketAciklama ||  
+                                paket.aciklama ||  
+                                "Paket"  
+                            )  
+                        }  
+  
+                    </div>  
+  
+  
+                    <div class="package-date">  
+  
+                        ${tarihFormatla(  
+                            paket.tarih  
+                        )}  
+  
+                    </div>  
+  
+                </div>  
+  
+  
+                <span  
+                    class="package-status ${durumClass}"  
+                >  
+  
+                    ${escapeHtml(  
+                        durumMetni  
+                    )}  
+  
+                </span>  
+  
+            </div>  
+  
+  
+            <div class="customer-summary">  
+  
+                <div>  
+  
+                    <div class="customer-name">  
+  
+                        👤 ${  
+                            escapeHtml(  
+                                paket.musteriAdi ||  
+                                "Müşteri"  
+                            )  
+                        }  
+  
+                    </div>  
+  
+  
+                    <div class="customer-phone">  
+  
+                        📞 ${  
+                            escapeHtml(  
+                                paket.musteriTelefon ||  
+                                "-"  
+                            )  
+                        }  
+  
+                    </div>  
+  
+                </div>  
+  
+  
+                <div class="fee-box">  
+  
+                    <div class="fee-label">  
+                        KURYE ÜCRETİ  
+                    </div>  
+  
+                    <div class="fee-value">  
+  
+                        ${escapeHtml(  
+                            kuryeUcreti  
+                        )}  
+  
+                    </div>  
+  
+  
+                    ${  
+                        siparisTutari !== "-"  
+                            ? `  
+  
+                                <div class="order-value">  
+  
+                                    Sipariş:  
+                                    ${escapeHtml(  
+                                        siparisTutari  
+                                    )}  
+  
+                                </div>  
+  
+                            `  
+                            : ""  
+                    }  
+  
+                </div>  
+  
+            </div>  
+  
+  
+            <div class="route-box">  
+  
+                <div class="route-row">  
+  
+                    <div class="route-icon">  
+                        🏪  
+                    </div>  
+  
+                    <div>  
+  
+                        <div class="route-label">  
+                            ALIŞ ADRESİ  
+                        </div>  
+  
+                        <div class="route-address">  
+  
+                            ${escapeHtml(  
+                                paket.isletmeAdres ||  
+                                paket.alisAdresi ||  
+                                "-"  
+                            )}  
+  
+                        </div>  
+  
+                    </div>  
+  
+                </div>  
+  
+  
+                <div class="route-row">  
+  
+                    <div class="route-icon">  
+                        📍  
+                    </div>  
+  
+                    <div>  
+  
+                        <div class="route-label">  
+                            TESLİMAT ADRESİ  
+                        </div>  
+  
+                        <div class="route-address">  
+  
+                            ${escapeHtml(  
+                                paket.musteriAdres ||  
+                                paket.teslimatAdresi ||  
+                                "-"  
+                            )}  
+  
+                        </div>  
+  
+                    </div>  
+  
+                </div>  
+  
+            </div>  
+  
+  
+            ${  
+                paket.kuryeId  
+                    ? `  
+  
+                        <div class="courier-box">  
+  
+                            <div class="courier-label">  
+                                KURYE  
+                            </div>  
+  
+                            <div class="courier-name">  
+  
+                                🛵 ${  
+                                    escapeHtml(  
+                                        paket.kuryeAdi ||  
+                                        "Kurye atandı"  
+                                    )  
+                                }  
+  
+                            </div>  
+  
+                        </div>  
+  
+                    `  
+                    : ""  
+            }  
+  
+  
+            ${  
+                paket.paketNotu  
+                    ? `  
+  
+                        <div class="package-note">  
+  
+                            📝 ${  
+                                escapeHtml(  
+                                    paket.paketNotu  
+                                )  
+                            }  
+  
+                        </div>  
+  
+                    `  
+                    : ""  
+            }  
+  
+  
+            <div class="package-actions">  
+  
+                <button  
+                    class="package-action map-action"  
+                    data-action="map"  
+                >  
+                    🗺️ Harita  
+                </button>  
+  
+  
+                <button  
+                    class="package-action detail-action"  
+                    data-action="detail"  
+                >  
+                    👁️ Detay  
+                </button>  
+  
+  
+                ${  
+                    durum !== "teslim_edildi" &&  
+                    durum !== "iptal" &&  
+                    durum !== "iptal_edildi"  
+                        ? `  
+  
+                            <button  
+                                class="package-action cancel-action"  
+                                data-action="cancel"  
+                            >  
+                                ✕ İptal  
+                            </button>  
+  
+                        `  
+                        : ""  
+                }  
+  
+            </div>  
+  
+        </div>  
+  
+    `;  
+  
+}  
+/* =====================================================  
+   BUTONLARI BAĞLA  
+===================================================== */  
+  
+function butonlariBagla(paket) {  
+  
+    const kart =  
+        document.querySelector(  
+            '[data-package-id="' +  
+            paket.id +  
+            '"]'  
+        );  
+  
+  
+    if (!kart) {  
+        return;  
+    }  
+  
+  
+    /* HARİTA */  
+  
+    const mapBtn =  
+        kart.querySelector(  
+            '[data-action="map"]'  
+        );  
+  
+  
+    if (mapBtn) {  
+  
+        mapBtn.addEventListener(  
+            "click",  
+            function() {  
+  
+                const adres =  
+                    paket.musteriAdres ||  
+                    paket.teslimatAdresi ||  
+                    "";  
+  
+                googleMaps(adres);  
+  
+            }  
+        );  
+  
+    }  
+  
+  
+    /* DETAY */  
+  
+    const detailBtn =  
+        kart.querySelector(  
+            '[data-action="detail"]'  
+        );  
+  
+  
+    if (detailBtn) {  
+  
+        detailBtn.addEventListener(  
+            "click",  
+            function() {  
+  
+                detayAc(paket);  
+  
+            }  
+        );  
+  
+    }  
+  
+  
+    /* İPTAL */  
+  
+    const cancelBtn =  
+        kart.querySelector(  
+            '[data-action="cancel"]'  
+        );  
+  
+  
+    if (cancelBtn) {  
+  
+        cancelBtn.addEventListener(  
+            "click",  
+            function() {  
+  
+                paketIptal(paket);  
+  
+            }  
+        );  
+  
+    }  
+  
+}  
+  
+  
+/* =====================================================  
+   GOOGLE MAPS  
+===================================================== */  
+  
+function googleMaps(adres) {  
+  
+    if (!adres) {  
+  
+        alert(  
+            "Teslimat adresi bulunamadı."  
+        );  
+  
+        return;  
+  
+    }  
+  
+  
+    const url =  
+        "https://www.google.com/maps/search/?api=1&query=" +  
+        encodeURIComponent(adres);  
+  
+  
+    window.open(  
+        url,  
+        "_blank"  
+    );  
+  
+}  
+  
+  
+/* =====================================================  
+   DETAY  
+===================================================== */  
+  
+function detayAc(paket) {  
+  
+    const kuryeUcreti =  
+        paraFormatla(  
+            paket.kuryeUcreti  
+        );  
+  
+  
+    const siparisTutari =  
+        paraFormatla(  
+            paket.siparisTutari  
+        );  
+  
+  
+    const odemeSekli =  
+        paket.odemeSekli ||  
+        "Belirtilmedi";  
+  
+  
+    detailContent.innerHTML = `  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                DURUM  
+            </div>  
+  
+            <div class="detail-value">  
+                ${escapeHtml(  
+                    paket.durumMetni ||  
+                    "Kurye bekleniyor"  
+                )}  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                KURYE ÜCRETİ  
+            </div>  
+  
+            <div class="detail-value detail-money">  
+  
+                ${escapeHtml(  
+                    kuryeUcreti  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                SİPARİŞ TUTARI  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${escapeHtml(  
+                    siparisTutari  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                ÖDEME ŞEKLİ  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${escapeHtml(  
+                    odemeSekli  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                PAKET  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${escapeHtml(  
+                    paket.paketAciklama ||  
+                    paket.aciklama ||  
+                    "-"  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                İŞLETME  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${escapeHtml(  
+                    paket.isletmeAdi ||  
+                    "-"  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                ALIŞ ADRESİ  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${escapeHtml(  
+                    paket.isletmeAdres ||  
+                    paket.alisAdresi ||  
+                    "-"  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                MÜŞTERİ  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${escapeHtml(  
+                    paket.musteriAdi ||  
+                    "-"  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                MÜŞTERİ TELEFONU  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${escapeHtml(  
+                    paket.musteriTelefon ||  
+                    "-"  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                TESLİMAT ADRESİ  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${escapeHtml(  
+                    paket.musteriAdres ||  
+                    paket.teslimatAdresi ||  
+                    "-"  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+  
+        ${  
+            paket.kuryeAdi  
+                ? `  
+  
+                    <div class="detail-row">  
+  
+                        <div class="detail-label">  
+                            KURYE  
+                        </div>  
+  
+                        <div class="detail-value">  
+  
+                            🛵 ${  
+                                escapeHtml(  
+                                    paket.kuryeAdi  
+                                )  
+                            }  
+  
+                        </div>  
+  
+                    </div>  
+  
+                `  
+                : ""  
+        }  
+  
+  
+        ${  
+            paket.paketNotu  
+                ? `  
+  
+                    <div class="detail-row">  
+  
+                        <div class="detail-label">  
+                            KURYE NOTU  
+                        </div>  
+  
+                        <div class="detail-value">  
+  
+                            ${escapeHtml(  
+                                paket.paketNotu  
+                            )}  
+  
+                        </div>  
+  
+                    </div>  
+  
+                `  
+                : ""  
+        }  
+  
+  
+        <div class="detail-row">  
+  
+            <div class="detail-label">  
+                OLUŞTURULMA TARİHİ  
+            </div>  
+  
+            <div class="detail-value">  
+  
+                ${tarihFormatla(  
+                    paket.tarih  
+                )}  
+  
+            </div>  
+  
+        </div>  
+  
+    `;  
+  
+  
+    detailModal.classList.add(  
+        "show"  
+    );  
+  
+}  
+  
+  
+/* =====================================================  
+   PAKET İPTAL  
+===================================================== */  
+  
+async function paketIptal(paket) {  
+  
+    if (  
+        paket.durum ===  
+        "teslim_edildi"  
+    ) {  
+  
+        return;  
+  
+    }  
+  
+  
+    const onay =  
+        confirm(  
+            "Bu paketi iptal etmek istediğinize emin misiniz?"  
+        );  
+  
+  
+    if (!onay) {  
+        return;  
+    }  
+  
+  
+    try {  
+  
+        await updateDoc(  
+  
+            doc(  
+                db,  
+                "paketler",  
+                paket.id  
+            ),  
+  
+            {  
+  
+                durum:  
+                    "iptal_edildi",  
+  
+                durumMetni:  
+                    "İptal Edildi",  
+  
+                guncellenme:  
+                    new Date()  
+  
+            }  
+  
+        );  
+  
+  
+        mesajGoster(  
+            "✅ Paket iptal edildi.",  
+            "success"  
+        );  
+  
+    }  
+  
+    catch (error) {  
+  
+        console.error(  
+            "Paket iptal hatası:",  
+            error  
+        );  
+  
+  
+        mesajGoster(  
+            "❌ " +  
+            (  
+                error.message ||  
+                "Paket iptal edilemedi."  
+            ),  
+            "error"  
+        );  
+  
+    }  
+  
+}  
+  
+  
+/* =====================================================  
+   TARİH  
+===================================================== */  
+  
+function tarihFormatla(timestamp) {  
+  
+    if (!timestamp) {  
+  
+        return "Tarih belirtilmedi";  
+  
+    }  
+  
+  
+    try {  
+  
+        const date =  
+            typeof timestamp.toDate ===  
+            "function"  
+  
+                ? timestamp.toDate()  
+  
+                : new Date(  
+                    timestamp  
+                );  
+  
+  
+        return date.toLocaleString(  
+            "tr-TR",  
+            {  
+  
+                day:  
+                    "2-digit",  
+  
+                month:  
+                    "2-digit",  
+  
+                year:  
+                    "numeric",  
+  
+                hour:  
+                    "2-digit",  
+  
+                minute:  
+                    "2-digit"  
+  
+            }  
+        );  
+  
+    }  
+  
+    catch (error) {  
+  
+        return "Tarih bilinmiyor";  
+  
+    }  
+  
+}  
+  
+  
+/* =====================================================  
+   ZAMAN DEĞERİ  
+===================================================== */  
+  
+function zamanDegeri(timestamp) {  
+  
+    if (!timestamp) {  
+        return 0;  
+    }  
+  
+  
+    try {  
+  
+        if (  
+            typeof timestamp.toMillis ===  
+            "function"  
+        ) {  
+  
+            return timestamp.toMillis();  
+  
+        }  
+  
+  
+        return new Date(  
+            timestamp  
+        ).getTime();  
+  
+    }  
+  
+    catch (error) {  
+  
+        return 0;  
+  
+    }  
+  
+}  
+  
+  
+/* =====================================================  
+   PARA  
+===================================================== */  
+  
+function paraFormatla(deger) {  
+  
+    if (  
+        deger ===  
+        undefined ||  
+        deger ===  
+        null ||  
+        deger ===  
+        ""  
+    ) {  
+  
+        return "-";  
+  
+    }  
+  
+  
+    const sayi =  
+        Number(  
+            deger  
+        );  
+  
+  
+    if (  
+        Number.isNaN(  
+            sayi  
+        )  
+    ) {  
+  
+        return "-";  
+  
+    }  
+  
+  
+    return sayi.toLocaleString(  
+        "tr-TR",  
+        {  
+  
+            minimumFractionDigits:  
+                2,  
+  
+            maximumFractionDigits:  
+                2  
+  
+        }  
+    ) + " TL";  
+  
+}  
+  
+  
+/* =====================================================  
+   GÜVENLİ HTML  
+===================================================== */  
+  
+function escapeHtml(value) {  
+  
+    return String(  
+        value ?? ""  
+    )  
+    .replace(  
+        /&/g,  
+        "&amp;"  
+    )  
+    .replace(  
+        /</g,  
+        "&lt;"  
+    )  
+    .replace(  
+        />/g,  
+        "&gt;"  
+    )  
+    .replace(  
+        /"/g,  
+        "&quot;"  
+    )  
+    .replace(  
+        /'/g,  
+        "&#039;"  
+    );  
+  
+}  
+  
+  
+function escapeAttr(value) {  
+  
+    return escapeHtml(  
+        value  
+    );  
+  
+}  
+  
+  
+/* =====================================================  
+   FİLTRELER  
+===================================================== */  
+  
+document  
+    .querySelectorAll(  
+        ".filter-tab"  
+    )  
+    .forEach(  
+        function(tab) {  
+  
+            tab.addEventListener(  
+                "click",  
+                function() {  
+  
+                    document  
+                        .querySelectorAll(  
+                            ".filter-tab"  
+                        )  
+                        .forEach(  
+                            function(item) {  
+  
+                                item.classList.remove(  
+                                    "active"  
+                                );  
+  
+                            }  
+                        );  
+  
+  
+                    tab.classList.add(  
+                        "active"  
+                    );  
+  
+  
+                    aktifFiltre =  
+                        tab.dataset.filter;  
+  
+  
+                    paketleriGoster();  
+  
+                }  
+            );  
+  
+        }  
+    );  
+  
+  
+/* =====================================================  
+   MODAL KAPAT  
+===================================================== */  
+  
+document  
+    .getElementById(  
+        "closeModal"  
+    )  
+    .addEventListener(  
+        "click",  
+        function() {  
+  
+            detailModal.classList.remove(  
+                "show"  
+            );  
+  
+        }  
+    );  
+  
+  
+detailModal.addEventListener(  
+    "click",  
+    function(event) {  
+  
+        if (  
+            event.target ===  
+            detailModal  
+        ) {  
+  
+            detailModal.classList.remove(  
+                "show"  
+            );  
+  
+        }  
+  
+    }  
+);  
+  
+  
+/* =====================================================  
+   NAVİGASYON  
+===================================================== */  
+  
+document  
+    .getElementById(  
+        "geriBtn"  
+    )  
+    .addEventListener(  
+        "click",  
+        function() {  
+  
+            window.location.href =  
+                "isletme.html";  
+  
+        }  
+    );  
+  
+  
+document  
+    .getElementById(  
+        "newPackageBtn"  
+    )  
+    .addEventListener(  
+        "click",  
+        function() {  
+  
+            window.location.href =  
+                "paket-ekle.html";  
+  
+        }  
+    );  
+  
+  
+document  
+    .getElementById(  
+        "homeBtn"  
+    )  
+    .addEventListener(  
+        "click",  
+        function() {  
+  
+            window.location.href =  
+                "isletme.html";  
+  
+        }  
+    );  
+  
+  
+document  
+    .getElementById(  
+        "createBtn"  
+    )  
+    .addEventListener(  
+        "click",  
+        function() {  
+  
+            window.location.href =  
+                "paket-ekle.html";  
+  
+        }  
+    );  
+  
+  
+document  
+    .getElementById(  
+        "profileBtn"  
+    )  
+    .addEventListener(  
+        "click",  
+        function() {  
+  
+            window.location.href =  
+                "profil.html";  
+  
+        }  
+    );  
+  
+  
+/* =====================================================  
+   TEMİZLE  
+===================================================== */  
+  
+window.addEventListener(  
+    "beforeunload",  
+    function() {  
+  
+        if (unsubscribe) {  
+  
+            unsubscribe();  
+  
+        }  
+  
+    }  
+);  
+  
+</script>  
+  
+</body>  
+</html>

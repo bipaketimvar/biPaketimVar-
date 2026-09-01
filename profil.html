@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Paketimvar - Kurye Profil</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .profile-avatar {
+            width: 78px;
+            height: 78px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .profile-type {
+            margin-top: 4px;
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .profile-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .profile-card-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-row:last-child {
+            border-bottom: 0;
+        }
+
+        .info-label {
+            color: #9ca3af;
+            font-size: 10px;
+        }
+
+        .info-value {
+            color: #374151;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 12px 5px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+        .active-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .active-info strong {
+            display: block;
+            font-size: 12px;
+            color: #111827;
+        }
+
+        .active-info span {
+            display: block;
+            margin-top: 3px;
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        .switch {
+            position: relative;
+            width: 48px;
+            height: 27px;
+            flex: 0 0 48px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            cursor: pointer;
+            background: #d1d5db;
+            border-radius: 30px;
+            transition: .2s;
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            left: 3px;
+            top: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: .2s;
+        }
+
+        .switch input:checked + .slider {
+            background: #22c55e;
+        }
+
+        .switch input:checked + .slider:before {
+            transform: translateX(21px);
+        }
+
+        .logout-button {
+            width: 100%;
+            min-height: 42px;
+            border: 0;
+            border-radius: 10px;
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 25px;
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+    <div class="logo">
+        📦 Paketim<span>var</span>
+    </div>
+
+    <button
+        id="backBtn"
+        class="btn btn-light"
+        style="width:auto; min-height:36px;"
+    >
+        ← Geri
+    </button>
+
+</header>
+
+
+<main class="page">
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+    <div id="profileContent">
+
+        <div class="loading">
+            Profil yükleniyor...
+        </div>
+
+    </div>
+
+
+    <div class="profile-card">
+
+        <div class="profile-card-title">
+            ⚙️ Hesap
+        </div>
+
+        <button
+            id="logoutBtn"
+            class="logout-button"
+        >
+            🚪 Çıkış Yap
+        </button>
+
+    </div>
+
+</main>
+
+
+<nav class="bottom-nav">
+
+    <button
+        class="nav-item"
+        id="homeBtn"
+    >
+        <span class="icon">🏠</span>
+        Ana Sayfa
+    </button>
+
+
+    <button
+        class="nav-item"
+        id="packagesBtn"
+    >
+        <span class="icon">📦</span>
+        Paketler
+    </button>
+
+
+    <button
+        class="nav-item active"
+    >
+        <span class="icon">👤</span>
+        Profil
+    </button>
+
+</nav>
+<script type="module">
+
+    import {
+
+        auth,
+        db,
+
+        onAuthStateChanged,
+
+        doc,
+        getDoc,
+        updateDoc,
+
+        signOut
+
+    } from "./firebase.js";
+
+
+    /* =====================================================
+       DEĞİŞKENLER
+    ===================================================== */
+
+    let aktifKullanici = null;
+
+    let kullaniciData = null;
+
+
+    /* =====================================================
+       ELEMENTLER
+    ===================================================== */
+
+    const profileContent =
+        document.getElementById(
+            "profileContent"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    /* =====================================================
+       MESAJ
+    ===================================================== */
+
+    function mesajGoster(
+        text,
+        type = "error"
+    ) {
+
+        message.textContent =
+            text;
+
+        message.className =
+            "message show " + type;
+
+    }
+
+
+    /* =====================================================
+       AUTH KONTROLÜ
+    ===================================================== */
+
+    onAuthStateChanged(
+        auth,
+        async function(user) {
+
+            if (!user) {
+
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            aktifKullanici =
+                user;
+
+
+            await profiliGetir();
+
+        }
+    );
+
+
+    /* =====================================================
+       PROFİLİ GETİR
+    ===================================================== */
+
+    async function profiliGetir() {
+
+        try {
+
+            const kullaniciRef =
+                doc(
+                    db,
+                    "kullanicilar",
+                    aktifKullanici.uid
+                );
+
+
+            const sonuc =
+                await getDoc(
+                    kullaniciRef
+                );
+
+
+            if (!sonuc.exists()) {
+
+                profileContent.innerHTML = `
+
+                    <div class="profile-card">
+
+                        <div class="profile-card-title">
+                            ⚠️ Profil bulunamadı
+                        </div>
+
+                        <div class="info-value">
+                            Kullanıcı bilgileriniz Firebase'de bulunamadı.
+                        </div>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            kullaniciData =
+                sonuc.data();
+
+
+            /* =============================================
+               HESAP TÜRÜ
+            ============================================== */
+
+            if (
+                kullaniciData.tip &&
+                kullaniciData.tip !== "kurye"
+            ) {
+
+                window.location.href =
+                    "isletme.html";
+
+                return;
+
+            }
+
+
+            profilGoster();
+
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Profil hatası:",
+                error
+            );
+
+
+            profileContent.innerHTML = `
+
+                <div class="profile-card">
+
+                    <div class="profile-card-title">
+                        ⚠️ Profil yüklenemedi
+                    </div>
+
+                    <div class="info-value">
+                        ${escapeHtml(
+                            error.message ||
+                            "Bir hata oluştu."
+                        )}
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       PROFİLİ GÖSTER
+    ===================================================== */
+
+    function profilGoster() {
+
+        const ad =
+            kullaniciData.ad ||
+            "Kurye";
+
+
+        const telefon =
+            kullaniciData.telefon ||
+            aktifKullanici.phoneNumber ||
+            "-";
+
+
+        const email =
+            kullaniciData.email ||
+            aktifKullanici.email ||
+            "-";
+
+
+        const basarili =
+            Number(
+                kullaniciData.basarili || 0
+            );
+
+
+        const gelmedi =
+            Number(
+                kullaniciData.gelmedi || 0
+            );
+
+
+        const toplam =
+            basarili +
+            gelmedi;
+
+
+        let basariOrani = 0;
+
+
+        if (toplam > 0) {
+
+            basariOrani =
+                Math.round(
+                    (
+                        basarili /
+                        toplam
+                    ) * 100
+                );
+
+        }
+
+
+        const aktif =
+            kullaniciData.aktif !== false;
+
+
+        profileContent.innerHTML = `
+
+            <div class="profile-header">
+
+                <div class="profile-avatar">
+                    🛵
+                </div>
+
+                <div class="profile-name">
+                    ${escapeHtml(ad)}
+                </div>
+
+                <div class="profile-type">
+                    🚚 Kurye Hesabı
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <div class="profile-card-title">
+                    👤 Hesap Bilgileri
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Ad Soyad
+                    </div>
+
+                    <div class="info-value">
+                        ${escapeHtml(ad)}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        📞 Telefon
+                    </div>
+
+                    <div class="info-value">
+                        ${escapeHtml(telefon)}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        📧 E-posta
+                    </div>
+
+                    <div class="info-value">
+                        ${escapeHtml(email)}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <div class="profile-card-title">
+                    📊 Kurye İstatistikleri
+                </div>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-box">
+
+                        <div class="stat-number">
+                            ${basarili}
+                        </div>
+
+                        <div class="stat-label">
+                            Başarılı
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-box">
+
+                        <div class="stat-number">
+                            ${gelmedi}
+                        </div>
+
+                        <div class="stat-label">
+                            Gelmedi
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-box">
+
+                        <div class="stat-number">
+                            %${basariOrani}
+                        </div>
+
+                        <div class="stat-label">
+                            Başarı
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <div class="profile-card-title">
+                    🟢 Çalışma Durumu
+                </div>
+
+
+                <div class="active-row">
+
+                    <div class="active-info">
+
+                        <strong id="activeText">
+                            ${
+                                aktif
+                                    ? "Aktif"
+                                    : "Pasif"
+                            }
+                        </strong>
+
+                        <span id="activeSubText">
+                            ${
+                                aktif
+                                    ? "Paketler size gösterilebilir."
+                                    : "Yeni paketler gösterilmez."
+                            }
+                        </span>
+
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="activeToggle"
+                            ${
+                                aktif
+                                    ? "checked"
+                                    : ""
+                            }
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        const activeToggle =
+            document.getElementById(
+                "activeToggle"
+            );
+
+
+        if (activeToggle) {
+
+            activeToggle.addEventListener(
+                "change",
+                aktifDurumuDegistir
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       AKTİF / PASİF
+    ===================================================== */
+
+    async function aktifDurumuDegistir() {
+
+        const toggle =
+            document.getElementById(
+                "activeToggle"
+            );
+
+
+        if (!toggle) {
+            return;
+        }
+
+
+        const yeniDurum =
+            toggle.checked;
+
+
+        try {
+
+            await updateDoc(
+
+                doc(
+                    db,
+                    "kullanicilar",
+                    aktifKullanici.uid
+                ),
+
+                {
+
+                    aktif:
+                        yeniDurum
+
+                }
+
+            );
+
+
+            kullaniciData.aktif =
+                yeniDurum;
+
+
+            const activeText =
+                document.getElementById(
+                    "activeText"
+                );
+
+
+            const activeSubText =
+                document.getElementById(
+                    "activeSubText"
+                );
+
+
+            if (yeniDurum) {
+
+                activeText.textContent =
+                    "Aktif";
+
+                activeSubText.textContent =
+                    "Paketler size gösterilebilir.";
+
+                mesajGoster(
+                    "✅ Kurye durumunuz aktif.",
+                    "success"
+                );
+
+            }
+
+            else {
+
+                activeText.textContent =
+                    "Pasif";
+
+                activeSubText.textContent =
+                    "Yeni paketler gösterilmez.";
+
+                mesajGoster(
+                    "⏸️ Kurye durumunuz pasif.",
+                    "success"
+                );
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Aktiflik değiştirme hatası:",
+                error
+            );
+
+
+            toggle.checked =
+                !yeniDurum;
+
+
+            mesajGoster(
+                "❌ Durum değiştirilemedi.",
+                "error"
+            );
+
+        }
+
+    }
+        /* =====================================================
+       HTML GÜVENLİĞİ
+    ===================================================== */
+
+    function escapeHtml(value) {
+
+        return String(
+            value ?? ""
+        )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+    }
+
+
+    /* =====================================================
+       GERİ
+    ===================================================== */
+
+    document
+        .getElementById(
+            "backBtn"
+        )
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "kurye.html";
+
+            }
+        );
+
+
+    /* =====================================================
+       ANA SAYFA
+    ===================================================== */
+
+    document
+        .getElementById(
+            "homeBtn"
+        )
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "kurye.html";
+
+            }
+        );
+
+
+    /* =====================================================
+       PAKETLER
+    ===================================================== */
+
+    document
+        .getElementById(
+            "packagesBtn"
+        )
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "kurye.html";
+
+            }
+        );
+
+
+    /* =====================================================
+       ÇIKIŞ
+    ===================================================== */
+
+    document
+        .getElementById(
+            "logoutBtn"
+        )
+        .addEventListener(
+            "click",
+            async function() {
+
+                const onay =
+                    confirm(
+                        "Hesabınızdan çıkış yapmak istiyor musunuz?"
+                    );
+
+
+                if (!onay) {
+                    return;
+                }
+
+
+                try {
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    window.location.href =
+                        "index.html";
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Çıkış hatası:",
+                        error
+                    );
+
+
+                    mesajGoster(
+                        "❌ Çıkış yapılamadı.",
+                        "error"
+                    );
+
+                }
+
+            }
+        );
+
+</script>
+
+</body>
+
+</html>

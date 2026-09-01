@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Paketimvar - Giriş</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .login-logo .logo {
+            font-size: 27px;
+            font-weight: 900;
+        }
+
+        .login-logo p {
+            margin: 7px 0 0;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .login-card,
+        .register-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow:
+                0 8px 30px rgba(15, 23, 42, .06);
+        }
+
+        .register-card {
+            margin-top: 12px;
+        }
+
+        .login-title,
+        .register-title {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .login-title strong,
+        .register-title strong {
+            display: block;
+            font-size: 17px;
+            color: #111827;
+        }
+
+        .login-title span,
+        .register-title span {
+            display: block;
+            color: #6b7280;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 13px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            min-height: 44px;
+            box-sizing: border-box;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #2563eb;
+        }
+
+        .login-button {
+            width: 100%;
+            min-height: 44px;
+            border: 0;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .login-button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .register-button {
+            width: 100%;
+            min-height: 43px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .register-button + .register-button {
+            margin-top: 8px;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-page">
+
+    <div class="login-container">
+
+
+        <!-- LOGO -->
+
+        <div class="login-logo">
+
+            <div class="logo">
+                📦 Paketim<span>var</span>
+            </div>
+
+            <p>
+                Kurye ve işletme teslimat sistemi
+            </p>
+
+        </div>
+
+
+
+        <!-- MESAJ -->
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+
+        <!-- GİRİŞ -->
+
+        <div class="login-card">
+
+            <div class="login-title">
+
+                <strong>
+                    Hesabınıza giriş yapın
+                </strong>
+
+                <span>
+                    Telefon numaranız ve şifrenizle giriş yapın.
+                </span>
+
+            </div>
+
+
+
+            <!-- TELEFON -->
+
+            <div class="form-group">
+
+                <label for="telefon">
+                    Telefon
+                </label>
+
+                <input
+                    id="telefon"
+                    type="tel"
+                    inputmode="tel"
+                    placeholder="05XX XXX XX XX"
+                    autocomplete="tel"
+                    maxlength="11"
+                >
+
+            </div>
+
+
+
+            <!-- ŞİFRE -->
+
+            <div class="form-group">
+
+                <label for="sifre">
+                    Şifre
+                </label>
+
+                <input
+                    id="sifre"
+                    type="password"
+                    placeholder="Şifrenizi girin"
+                    autocomplete="current-password"
+                >
+
+            </div>
+
+
+
+            <!-- GİRİŞ BUTONU -->
+
+            <button
+                id="girisBtn"
+                class="btn btn-primary login-button"
+            >
+                Giriş Yap
+            </button>
+
+        </div>
+
+
+
+        <!-- KAYIT -->
+
+        <div class="register-card">
+
+            <div class="register-title">
+
+                <strong>
+                    Hesabınız yok mu?
+                </strong>
+
+                <span>
+                    Kullanım türünüzü seçerek kayıt olun.
+                </span>
+
+            </div>
+
+
+
+            <!-- KURYE -->
+
+            <button
+                id="kuryeKayitBtn"
+                class="btn btn-primary register-button"
+            >
+                🚚 Kurye Olarak Kayıt Ol
+            </button>
+
+
+
+            <!-- İŞLETME -->
+
+            <button
+                id="isletmeKayitBtn"
+                class="btn btn-light register-button"
+            >
+                🏪 İşletme Olarak Kayıt Ol
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+<script type="module">
+
+
+/* =====================================================
+   FIREBASE
+===================================================== */
+
+import {
+    auth,
+    db
+} from "./firebase.js";
+
+
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+
+/* =====================================================
+   ELEMENTLER
+===================================================== */
+
+const telefonInput =
+    document.getElementById(
+        "telefon"
+    );
+
+
+const sifreInput =
+    document.getElementById(
+        "sifre"
+    );
+
+
+const girisBtn =
+    document.getElementById(
+        "girisBtn"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const kuryeKayitBtn =
+    document.getElementById(
+        "kuryeKayitBtn"
+    );
+
+
+const isletmeKayitBtn =
+    document.getElementById(
+        "isletmeKayitBtn"
+    );
+
+
+
+/* =====================================================
+   MESAJ
+===================================================== */
+
+function mesaj(
+    text,
+    type = "error"
+) {
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message show " +
+        type;
+
+}
+
+
+
+/* =====================================================
+   TELEFONU TEMİZLE
+===================================================== */
+
+function telefonTemizle(
+    telefon
+) {
+
+    let temiz =
+        String(
+            telefon || ""
+        )
+        .replace(
+            /\D/g,
+            ""
+        );
+
+
+    /*
+       90XXXXXXXXXX gelirse
+       0XXXXXXXXXX formatına çevir
+    */
+
+    if (
+        temiz.startsWith("90") &&
+        temiz.length === 12
+    ) {
+
+        temiz =
+            "0" +
+            temiz.substring(2);
+
+    }
+
+
+    /*
+       5XXXXXXXXX gelirse
+       05XXXXXXXXX yap
+    */
+
+    if (
+        temiz.length === 10 &&
+        temiz.startsWith("5")
+    ) {
+
+        temiz =
+            "0" +
+            temiz;
+
+    }
+
+
+    return temiz;
+
+}
+
+
+
+/* =====================================================
+   TELEFON GEÇERLİ Mİ?
+===================================================== */
+
+function telefonGecerliMi(
+    telefon
+) {
+
+    const temiz =
+        telefonTemizle(
+            telefon
+        );
+
+
+    return (
+        temiz.length === 11 &&
+        temiz.startsWith("05")
+    );
+
+}
+
+
+
+/* =====================================================
+   KULLANICIYI YÖNLENDİR
+===================================================== */
+
+async function kullaniciYonlendir(
+    uid
+) {
+
+    try {
+
+        const kullaniciRef =
+            doc(
+                db,
+                "kullanicilar",
+                uid
+            );
+
+
+        const sonuc =
+            await getDoc(
+                kullaniciRef
+            );
+
+
+        if (
+            !sonuc.exists()
+        ) {
+
+            mesaj(
+                "Kullanıcı kaydı bulunamadı.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const data =
+            sonuc.data();
+
+
+        console.log(
+            "Kullanıcı:",
+            data
+        );
+
+
+        /* =============================================
+           KURYE
+        ============================================== */
+
+        if (
+            data.tip ===
+            "kurye"
+        ) {
+
+            window.location.href =
+                "kurye.html";
+
+            return;
+
+        }
+
+
+        /* =============================================
+           İŞLETME
+        ============================================== */
+
+        if (
+            data.tip ===
+            "isletme"
+        ) {
+
+            window.location.href =
+                "isletme.html";
+
+            return;
+
+        }
+
+
+        mesaj(
+            "Hesap türünüz belirlenemedi.",
+            "error"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Yönlendirme hatası:",
+            error
+        );
+
+
+        mesaj(
+            "Kullanıcı bilgileri alınamadı.",
+            "error"
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   SAYFA AÇILINCA OTURUM KONTROLÜ
+===================================================== */
+
+onAuthStateChanged(
+    auth,
+    async function(user) {
+
+        if (!user) {
+
+            return;
+
+        }
+
+
+        await kullaniciYonlendir(
+            user.uid
+        );
+
+    }
+);
+
+
+
+/* =====================================================
+   GİRİŞ YAP
+===================================================== */
+
+async function girisYap() {
+
+
+    const telefon =
+        telefonTemizle(
+            telefonInput.value
+        );
+
+
+    const sifre =
+        sifreInput.value;
+
+
+
+    /* ================================================
+       TELEFON
+    ================================================= */
+
+    if (!telefon) {
+
+        mesaj(
+            "Telefon numaranızı girin.",
+            "error"
+        );
+
+        telefonInput.focus();
+
+        return;
+
+    }
+
+
+    if (
+        !telefonGecerliMi(
+            telefon
+        )
+    ) {
+
+        mesaj(
+            "Geçerli bir telefon numarası girin.",
+            "error"
+        );
+
+        telefonInput.focus();
+
+        return;
+
+    }
+
+
+
+    /* ================================================
+       ŞİFRE
+    ================================================= */
+
+    if (!sifre) {
+
+        mesaj(
+            "Şifrenizi girin.",
+            "error"
+        );
+
+        sifreInput.focus();
+
+        return;
+
+    }
+
+
+
+    /* ================================================
+       BUTON
+    ================================================= */
+
+    girisBtn.disabled =
+        true;
+
+    girisBtn.textContent =
+        "Giriş yapılıyor...";
+
+
+
+    try {
+
+
+        /* ============================================
+           FIRESTORE KULLANICILAR
+        ============================================= */
+
+        const kullanicilarRef =
+            collection(
+                db,
+                "kullanicilar"
+            );
+
+
+        const kullaniciQuery =
+            query(
+                kullanicilarRef,
+                where(
+                    "telefon",
+                    "==",
+                    telefon
+                )
+            );
+
+
+        const snapshot =
+            await getDocs(
+                kullaniciQuery
+            );
+
+
+
+        /* ============================================
+           KULLANICI BULUNAMADI
+        ============================================= */
+
+        if (
+            snapshot.empty
+        ) {
+
+            mesaj(
+                "Bu telefon numarasıyla kayıtlı hesap bulunamadı.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+
+        /* ============================================
+           İLK KULLANICI
+        ============================================= */
+
+        const kullaniciDoc =
+            snapshot.docs[0];
+
+
+        const kullanici =
+            kullaniciDoc.data();
+
+
+        const email =
+            kullanici.email;
+
+
+
+        /* ============================================
+           E-POSTA YOKSA
+        ============================================= */
+
+        if (!email) {
+
+            mesaj(
+                "Hesabınızın e-posta bilgisi bulunamadı.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+
+        /* ============================================
+           FIREBASE AUTH GİRİŞ
+        ============================================= */
+
+        const sonuc =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                sifre
+            );
+
+
+
+        /* ============================================
+           PANEL
+        ============================================= */
+
+        await kullaniciYonlendir(
+            sonuc.user.uid
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Giriş hatası:",
+            error
+        );
+
+
+        let hata =
+            "Telefon veya şifre yanlış.";
+
+
+        /* ============================================
+           FIREBASE HATALARI
+        ============================================= */
+
+        if (
+            error.code ===
+            "auth/invalid-credential"
+        ) {
+
+            hata =
+                "Telefon veya şifre yanlış.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/wrong-password"
+        ) {
+
+            hata =
+                "Şifre yanlış.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/user-not-found"
+        ) {
+
+            hata =
+                "Bu hesap bulunamadı.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/too-many-requests"
+        ) {
+
+            hata =
+                "Çok fazla deneme yapıldı. Bir süre sonra tekrar deneyin.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/network-request-failed"
+        ) {
+
+            hata =
+                "İnternet bağlantınızı kontrol edin.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "permission-denied"
+        ) {
+
+            hata =
+                "Kullanıcı bilgisine erişilemiyor. Firebase Rules kontrol edilmeli.";
+
+        }
+
+
+        mesaj(
+            hata,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        girisBtn.disabled =
+            false;
+
+        girisBtn.textContent =
+            "Giriş Yap";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   GİRİŞ BUTONU
+===================================================== */
+
+girisBtn.addEventListener(
+    "click",
+    girisYap
+);
+
+
+
+/* =====================================================
+   ENTER
+===================================================== */
+
+sifreInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            girisYap();
+
+        }
+
+    }
+);
+/* =====================================================
+   KURYE KAYIT
+===================================================== */
+
+kuryeKayitBtn.addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "kurye-kayit.html";
+
+    }
+);
+
+
+
+/* =====================================================
+   İŞLETME KAYIT
+===================================================== */
+
+isletmeKayitBtn.addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "isletme-kayit.html";
+
+    }
+);
+
+
+
+/* =====================================================
+   TELEFON NUMARASI FORMATLAMA
+===================================================== */
+
+telefonInput.addEventListener(
+    "input",
+    function() {
+
+        let rakamlar =
+            this.value
+                .replace(
+                    /\D/g,
+                    ""
+                );
+
+
+        /*
+           90 ile başlıyorsa
+           Türkiye formatına çevir
+        */
+
+        if (
+            rakamlar.startsWith("90")
+        ) {
+
+            rakamlar =
+                "0" +
+                rakamlar.substring(2);
+
+        }
+
+
+        /*
+           5 ile başlıyorsa
+           başına 0 ekle
+        */
+
+        if (
+            rakamlar.length === 10 &&
+            rakamlar.startsWith("5")
+        ) {
+
+            rakamlar =
+                "0" +
+                rakamlar;
+
+        }
+
+
+        this.value =
+            rakamlar.substring(
+                0,
+                11
+            );
+
+    }
+);
+
+
+
+/* =====================================================
+   ŞİFRE GÖSTERMEK İÇİN ENTER DIŞI EK İŞLEM YOK
+===================================================== */
+
+
+</script>
+
+
+</body>
+
+</html>

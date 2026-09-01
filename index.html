@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Paketimvar - Giriş</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+    
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .login-logo .logo {
+            font-size: 27px;
+            font-weight: 900;
+        }
+
+        .login-logo .logo span {
+            color: #2563eb;
+        }
+
+        .login-logo p {
+            margin: 7px 0 0;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .login-card,
+        .register-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow:
+                0 8px 30px rgba(15, 23, 42, .06);
+        }
+
+        .register-card {
+            margin-top: 12px;
+        }
+
+        .login-title,
+        .register-title {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .login-title strong,
+        .register-title strong {
+            display: block;
+            font-size: 17px;
+            color: #111827;
+        }
+
+        .login-title span,
+        .register-title span {
+            display: block;
+            color: #6b7280;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 13px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            min-height: 44px;
+            box-sizing: border-box;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 13px;
+            outline: none;
+            background: #ffffff;
+        }
+
+        .form-group input:focus {
+            border-color: #2563eb;
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, .08);
+        }
+
+        .login-button {
+            width: 100%;
+            min-height: 44px;
+            border: 0;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .login-button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .register-button {
+            width: 100%;
+            min-height: 43px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .register-button + .register-button {
+            margin-top: 8px;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .forgot-text {
+            text-align: center;
+            margin-top: 12px;
+            color: #6b7280;
+            font-size: 10px;
+        }
+
+        /* =================================================
+           ÇOBANTÜRK YAZILIM
+        ================================================== */
+
+        .footer-yazilim {
+            text-align: center;
+            margin-top: 18px;
+            padding-bottom: 8px;
+            color: #9ca3af;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .2px;
+        }
+
+    
+     151}
+
+    </style>
+
+</head>
+
+
+<body>
+    
+
+
+<div class="login-page">
+
+    <div class="login-container">
+
+
+
+        <!-- =================================================
+             MESAJ
+        ================================================== -->
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <!-- =================================================
+             LOGO / ANA GÖRSEL
+        ================================================== -->
+
+        <div class="login-logo">
+
+            <img
+                src="ana.png"
+                alt="Paketimvar"
+                class="ana-logo"
+            >
+
+        </div>
+
+
+        <!-- =================================================
+             GİRİŞ KARTI
+        ================================================== -->
+
+        <div class="login-card">
+
+            <div class="login-title">
+
+                <strong>
+                    Hesabınıza giriş yapın
+                </strong>
+
+                <span>
+                    E-posta ve şifrenizle giriş yapın.
+                </span>
+
+            </div>
+
+
+            <!-- =================================================
+                 E-POSTA
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    E-posta
+                </label>
+
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="ornek@mail.com"
+                    autocomplete="email"
+                    inputmode="email"
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 ŞİFRE
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label for="sifre">
+                    Şifre
+                </label>
+
+                <input
+                    id="sifre"
+                    type="password"
+                    placeholder="Şifrenizi girin"
+                    autocomplete="current-password"
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 GİRİŞ
+            ================================================== -->
+
+            <button
+                id="girisBtn"
+                class="btn btn-primary login-button"
+            >
+                Giriş Yap
+            </button>
+
+
+            <div class="forgot-text">
+                Hesabınıza kayıt olduğunuz e-posta ve şifreyi kullanın.
+            </div>
+
+        </div>
+
+
+
+
+        <!-- =================================================
+             KAYIT
+        ================================================== -->
+
+        <div class="register-card">
+
+            <div class="register-title">
+
+                <strong>
+                    Hesabınız yok mu?
+                </strong>
+
+                <span>
+                    Kullanım türünüzü seçerek kayıt olun.
+                </span>
+
+            </div>
+
+
+            <button
+                id="kuryeKayitBtn"
+                class="btn btn-primary register-button"
+            >
+                🚚 Kurye Olarak Kayıt Ol
+            </button>
+
+
+            <button
+                id="isletmeKayitBtn"
+                class="btn btn-light register-button"
+            >
+                🏪 İşletme Olarak Kayıt Ol
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             ALT BİLGİ
+        ================================================== -->
+
+        <div class="footer-yazilim">
+            © 2026 Çobantürk Yazılım
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+
+/* =====================================================
+   FIREBASE
+===================================================== */
+
+import {
+    auth,
+    db
+} from "./firebase.js";
+
+
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+
+/* =====================================================
+   ELEMENTLER
+===================================================== */
+
+const emailInput =
+    document.getElementById(
+        "email"
+    );
+
+
+const sifreInput =
+    document.getElementById(
+        "sifre"
+    );
+
+
+const girisBtn =
+    document.getElementById(
+        "girisBtn"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const kuryeKayitBtn =
+    document.getElementById(
+        "kuryeKayitBtn"
+    );
+
+
+const isletmeKayitBtn =
+    document.getElementById(
+        "isletmeKayitBtn"
+    );
+
+
+
+/* =====================================================
+   MESAJ
+===================================================== */
+
+function mesaj(
+    text,
+    type = "error"
+) {
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message show " +
+        type;
+
+}
+
+
+
+/* =====================================================
+   MESAJ TEMİZLE
+===================================================== */
+
+function mesajTemizle() {
+
+    message.textContent =
+        "";
+
+    message.className =
+        "message";
+
+}
+
+
+
+/* =====================================================
+   KULLANICI TİPİNİ BUL
+===================================================== */
+
+async function kullaniciYonlendir(
+    uid
+) {
+
+    try {
+
+        const kullaniciRef =
+            doc(
+                db,
+                "kullanicilar",
+                uid
+            );
+
+
+        const sonuc =
+            await getDoc(
+                kullaniciRef
+            );
+
+
+        if (
+            !sonuc.exists()
+        ) {
+
+            mesaj(
+                "Hesap bulundu ancak kullanıcı kaydı bulunamadı.",
+                "error"
+            );
+
+            return false;
+
+        }
+
+
+        const data =
+            sonuc.data();
+
+
+        console.log(
+            "Kullanıcı bilgisi:",
+            data
+        );
+
+
+
+
+        /* =================================================
+           KURYE
+        ================================================= */
+
+        if (
+            data.tip ===
+            "kurye"
+        ) {
+
+            window.location.href =
+                "kurye.html";
+
+            return true;
+
+        }
+
+
+
+        /* =================================================
+           İŞLETME
+        ================================================= */
+
+        if (
+            data.tip ===
+            "isletme"
+        ) {
+
+            window.location.href =
+                "isletme.html";
+
+            return true;
+
+        }
+
+
+
+        /* =================================================
+           TİP YOK
+        ================================================= */
+
+        mesaj(
+            "Hesap türünüz belirlenemedi.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Kullanıcı yönlendirme hatası:",
+            error
+        );
+
+
+        mesaj(
+            "Kullanıcı bilgileri alınamadı.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   OTURUM KONTROLÜ
+===================================================== */
+
+onAuthStateChanged(
+    auth,
+    async function(user) {
+
+        if (!user) {
+
+            return;
+
+        }
+
+
+        /*
+           Kullanıcı zaten giriş yaptıysa
+           doğru panele gönder.
+        */
+
+        await kullaniciYonlendir(
+            user.uid
+        );
+
+    }
+);
+
+
+
+
+
+/* =====================================================
+   GİRİŞ
+===================================================== */
+
+async function girisYap() {
+
+
+    mesajTemizle();
+
+
+    const email =
+        emailInput.value
+            .trim()
+            .toLowerCase();
+
+
+    const sifre =
+        sifreInput.value;
+
+
+
+    /* =================================================
+       E-POSTA KONTROL
+    ================================================= */
+
+    if (!email) {
+
+        mesaj(
+            "E-posta adresinizi girin.",
+            "error"
+        );
+
+        emailInput.focus();
+
+        return;
+
+    }
+
+
+    if (
+        !email.includes("@") ||
+        !email.includes(".")
+    ) {
+
+        mesaj(
+            "Geçerli bir e-posta adresi girin.",
+            "error"
+        );
+
+        emailInput.focus();
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       ŞİFRE KONTROL
+    ================================================= */
+
+    if (!sifre) {
+
+        mesaj(
+            "Şifrenizi girin.",
+            "error"
+        );
+
+        sifreInput.focus();
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       BUTON
+    ================================================= */
+
+    girisBtn.disabled =
+        true;
+
+    girisBtn.textContent =
+        "Giriş yapılıyor...";
+
+
+
+    try {
+
+
+        /* =================================================
+           FIREBASE AUTH
+        ================================================= */
+
+        const sonuc =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                sifre
+            );
+
+
+        console.log(
+            "Firebase giriş başarılı:",
+            sonuc.user.uid
+        );
+
+
+
+        /* =================================================
+           KULLANICI PANELİ
+        ================================================= */
+
+        const yonlendirildi =
+            await kullaniciYonlendir(
+                sonuc.user.uid
+            );
+
+
+        if (!yonlendirildi) {
+
+            girisBtn.disabled =
+                false;
+
+            girisBtn.textContent =
+                "Giriş Yap";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Giriş hatası:",
+            error
+        );
+
+
+        let hata =
+            "E-posta veya şifre yanlış.";
+
+
+        /* =================================================
+           FIREBASE HATALARI
+        ================================================= */
+
+        if (
+            error.code ===
+            "auth/invalid-credential"
+        ) {
+
+            hata =
+                "E-posta veya şifre yanlış.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/wrong-password"
+        ) {
+
+            hata =
+                "Şifre yanlış.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/user-not-found"
+        ) {
+
+            hata =
+                "Bu e-posta ile kayıtlı hesap bulunamadı.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/invalid-email"
+        ) {
+
+            hata =
+                "Geçerli bir e-posta adresi girin.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/too-many-requests"
+        ) {
+
+            hata =
+                "Çok fazla başarısız giriş denemesi yapıldı. Daha sonra tekrar deneyin.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/network-request-failed"
+        ) {
+
+            hata =
+                "İnternet bağlantınızı kontrol edin.";
+
+        }
+
+
+        mesaj(
+            "❌ " + hata,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        if (
+            !auth.currentUser
+        ) {
+
+            girisBtn.disabled =
+                false;
+
+            girisBtn.textContent =
+                "Giriş Yap";
+
+        }
+
+    }
+
+}
+
+
+
+/* =====================================================
+   GİRİŞ BUTONU
+===================================================== */
+
+girisBtn.addEventListener(
+    "click",
+    girisYap
+);
+
+
+
+/* =====================================================
+   ENTER İLE GİRİŞ
+===================================================== */
+
+emailInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            sifreInput.focus();
+
+        }
+
+    }
+);
+
+
+sifreInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            girisYap();
+
+        }
+
+    }
+);
+
+
+
+/* =====================================================
+   KURYE KAYIT
+===================================================== */
+
+kuryeKayitBtn.addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "kayit.html?tip=kurye";
+
+    }
+);
+
+
+
+/* =====================================================
+   İŞLETME KAYIT
+===================================================== */
+
+isletmeKayitBtn.addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "kayit.html?tip=isletme";
+
+    }
+);
+
+
+
+/* =====================================================
+   E-POSTA TEMİZLEME
+===================================================== */
+
+emailInput.addEventListener(
+    "input",
+    function() {
+
+        this.value =
+            this.value
+                .replace(
+                    /\s/g,
+                    ""
+                )
+                .toLowerCase();
+
+    }
+);
+
+
+
+/* =====================================================
+   ŞİFRE BOŞLUKLARINI ENGELLE
+===================================================== */
+
+sifreInput.addEventListener(
+    "input",
+    function() {
+
+        /*
+           Şifrenin içindeki boşlukları
+           otomatik silmiyoruz.
+
+           Çünkü Firebase'de kayıt olurken
+           kullanıcı şifresinde boşluk kullandıysa
+           aynı şifreyle giriş yapabilmesi gerekir.
+        */
+
+    }
+);
+
+
+
+/* =====================================================
+   SAYFA YÜKLENDİ
+===================================================== */
+
+console.log(
+    "Paketimvar giriş sistemi hazır."
+);
+
+
+</script>
+
+
+</body>
+
+
+</html>

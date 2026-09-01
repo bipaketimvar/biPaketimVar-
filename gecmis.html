@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Paketimvar - Geçmiş</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        .history-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .history-head h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .history-subtitle {
+            color: #6b7280;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .history-count {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-radius: 20px;
+            padding: 6px 9px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .history-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 13px;
+            margin-bottom: 10px;
+            box-shadow: 0 3px 12px rgba(15,23,42,.035);
+        }
+
+        .history-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .history-title {
+            color: #111827;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .history-date {
+            color: #9ca3af;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .history-status {
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 20px;
+            padding: 5px 8px;
+            font-size: 9px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .history-row {
+            display: flex;
+            gap: 9px;
+            padding: 9px 0;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .history-icon {
+            width: 27px;
+            height: 27px;
+            flex: 0 0 27px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .history-label {
+            color: #9ca3af;
+            font-size: 9px;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .history-value {
+            color: #374151;
+            font-size: 11px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .history-customer {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 9px;
+            margin-top: 8px;
+        }
+
+        .history-customer-name {
+            color: #111827;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .history-customer-phone {
+            color: #6b7280;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .history-empty {
+            text-align: center;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 32px 18px;
+        }
+
+        .history-empty-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .history-empty-title {
+            color: #111827;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .history-empty-text {
+            color: #6b7280;
+            font-size: 11px;
+            line-height: 1.5;
+            margin-top: 5px;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 10px;
+        }
+
+        .history-btn {
+            flex: 1;
+            min-height: 37px;
+            border: 0;
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .map-btn {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .back-btn {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+    <div class="logo">
+        📦 Paketim<span>var</span>
+    </div>
+
+    <button
+        id="backBtn"
+        class="btn btn-light"
+        style="width:auto; min-height:36px;"
+    >
+        ← Geri
+    </button>
+
+</header>
+
+
+<main class="page">
+
+    <div class="history-head">
+
+        <div>
+
+            <h1>
+                📜 Geçmiş Paketler
+            </h1>
+
+            <div class="history-subtitle">
+                Tamamladığınız teslimatlar
+            </div>
+
+        </div>
+
+        <div
+            id="historyCount"
+            class="history-count"
+        >
+            0 Paket
+        </div>
+
+    </div>
+
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+    <div
+        id="historyList"
+    >
+
+        <div class="history-empty">
+
+            <div class="history-empty-icon">
+                ⏳
+            </div>
+
+            <div class="history-empty-title">
+                Geçmiş yükleniyor...
+            </div>
+
+            <div class="history-empty-text">
+                Tamamlanan paketler kontrol ediliyor.
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<nav class="bottom-nav">
+
+    <button
+        id="homeBtn"
+        class="nav-item"
+    >
+        <span class="icon">🏠</span>
+        Ana Sayfa
+    </button>
+
+
+    <button
+        class="nav-item active"
+    >
+        <span class="icon">📜</span>
+        Geçmiş
+    </button>
+
+
+    <button
+        id="profileBtn"
+        class="nav-item"
+    >
+        <span class="icon">👤</span>
+        Profil
+    </button>
+
+</nav>
+<script type="module">
+
+    import {
+
+        auth,
+        db,
+
+        onAuthStateChanged,
+
+        collection,
+        query,
+        where,
+        onSnapshot,
+
+        doc,
+        getDoc
+
+    } from "./firebase.js";
+
+
+    /* =====================================================
+       DEĞİŞKENLER
+    ===================================================== */
+
+    let aktifKullanici = null;
+
+    let tumGecmisPaketler = [];
+
+    let unsubscribe = null;
+
+
+    /* =====================================================
+       ELEMENTLER
+    ===================================================== */
+
+    const historyList =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    const historyCount =
+        document.getElementById(
+            "historyCount"
+        );
+
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    /* =====================================================
+       MESAJ
+    ===================================================== */
+
+    function mesajGoster(
+        text,
+        type = "error"
+    ) {
+
+        message.textContent =
+            text;
+
+        message.className =
+            "message show " + type;
+
+    }
+
+
+    /* =====================================================
+       AUTH
+    ===================================================== */
+
+    onAuthStateChanged(
+        auth,
+        function(user) {
+
+            if (!user) {
+
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            aktifKullanici =
+                user;
+
+
+            gecmisPaketleriDinle();
+
+        }
+    );
+
+
+    /* =====================================================
+       GEÇMİŞ PAKETLERİ DİNLE
+    ===================================================== */
+
+    function gecmisPaketleriDinle() {
+
+        if (unsubscribe) {
+
+            unsubscribe();
+
+        }
+
+
+        const paketRef =
+            collection(
+                db,
+                "paketler"
+            );
+
+
+        const paketQuery =
+            query(
+
+                paketRef,
+
+                where(
+                    "kuryeId",
+                    "==",
+                    aktifKullanici.uid
+                ),
+
+                where(
+                    "durum",
+                    "==",
+                    "teslim_edildi"
+                )
+
+            );
+
+
+        unsubscribe =
+            onSnapshot(
+
+                paketQuery,
+
+                function(snapshot) {
+
+                    tumGecmisPaketler = [];
+
+
+                    snapshot.forEach(
+                        function(item) {
+
+                            tumGecmisPaketler.push({
+
+                                id:
+                                    item.id,
+
+                                ...item.data()
+
+                            });
+
+                        }
+                    );
+
+
+                    /* =====================================
+                       YENİDEN ESKİYE SIRALA
+                    ====================================== */
+
+                    tumGecmisPaketler.sort(
+                        function(a, b) {
+
+                            const aTime =
+                                zamanAl(
+                                    a.guncellenme ||
+                                    a.teslimTarihi ||
+                                    a.tarih
+                                );
+
+
+                            const bTime =
+                                zamanAl(
+                                    b.guncellenme ||
+                                    b.teslimTarihi ||
+                                    b.tarih
+                                );
+
+
+                            return bTime - aTime;
+
+                        }
+                    );
+
+
+                    gecmisPaketleriGoster();
+
+                },
+
+                function(error) {
+
+                    console.error(
+                        "Geçmiş paket hatası:",
+                        error
+                    );
+
+
+                    historyList.innerHTML = `
+
+                        <div class="history-empty">
+
+                            <div class="history-empty-icon">
+                                ⚠️
+                            </div>
+
+                            <div class="history-empty-title">
+                                Geçmiş yüklenemedi
+                            </div>
+
+                            <div class="history-empty-text">
+                                ${escapeHtml(
+                                    error.message ||
+                                    "Firebase bağlantısını kontrol edin."
+                                )}
+                            </div>
+
+                        </div>
+
+                    `;
+
+                    mesajGoster(
+                        "Geçmiş paketler alınamadı.",
+                        "error"
+                    );
+
+                }
+
+            );
+
+    }
+
+
+    /* =====================================================
+       GEÇMİŞ PAKETLERİ GÖSTER
+    ===================================================== */
+
+    function gecmisPaketleriGoster() {
+
+        historyCount.textContent =
+            tumGecmisPaketler.length +
+            " Paket";
+
+
+        if (
+            tumGecmisPaketler.length ===
+            0
+        ) {
+
+            historyList.innerHTML = `
+
+                <div class="history-empty">
+
+                    <div class="history-empty-icon">
+                        📭
+                    </div>
+
+                    <div class="history-empty-title">
+                        Henüz tamamlanan paket yok
+                    </div>
+
+                    <div class="history-empty-text">
+                        Teslim ettiğiniz paketler burada
+                        görünecek.
+                    </div>
+
+                    <br>
+
+                    <button
+                        id="goHomeEmpty"
+                        class="btn btn-primary"
+                    >
+                        🏠 Ana Sayfaya Dön
+                    </button>
+
+                </div>
+
+            `;
+
+
+            const goHomeEmpty =
+                document.getElementById(
+                    "goHomeEmpty"
+                );
+
+
+            if (goHomeEmpty) {
+
+                goHomeEmpty.onclick =
+                    function() {
+
+                        window.location.href =
+                            "kurye.html";
+
+                    };
+
+            }
+
+
+            return;
+
+        }
+
+
+        historyList.innerHTML =
+            tumGecmisPaketler
+                .map(
+                    function(paket) {
+
+                        return gecmisKarti(
+                            paket
+                        );
+
+                    }
+                )
+                .join("");
+
+
+        tumGecmisPaketler.forEach(
+            function(paket) {
+
+                gecmisButonlariniBagla(
+                    paket
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       GEÇMİŞ KARTI
+    ===================================================== */
+
+    function gecmisKarti(
+        paket
+    ) {
+
+        const paketAdi =
+            paket.paketAciklama ||
+            "Paket";
+
+
+        const isletmeAdi =
+            paket.isletmeAdi ||
+            paket.isletme ||
+            "İşletme";
+
+
+        const isletmeAdres =
+            paket.isletmeAdres ||
+            "-";
+
+
+        const musteriAdi =
+            paket.musteriAdi ||
+            "Müşteri";
+
+
+        const musteriTelefon =
+            paket.musteriTelefon ||
+            "";
+
+
+        const musteriAdres =
+            paket.musteriAdres ||
+            "-";
+
+
+        const teslimZamani =
+            paket.guncellenme ||
+            paket.teslimTarihi ||
+            paket.tarih;
+
+
+        return `
+
+            <div
+                class="history-card"
+                data-history-id="${escapeAttr(
+                    paket.id
+                )}"
+            >
+
+                <div class="history-top">
+
+                    <div>
+
+                        <div class="history-title">
+
+                            📦 ${
+                                escapeHtml(
+                                    paketAdi
+                                )
+                            }
+
+                        </div>
+
+                        <div class="history-date">
+
+                            ${tarihFormatla(
+                                teslimZamani
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="history-status">
+
+                        ✓ Teslim edildi
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-row">
+
+                    <div class="history-icon">
+                        🏪
+                    </div>
+
+                    <div>
+
+                        <div class="history-label">
+                            İŞLETME
+                        </div>
+
+                        <div class="history-value">
+
+                            ${escapeHtml(
+                                isletmeAdi
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-row">
+
+                    <div class="history-icon">
+                        🏪
+                    </div>
+
+                    <div>
+
+                        <div class="history-label">
+                            ALIŞ ADRESİ
+                        </div>
+
+                        <div class="history-value">
+
+                            ${escapeHtml(
+                                isletmeAdres
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-row">
+
+                    <div class="history-icon">
+                        📍
+                    </div>
+
+                    <div>
+
+                        <div class="history-label">
+                            TESLİMAT ADRESİ
+                        </div>
+
+                        <div class="history-value">
+
+                            ${escapeHtml(
+                                musteriAdres
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-customer">
+
+                    <div class="history-customer-name">
+
+                        👤 ${
+                            escapeHtml(
+                                musteriAdi
+                            )
+                        }
+
+                    </div>
+
+
+                    ${
+                        musteriTelefon
+                            ? `
+                                <div class="history-customer-phone">
+
+                                    📞 ${
+                                        escapeHtml(
+                                            musteriTelefon
+                                        )
+                                    }
+
+                                </div>
+                            `
+                            : ""
+                    }
+
+                </div>
+
+
+                <div class="history-actions">
+
+                    <button
+                        class="history-btn map-btn"
+                        data-action="map"
+                        data-id="${escapeAttr(
+                            paket.id
+                        )}"
+                    >
+
+                        🗺️ Adresi Aç
+
+                    </button>
+
+
+                    <button
+                        class="history-btn back-btn"
+                        data-action="back"
+                        data-id="${escapeAttr(
+                            paket.id
+                        )}"
+                    >
+
+                        ← Ana Sayfa
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+        /* =====================================================
+       BUTONLARI BAĞLA
+    ===================================================== */
+
+    function gecmisButonlariniBagla(
+        paket
+    ) {
+
+        const kart =
+            document.querySelector(
+                '[data-history-id="' +
+                paket.id +
+                '"]'
+            );
+
+
+        if (!kart) {
+
+            return;
+
+        }
+
+
+        const mapBtn =
+            kart.querySelector(
+                '[data-action="map"]'
+            );
+
+
+        if (mapBtn) {
+
+            mapBtn.onclick =
+                function() {
+
+                    googleMaps(
+                        paket.musteriAdres
+                    );
+
+                };
+
+        }
+
+
+        const backBtn =
+            kart.querySelector(
+                '[data-action="back"]'
+            );
+
+
+        if (backBtn) {
+
+            backBtn.onclick =
+                function() {
+
+                    window.location.href =
+                        "kurye.html";
+
+                };
+
+        }
+
+    }
+
+
+    /* =====================================================
+       GOOGLE MAPS
+    ===================================================== */
+
+    function googleMaps(
+        adres
+    ) {
+
+        if (!adres) {
+
+            alert(
+                "Müşteri adresi bulunamadı."
+            );
+
+            return;
+
+        }
+
+
+        const url =
+            "https://www.google.com/maps/search/?api=1&query=" +
+            encodeURIComponent(adres);
+
+
+        window.location.href =
+            url;
+
+    }
+
+
+    /* =====================================================
+       ZAMAN AL
+    ===================================================== */
+
+    function zamanAl(
+        timestamp
+    ) {
+
+        if (!timestamp) {
+
+            return 0;
+
+        }
+
+
+        try {
+
+            if (
+                typeof timestamp.toMillis ===
+                "function"
+            ) {
+
+                return timestamp.toMillis();
+
+            }
+
+
+            if (
+                typeof timestamp.toDate ===
+                "function"
+            ) {
+
+                return timestamp
+                    .toDate()
+                    .getTime();
+
+            }
+
+
+            const date =
+                new Date(timestamp);
+
+
+            const time =
+                date.getTime();
+
+
+            return Number.isNaN(time)
+                ? 0
+                : time;
+
+        }
+
+        catch (error) {
+
+            return 0;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       TARİH FORMATLA
+    ===================================================== */
+
+    function tarihFormatla(
+        timestamp
+    ) {
+
+        if (!timestamp) {
+
+            return "Tarih bilinmiyor";
+
+        }
+
+
+        try {
+
+            let date;
+
+
+            if (
+                typeof timestamp.toDate ===
+                "function"
+            ) {
+
+                date =
+                    timestamp.toDate();
+
+            }
+
+            else {
+
+                date =
+                    new Date(timestamp);
+
+            }
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return "Tarih bilinmiyor";
+
+            }
+
+
+            return date.toLocaleString(
+                "tr-TR",
+                {
+
+                    day:
+                        "2-digit",
+
+                    month:
+                        "2-digit",
+
+                    year:
+                        "numeric",
+
+                    hour:
+                        "2-digit",
+
+                    minute:
+                        "2-digit"
+
+                }
+            );
+
+        }
+
+        catch (error) {
+
+            return "Tarih bilinmiyor";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       HTML GÜVENLİĞİ
+    ===================================================== */
+
+    function escapeHtml(
+        value
+    ) {
+
+        return String(
+            value ?? ""
+        )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+    }
+
+
+    function escapeAttr(
+        value
+    ) {
+
+        return escapeHtml(
+            value
+        );
+
+    }
+
+
+    /* =====================================================
+       ANA SAYFA
+    ===================================================== */
+
+    document
+        .getElementById(
+            "homeBtn"
+        )
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "kurye.html";
+
+            }
+        );
+
+
+    /* =====================================================
+       GERİ
+    ===================================================== */
+
+    document
+        .getElementById(
+            "backBtn"
+        )
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "kurye.html";
+
+            }
+        );
+
+
+    /* =====================================================
+       PROFİL
+    ===================================================== */
+
+    document
+        .getElementById(
+            "profileBtn"
+        )
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "profil.html";
+
+            }
+        );
+
+
+</script>
+
+
+</body>
+
+</html>

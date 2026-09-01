@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Paketimvar - Yeni Paket</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     ÜST BAR
+===================================================== -->
+
+<header class="topbar">
+
+    <div class="logo">
+        📦 Paketim<span>var</span>
+    </div>
+
+    <button
+        id="geriBtn"
+        class="btn btn-light"
+        style="width:auto; min-height:36px;"
+    >
+        ← Geri
+    </button>
+
+</header>
+
+
+<!-- =====================================================
+     ANA İÇERİK
+===================================================== -->
+
+<main class="page">
+
+    <div class="page-title">
+
+        <h1>
+            Yeni Paket
+        </h1>
+
+        <p>
+            Kurye için yeni teslimat oluşturun.
+        </p>
+
+    </div>
+
+
+    <!-- MESAJ -->
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+    <!-- YÜKLENİYOR -->
+
+    <div
+        id="loading"
+        class="loading"
+    >
+        İşletme bilgileriniz yükleniyor...
+    </div>
+
+
+    <!-- =================================================
+         FORM
+    ================================================== -->
+
+    <div
+        id="formContainer"
+        class="hidden"
+    >
+
+
+        <!-- =============================================
+             İŞLETME
+        ============================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <h3>
+                    🏪 İşletme
+                </h3>
+
+                <span class="badge badge-green">
+                    Hazır
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-icon">
+                    🏪
+                </div>
+
+                <div class="info-content">
+
+                    <div class="info-label">
+                        İşletme adı
+                    </div>
+
+                    <div
+                        id="isletmeAdi"
+                        class="info-value"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-icon">
+                    📍
+                </div>
+
+                <div class="info-content">
+
+                    <div class="info-label">
+                        Alış adresi
+                    </div>
+
+                    <div
+                        id="isletmeAdres"
+                        class="info-value"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             MÜŞTERİ
+        ============================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <h3>
+                    👤 Müşteri Bilgileri
+                </h3>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="musteriAdi">
+                    Müşteri adı
+                </label>
+
+                <input
+                    type="text"
+                    id="musteriAdi"
+                    placeholder="Müşteri adı soyadı"
+                    autocomplete="name"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="musteriTelefon">
+                    Müşteri telefonu
+                </label>
+
+                <input
+                    type="tel"
+                    id="musteriTelefon"
+                    placeholder="05XXXXXXXXX"
+                    inputmode="tel"
+                    maxlength="11"
+                    autocomplete="tel"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="musteriAdres">
+                    Teslimat adresi
+                </label>
+
+                <textarea
+                    id="musteriAdres"
+                    placeholder="Mahalle, sokak, bina no, daire no..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             PAKET
+        ============================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <h3>
+                    📦 Paket Bilgileri
+                </h3>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="paketAciklama">
+                    Paket açıklaması
+                </label>
+
+                <input
+                    type="text"
+                    id="paketAciklama"
+                    placeholder="Örn: Yemek siparişi"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="paketNotu">
+                    Kurye notu
+                </label>
+
+                <textarea
+                    id="paketNotu"
+                    placeholder="Kurye için özel not..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             ÜCRET VE ÖDEME
+        ============================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <h3>
+                    💰 Ücret ve Ödeme
+                </h3>
+
+                <span class="badge badge-green">
+                    Esnek
+                </span>
+
+            </div>
+
+
+            <!-- KURYE ÜCRETİ -->
+
+            <div class="form-group">
+
+                <label for="kuryeUcreti">
+                    🛵 Kurye ücreti
+                    <span style="color:#dc2626;">*</span>
+                </label>
+
+                <input
+                    type="number"
+                    id="kuryeUcreti"
+                    placeholder="Örn: 100"
+                    min="1"
+                    step="0.01"
+                    inputmode="decimal"
+                >
+
+                <div
+                    style="
+                        margin-top:5px;
+                        font-size:11px;
+                        color:#6b7280;
+                    "
+                >
+                    Kurye için ödenecek teslimat ücretidir.
+                </div>
+
+            </div>
+
+
+            <!-- SİPARİŞ TUTARI -->
+
+            <div class="form-group">
+
+                <label for="siparisTutari">
+                    🛒 Sipariş tutarı
+                    <span
+                        style="
+                            color:#6b7280;
+                            font-size:11px;
+                            font-weight:400;
+                        "
+                    >
+                        (Opsiyonel)
+                    </span>
+                </label>
+
+                <input
+                    type="number"
+                    id="siparisTutari"
+                    placeholder="Örn: 350"
+                    min="0"
+                    step="0.01"
+                    inputmode="decimal"
+                >
+
+                <div
+                    style="
+                        margin-top:5px;
+                        font-size:11px;
+                        color:#6b7280;
+                    "
+                >
+                    Sipariş tutarını biliyorsanız girebilirsiniz.
+                </div>
+
+            </div>
+
+
+            <!-- ÖDEME ŞEKLİ -->
+
+            <div class="form-group">
+
+                <label for="odemeSekli">
+                    💳 Ödeme şekli
+                    <span
+                        style="
+                            color:#6b7280;
+                            font-size:11px;
+                            font-weight:400;
+                        "
+                    >
+                        (Opsiyonel)
+                    </span>
+                </label>
+
+                <select
+                    id="odemeSekli"
+                >
+
+                    <option value="">
+                        Ödeme şekli seçilmedi
+                    </option>
+
+                    <option value="online">
+                        💳 Online Ödeme
+                    </option>
+
+                    <option value="nakit">
+                        💵 Nakit
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             OLUŞTUR
+        ============================================== -->
+
+        <div class="card">
+
+            <button
+                id="paketBtn"
+                class="btn btn-primary"
+            >
+                🚀 Paketi Oluştur
+            </button>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+<!-- =====================================================
+     ALT MENÜ
+===================================================== -->
+
+<nav class="bottom-nav">
+
+    <button
+        class="nav-item"
+        id="anaSayfaBtn"
+    >
+        <span class="icon">🏠</span>
+        Ana Sayfa
+    </button>
+
+
+    <button
+        class="nav-item active"
+        id="paketOlusturBtn"
+    >
+        <span class="icon">➕</span>
+        Paket Oluştur
+    </button>
+
+
+    <button
+        class="nav-item"
+        id="paketlerBtn"
+    >
+        <span class="icon">📦</span>
+        Paketler
+    </button>
+
+
+    <button
+        class="nav-item"
+        id="profilBtn"
+    >
+        <span class="icon">👤</span>
+        Profil
+    </button>
+
+</nav>
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
+
+<script type="module">
+
+    import {
+        auth,
+        db,
+        onAuthStateChanged,
+        doc,
+        getDoc,
+        addDoc,
+        collection,
+        serverTimestamp
+    } from "./firebase.js";
+
+
+    /* =================================================
+       DEĞİŞKENLER
+    ================================================= */
+
+    let aktifKullanici = null;
+
+    let isletmeBilgileri = null;
+
+
+    /* =================================================
+       ELEMENTLER
+    ================================================= */
+
+    const loading =
+        document.getElementById("loading");
+
+    const formContainer =
+        document.getElementById("formContainer");
+
+    const message =
+        document.getElementById("message");
+
+    const paketBtn =
+        document.getElementById("paketBtn");
+
+
+    /* =================================================
+       MESAJ
+    ================================================= */
+
+    function mesajGoster(
+        text,
+        type = "error"
+    ) {
+
+        message.textContent = text;
+
+        message.className =
+            "message show " + type;
+
+    }
+
+
+    function mesajTemizle() {
+
+        message.textContent = "";
+
+        message.className =
+            "message";
+
+    }
+
+
+    /* =================================================
+       TELEFON TEMİZLE
+    ================================================= */
+
+    function telefonTemizle(telefon) {
+
+        return String(telefon || "")
+            .replace(/\D/g, "")
+            .slice(0, 11);
+
+    }
+
+
+    /* =================================================
+       OTURUM
+    ================================================= */
+
+    onAuthStateChanged(
+        auth,
+        async function(user) {
+
+            if (!user) {
+
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            aktifKullanici = user;
+
+
+            await isletmeBilgileriniGetir(
+                user.uid
+            );
+
+        }
+    );
+
+
+    /* =================================================
+       İŞLETME BİLGİLERİ
+    ================================================= */
+
+    async function isletmeBilgileriniGetir(uid) {
+
+        try {
+
+            const ref =
+                doc(
+                    db,
+                    "kullanicilar",
+                    uid
+                );
+
+
+            const snap =
+                await getDoc(ref);
+
+
+            if (!snap.exists()) {
+
+                throw new Error(
+                    "İşletme bilgileriniz bulunamadı."
+                );
+
+            }
+
+
+            const data =
+                snap.data();
+
+
+            if (data.tip !== "isletme") {
+
+                alert(
+                    "Bu sayfayı sadece işletmeler kullanabilir."
+                );
+
+                window.location.href =
+                    "kurye.html";
+
+                return;
+
+            }
+
+
+            isletmeBilgileri =
+                data;
+
+
+            document
+                .getElementById("isletmeAdi")
+                .textContent =
+                    data.isletmeAdi ||
+                    "İşletme";
+
+
+            document
+                .getElementById("isletmeAdres")
+                .textContent =
+                    data.adres ||
+                    "Adres belirtilmemiş";
+
+
+            loading.classList.add(
+                "hidden"
+            );
+
+            formContainer.classList.remove(
+                "hidden"
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "İşletme bilgileri hatası:",
+                error
+            );
+
+            loading.textContent =
+                "❌ " +
+                (
+                    error.message ||
+                    "Bilgiler yüklenemedi."
+                );
+
+        }
+
+    }
+
+
+    /* =================================================
+       PAKET OLUŞTUR
+    ================================================= */
+
+    async function paketOlustur() {
+
+        mesajTemizle();
+
+
+        try {
+
+            /* =========================================
+               OTURUM
+            ========================================== */
+
+            if (!aktifKullanici) {
+
+                throw new Error(
+                    "Oturum bulunamadı."
+                );
+
+            }
+
+
+            /* =========================================
+               İŞLETME
+            ========================================== */
+
+            if (!isletmeBilgileri) {
+
+                throw new Error(
+                    "İşletme bilgileriniz yüklenmedi."
+                );
+
+            }
+
+
+            /* =========================================
+               İŞLETME ADRESİ
+            ========================================== */
+
+            const isletmeAdres =
+                String(
+                    isletmeBilgileri.adres || ""
+                ).trim();
+
+
+            if (!isletmeAdres) {
+
+                throw new Error(
+                    "İşletme adresiniz kayıtlı değil."
+                );
+
+            }
+
+
+            /* =========================================
+               MÜŞTERİ
+            ========================================== */
+
+            const musteriAdi =
+                document
+                    .getElementById("musteriAdi")
+                    .value
+                    .trim();
+
+
+            const musteriTelefon =
+                telefonTemizle(
+                    document
+                        .getElementById("musteriTelefon")
+                        .value
+                );
+
+
+            const musteriAdres =
+                document
+                    .getElementById("musteriAdres")
+                    .value
+                    .trim();
+
+
+            /* =========================================
+               PAKET
+            ========================================== */
+
+            const paketAciklama =
+                document
+                    .getElementById("paketAciklama")
+                    .value
+                    .trim();
+
+
+            const paketNotu =
+                document
+                    .getElementById("paketNotu")
+                    .value
+                    .trim();
+
+
+            /* =========================================
+               ÜCRET VE ÖDEME
+            ========================================== */
+
+            const kuryeUcretiInput =
+                document
+                    .getElementById("kuryeUcreti")
+                    .value
+                    .trim();
+
+
+            const siparisTutariInput =
+                document
+                    .getElementById("siparisTutari")
+                    .value
+                    .trim();
+
+
+            const odemeSekli =
+                document
+                    .getElementById("odemeSekli")
+                    .value;
+
+
+            /* =========================================
+               KURYE ÜCRETİ
+               SADECE BU ZORUNLU
+            ========================================== */
+
+            if (!kuryeUcretiInput) {
+
+                throw new Error(
+                    "Kurye ücretini girin."
+                );
+
+            }
+
+
+            const kuryeUcreti =
+                Number(
+                    kuryeUcretiInput
+                );
+
+
+            if (
+                !Number.isFinite(kuryeUcreti) ||
+                kuryeUcreti <= 0
+            ) {
+
+                throw new Error(
+                    "Geçerli bir kurye ücreti girin."
+                );
+
+            }
+
+
+            /* =========================================
+               SİPARİŞ TUTARI
+               OPSİYONEL
+            ========================================== */
+
+            let siparisTutari = null;
+
+
+            if (siparisTutariInput !== "") {
+
+                siparisTutari =
+                    Number(
+                        siparisTutariInput
+                    );
+
+
+                if (
+                    !Number.isFinite(
+                        siparisTutari
+                    ) ||
+                    siparisTutari < 0
+                ) {
+
+                    throw new Error(
+                        "Geçerli bir sipariş tutarı girin."
+                    );
+
+                }
+
+            }
+
+
+            /* =========================================
+               ÖDEME ŞEKLİ
+               OPSİYONEL
+            ========================================== */
+
+            const kayitOdemeSekli =
+                odemeSekli || null;
+
+
+            /* =========================================
+               MÜŞTERİ KONTROLLERİ
+            ========================================== */
+
+            if (!musteriAdi) {
+
+                throw new Error(
+                    "Müşteri adını girin."
+                );
+
+            }
+
+
+            if (
+                musteriTelefon.length !== 11 ||
+                !musteriTelefon.startsWith("05")
+            ) {
+
+                throw new Error(
+                    "Geçerli bir müşteri telefonu girin."
+                );
+
+            }
+
+
+            if (!musteriAdres) {
+
+                throw new Error(
+                    "Teslimat adresini girin."
+                );
+
+            }
+
+
+            /* =========================================
+               BUTON
+            ========================================== */
+
+            paketBtn.disabled = true;
+
+            paketBtn.textContent =
+                "⏳ Paket oluşturuluyor...";
+
+
+            /* =========================================
+               PAKET VERİSİ
+            ========================================== */
+
+            const paket = {
+
+                durum:
+                    "bekliyor",
+
+                durumMetni:
+                    "Kurye bekleniyor",
+
+
+                /* -------------------------
+                   İŞLETME
+                ------------------------- */
+
+                isletmeId:
+                    aktifKullanici.uid,
+
+                isletmeAdi:
+                    isletmeBilgileri.isletmeAdi ||
+                    "İşletme",
+
+                isletmeTelefon:
+                    isletmeBilgileri.telefon ||
+                    "",
+
+                isletmeAdres:
+                    isletmeAdres,
+
+
+                /* -------------------------
+                   MÜŞTERİ
+                ------------------------- */
+
+                musteriAdi:
+                    musteriAdi,
+
+                musteriTelefon:
+                    musteriTelefon,
+
+                musteriAdres:
+                    musteriAdres,
+
+
+                /* -------------------------
+                   PAKET
+                ------------------------- */
+
+                paketAciklama:
+                    paketAciklama ||
+                    "Paket",
+
+                paketNotu:
+                    paketNotu ||
+                    "",
+
+
+                /* -------------------------
+                   ÜCRET
+                ------------------------- */
+
+                kuryeUcreti:
+                    kuryeUcreti,
+
+                siparisTutari:
+                    siparisTutari,
+
+                odemeSekli:
+                    kayitOdemeSekli,
+
+
+                /* -------------------------
+                   KURYE
+                ------------------------- */
+
+                kuryeId:
+                    null,
+
+                kuryeAdi:
+                    "",
+
+                kuryeTelefon:
+                    "",
+
+
+                /* -------------------------
+                   ZAMAN
+                ------------------------- */
+
+                olusturanUid:
+                    aktifKullanici.uid,
+
+                tarih:
+                    serverTimestamp(),
+
+                guncellenme:
+                    serverTimestamp()
+
+            };
+                        /* =========================================
+               FIRESTORE
+            ========================================== */
+
+            const paketRef =
+                await addDoc(
+                    collection(
+                        db,
+                        "paketler"
+                    ),
+                    paket
+                );
+
+
+            console.log(
+                "Paket oluşturuldu:",
+                paketRef.id
+            );
+
+
+            /* =========================================
+               BAŞARILI
+            ========================================== */
+
+            mesajGoster(
+                "✅ Paket oluşturuldu. Kurye bekleniyor.",
+                "success"
+            );
+
+
+            paketBtn.textContent =
+                "✅ Paket Oluşturuldu";
+
+
+            /* =========================================
+               FORM TEMİZLE
+            ========================================== */
+
+            document
+                .getElementById("musteriAdi")
+                .value = "";
+
+
+            document
+                .getElementById("musteriTelefon")
+                .value = "";
+
+
+            document
+                .getElementById("musteriAdres")
+                .value = "";
+
+
+            document
+                .getElementById("paketAciklama")
+                .value = "";
+
+
+            document
+                .getElementById("paketNotu")
+                .value = "";
+
+
+            document
+                .getElementById("kuryeUcreti")
+                .value = "";
+
+
+            document
+                .getElementById("siparisTutari")
+                .value = "";
+
+
+            document
+                .getElementById("odemeSekli")
+                .value = "";
+
+
+            /* =========================================
+               PAKETLER SAYFASI
+            ========================================== */
+
+            setTimeout(
+                function() {
+
+                    window.location.href =
+                        "paketler.html";
+
+                },
+                1000
+            );
+
+        }
+
+
+        catch (error) {
+
+            console.error(
+                "Paket oluşturma hatası:",
+                error
+            );
+
+
+            mesajGoster(
+                "❌ " +
+                (
+                    error.message ||
+                    "Paket oluşturulamadı."
+                ),
+                "error"
+            );
+
+
+            paketBtn.disabled = false;
+
+            paketBtn.textContent =
+                "🚀 Paketi Oluştur";
+
+        }
+
+    }
+
+
+    /* =================================================
+       PAKET OLUŞTUR BUTONU
+    ================================================= */
+
+    paketBtn.addEventListener(
+        "click",
+        paketOlustur
+    );
+
+
+    /* =================================================
+       GERİ
+    ================================================= */
+
+    document
+        .getElementById("geriBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "isletme.html";
+
+            }
+        );
+
+
+    /* =================================================
+       ANA SAYFA
+    ================================================= */
+
+    document
+        .getElementById("anaSayfaBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "isletme.html";
+
+            }
+        );
+
+
+    /* =================================================
+       PAKET OLUŞTUR
+    ================================================= */
+
+    document
+        .getElementById("paketOlusturBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.reload();
+
+            }
+        );
+
+
+    /* =================================================
+       PAKETLER
+    ================================================= */
+
+    document
+        .getElementById("paketlerBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "paketler.html";
+
+            }
+        );
+
+
+    /* =================================================
+       PROFİL
+    ================================================= */
+
+    document
+        .getElementById("profilBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "profil.html";
+
+            }
+        );
+
+</script>
+
+</body>
+</html>

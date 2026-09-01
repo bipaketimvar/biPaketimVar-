@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Paketimvar - İşletme Paneli</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        /* =================================================
+           İŞLETME ANA SAYFA EK STİLLERİ
+        ================================================= */
+
+        .welcome-card {
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #1d4ed8
+            );
+            color: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 24px rgba(
+                37,
+                99,
+                235,
+                .15
+            );
+        }
+
+        .welcome-card .small {
+            font-size: 11px;
+            opacity: .85;
+            margin-bottom: 5px;
+        }
+
+        .welcome-card h2 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .welcome-card p {
+            margin: 7px 0 0;
+            font-size: 11px;
+            opacity: .9;
+            line-height: 1.5;
+        }
+
+
+        /* =================================================
+           HIZLI PAKET BUTONU
+        ================================================= */
+
+        .new-package-card {
+            border: 1px solid #dbeafe;
+            background: #f8fbff;
+        }
+
+        .new-package-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            margin-bottom: 10px;
+        }
+
+
+        /* =================================================
+           İSTATİSTİKLER
+        ================================================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 9px;
+            margin-top: 10px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+            padding: 13px;
+        }
+
+        .stat-icon {
+            font-size: 19px;
+            margin-bottom: 7px;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 10px;
+        }
+
+        .stat-value {
+            color: #111827;
+            font-size: 20px;
+            font-weight: 800;
+            margin-top: 3px;
+        }
+
+
+        /* =================================================
+           SON TESLİMATLAR
+        ================================================= */
+
+        .recent-list {
+            max-height: 310px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+
+        .recent-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .recent-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .recent-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .recent-item:last-child {
+            border-bottom: 0;
+        }
+
+        .recent-icon {
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
+            border-radius: 11px;
+            background: #ecfdf5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+        }
+
+        .recent-content {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .recent-name {
+            color: #111827;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recent-type {
+            color: #6b7280;
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+        .recent-time {
+            color: #9ca3af;
+            font-size: 9px;
+            white-space: nowrap;
+        }
+
+
+        /* =================================================
+           BOŞ DURUM
+        ================================================= */
+
+        .empty-state {
+            text-align: center;
+            padding: 24px 12px;
+        }
+
+        .empty-icon {
+            font-size: 32px;
+            margin-bottom: 7px;
+        }
+
+        .empty-title {
+            color: #111827;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .empty-text {
+            color: #6b7280;
+            font-size: 10px;
+            line-height: 1.5;
+            margin-top: 5px;
+        }
+
+
+        /* =================================================
+           PAKETLER BUTONU
+        ================================================= */
+
+        .secondary-action {
+            margin-top: 8px;
+        }
+
+
+        /* =================================================
+           MASAÜSTÜ
+        ================================================= */
+
+        @media (min-width: 700px) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(4, minmax(0, 1fr));
+            }
+
+            .page {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+
+            .recent-list {
+                max-height: 360px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     ÜST BAR
+===================================================== -->
+
+<header class="topbar">
+
+    <div class="logo">
+        📦 Paketim<span>var</span>
+    </div>
+
+
+    <button
+        class="btn btn-light"
+        style="
+            width:auto;
+            min-height:36px;
+        "
+        onclick="cikisYap()"
+    >
+
+        Çıkış
+
+    </button>
+
+</header>
+
+
+
+<!-- =====================================================
+     ANA İÇERİK
+===================================================== -->
+
+<main class="page">
+
+
+    <!-- =================================================
+         YÜKLENİYOR
+    ================================================== -->
+
+    <div
+        id="loading"
+        class="loading"
+    >
+
+        İşletme bilgileriniz yükleniyor...
+
+    </div>
+
+
+
+    <!-- =================================================
+         PANEL
+    ================================================== -->
+
+    <div
+        id="panel"
+        class="hidden"
+    >
+
+
+        <!-- =============================================
+             KARŞILAMA
+        ============================================== -->
+
+        <div class="welcome-card">
+
+            <div class="small">
+                İşletme Paneli
+            </div>
+
+
+            <h2 id="hosgeldin">
+                Hoş geldiniz
+            </h2>
+
+
+            <p>
+                Paketlerinizi buradan hızlıca
+                oluşturabilir ve teslimat durumlarını
+                takip edebilirsiniz.
+            </p>
+
+        </div>
+
+
+
+
+
+<!-- =================================================
+     YENİ TESLİMAT / TANITIM
+================================================== -->
+
+<div class="card new-package-card">
+
+    <div
+        class="anasayfa-banner"
+        onclick="paketOlustur()"
+    >
+
+        <img
+            src="anasayfa.png"
+            alt="Paketimvar ile güvenli ve kolay teslimat"
+        >
+
+        <div class="anasayfa-banner-overlay">
+
+            <div class="anasayfa-banner-title">
+            
+            </div>
+
+            <div class="anasayfa-banner-text">
+                
+            </div>
+
+            <button
+                type="button"
+                class="anasayfa-banner-button"
+                onclick="event.stopPropagation(); paketOlustur()"
+            >
+                ➕ Paket Oluştur
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <!-- =============================================
+             İSTATİSTİKLER
+        ============================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <h3>
+                    📊 Genel Durum
+                </h3>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📦
+                    </div>
+
+                    <div class="stat-label">
+                        Toplam Paket
+                    </div>
+
+                    <div
+                        id="toplamPaket"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ⏳
+                    </div>
+
+                    <div class="stat-label">
+                        Bekleyen
+                    </div>
+
+                    <div
+                        id="bekleyenPaket"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        🚚
+                    </div>
+
+                    <div class="stat-label">
+                        Dağıtımda
+                    </div>
+
+                    <div
+                        id="dagitimPaket"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ✅
+                    </div>
+
+                    <div class="stat-label">
+                        Teslim Edildi
+                    </div>
+
+                    <div
+                        id="teslimPaket"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             PAKETLER
+        ============================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <h3>
+                    📦 Paket Yönetimi
+                </h3>
+
+            </div>
+
+
+            <p
+                style="
+                    margin:0 0 11px;
+                    color:#6b7280;
+                    font-size:11px;
+                    line-height:1.5;
+                "
+            >
+
+                Aktif ve geçmiş tüm paketlerinizi
+                görüntüleyin.
+
+            </p>
+
+
+            <button
+                class="btn btn-light"
+                onclick="paketlerim()"
+            >
+
+                📦 Tüm Paketleri Gör
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =============================================
+             SON TESLİMATLAR
+        ============================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <h3>
+                    ✅ Son Teslimatlar
+                </h3>
+
+            </div>
+
+
+            <div
+                id="recentList"
+                class="recent-list"
+            >
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ⏳
+                    </div>
+
+                    <div class="empty-title">
+                        Teslimatlar yükleniyor...
+                    </div>
+
+                    <div class="empty-text">
+                        Son teslimatlar getiriliyor.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     ALT MENÜ
+===================================================== -->
+
+<nav class="bottom-nav">
+
+
+    <button
+        class="nav-item active"
+        onclick="anaSayfa()"
+    >
+
+        <span class="icon">
+            🏠
+        </span>
+
+        Ana Sayfa
+
+    </button>
+
+
+    <button
+        class="nav-item"
+        onclick="paketOlustur()"
+    >
+
+        <span class="icon">
+            ➕
+        </span>
+
+        Paket Oluştur
+
+    </button>
+
+
+    <button
+        class="nav-item"
+        onclick="paketlerim()"
+    >
+
+        <span class="icon">
+            📦
+        </span>
+
+        Paketler
+
+    </button>
+
+
+    <button
+        class="nav-item"
+        onclick="profil()"
+    >
+
+        <span class="icon">
+            👤
+        </span>
+
+        Profil
+
+    </button>
+
+
+</nav>
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
+
+<script type="module">
+
+    import {
+        auth,
+        db,
+        onAuthStateChanged,
+        doc,
+        getDoc,
+        collection,
+        query,
+        where,
+        onSnapshot,
+        signOut
+    } from "./firebase.js";
+
+
+    /* =================================================
+       ELEMENTLER
+    ================================================= */
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+    const panel =
+        document.getElementById(
+            "panel"
+        );
+
+    const hosgeldin =
+        document.getElementById(
+            "hosgeldin"
+        );
+
+    const toplamPaket =
+        document.getElementById(
+            "toplamPaket"
+        );
+
+    const bekleyenPaket =
+        document.getElementById(
+            "bekleyenPaket"
+        );
+
+    const dagitimPaket =
+        document.getElementById(
+            "dagitimPaket"
+        );
+
+    const teslimPaket =
+        document.getElementById(
+            "teslimPaket"
+        );
+
+    const recentList =
+        document.getElementById(
+            "recentList"
+        );
+
+
+    /* =================================================
+       DEĞİŞKENLER
+    ================================================= */
+
+    let aktifKullanici = null;
+
+    let tumPaketler = [];
+
+    let paketUnsubscribe = null;
+
+
+    /* =================================================
+       GİRİŞ KONTROLÜ
+    ================================================= */
+
+    onAuthStateChanged(
+        auth,
+        async (user) => {
+
+            if (!user) {
+
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            aktifKullanici =
+                user;
+
+
+            await isletmeBilgileriniYukle(
+                user.uid
+            );
+
+
+            paketleriDinle(
+                user.uid
+            );
+
+        }
+    );
+
+
+    /* =================================================
+       İŞLETME BİLGİLERİ
+       SADECE KARŞILAMA İÇİN
+    ================================================= */
+
+    async function isletmeBilgileriniYukle(
+        uid
+    ) {
+
+        try {
+
+            const ref =
+                doc(
+                    db,
+                    "kullanicilar",
+                    uid
+                );
+
+
+            const snap =
+                await getDoc(
+                    ref
+                );
+
+
+            if (!snap.exists()) {
+
+                alert(
+                    "İşletme hesabınız bulunamadı."
+                );
+
+
+                await signOut(
+                    auth
+                );
+
+
+                window.location.href =
+                    "index.html";
+
+
+                return;
+
+            }
+
+
+            const data =
+                snap.data();
+
+
+            /* =========================================
+               HESAP TÜRÜ
+            ========================================== */
+
+            if (
+                data.tip !==
+                "isletme"
+            ) {
+
+                alert(
+                    "Bu alan sadece işletmeler içindir."
+                );
+
+
+                window.location.href =
+                    "kurye.html";
+
+
+                return;
+
+            }
+
+
+            /* =========================================
+               KARŞILAMA
+            ========================================== */
+
+            const ad =
+                data.isletmeAdi ||
+                "İşletmem";
+
+
+            hosgeldin.textContent =
+                "Merhaba, " + ad;
+
+
+            /* =========================================
+               EKRANI AÇ
+            ========================================== */
+
+            loading.classList.add(
+                "hidden"
+            );
+
+
+            panel.classList.remove(
+                "hidden"
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "İşletme bilgileri:",
+                error
+            );
+
+
+            loading.textContent =
+                "❌ Bilgiler yüklenemedi.";
+
+        }
+
+    }
+
+
+    /* =================================================
+       PAKETLERİ FIREBASE'DEN DİNLE
+    ================================================= */
+
+    function paketleriDinle(
+        uid
+    ) {
+
+        try {
+
+            const paketlerRef =
+                collection(
+                    db,
+                    "paketler"
+                );
+
+
+            /*
+             * İşletmeye ait bütün paketleri
+             * getiriyoruz.
+             *
+             * Sıralamayı JavaScript tarafında
+             * yaptığımız için Firestore index
+             * gerektirmez.
+             */
+
+            const q =
+                query(
+                    paketlerRef,
+                    where(
+                        "isletmeId",
+                        "==",
+                        uid
+                    )
+                );
+
+
+            if (
+                paketUnsubscribe
+            ) {
+
+                paketUnsubscribe();
+
+            }
+
+
+            paketUnsubscribe =
+                onSnapshot(
+
+                    q,
+
+                    (snapshot) => {
+
+                        tumPaketler = [];
+
+
+                        snapshot.forEach(
+                            (docSnap) => {
+
+                                tumPaketler.push({
+
+                                    id:
+                                        docSnap.id,
+
+                                    ...docSnap.data()
+
+                                });
+
+                            }
+                        );
+
+
+                        paketleriSirala();
+
+
+                        istatistikleriGuncelle();
+
+
+                        sonTeslimatlariGoster();
+
+                    },
+
+
+                    (error) => {
+
+                        console.error(
+                            "Paket dinleme hatası:",
+                            error
+                        );
+
+
+                        recentList.innerHTML = `
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    ⚠️
+                                </div>
+
+                                <div class="empty-title">
+                                    Paketler yüklenemedi
+                                </div>
+
+                                <div class="empty-text">
+                                    Firebase yetkilerini kontrol edin.
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+
+                );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Paket bağlantı hatası:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =================================================
+       PAKETLERİ SIRALA
+    ================================================= */
+
+    function paketleriSirala() {
+
+        tumPaketler.sort(
+            (a, b) => {
+
+                return (
+                    paketZamani(b) -
+                    paketZamani(a)
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =================================================
+       PAKET ZAMANI
+    ================================================= */
+
+    function paketZamani(
+        paket
+    ) {
+
+        const alanlar = [
+
+            "teslimTarihi",
+            "teslimZamani",
+            "teslimEdilmeTarihi",
+            "updatedAt",
+            "tarih",
+            "olusturmaTarihi",
+            "createdAt"
+
+        ];
+
+
+        for (
+            const alan of alanlar
+        ) {
+
+            const deger =
+                paket[alan];
+
+
+            if (!deger) {
+
+                continue;
+
+            }
+
+
+            if (
+                typeof deger.toDate ===
+                "function"
+            ) {
+
+                return deger
+                    .toDate()
+                    .getTime();
+
+            }
+
+
+            if (
+                deger instanceof Date
+            ) {
+
+                return deger.getTime();
+
+            }
+
+
+            const tarih =
+                new Date(
+                    deger
+                );
+
+
+            if (
+                !isNaN(
+                    tarih.getTime()
+                )
+            ) {
+
+                return tarih.getTime();
+
+            }
+
+        }
+
+
+        return 0;
+
+    }
+
+
+    /* =================================================
+       DURUM NORMALLEŞTİR
+    ================================================= */
+
+    function durum(
+        paket
+    ) {
+
+        return String(
+            paket.durum ||
+            ""
+        )
+        .toLocaleLowerCase(
+            "tr-TR"
+        );
+
+    }
+
+
+    /* =================================================
+       BEKLEYEN DURUMLAR
+    ================================================= */
+
+    function bekleyenMi(
+        paket
+    ) {
+
+        const d =
+            durum(
+                paket
+            );
+
+
+        return (
+
+            d === "bekliyor" ||
+
+            d === "bekleyen" ||
+
+            d === "kurye_bekleniyor" ||
+
+            d === "kurye_bekliyor"
+
+        );
+
+    }
+
+
+    /* =================================================
+       DAĞITIMDA DURUMLAR
+    ================================================= */
+
+    function dagitimdaMi(
+        paket
+    ) {
+
+        const d =
+            durum(
+                paket
+            );
+
+
+        return (
+
+            d === "kurye_atandi" ||
+
+            d === "kurye atandi" ||
+
+            d === "paket_alindi" ||
+
+            d === "paket alindi" ||
+
+            d === "teslimata_cikti" ||
+
+            d === "teslimata cikti"
+
+        );
+
+    }
+
+
+    /* =================================================
+       TESLİM EDİLDİ Mİ?
+    ================================================= */
+
+    function teslimEdildiMi(
+        paket
+    ) {
+
+        const d =
+            durum(
+                paket
+            );
+
+
+        return (
+
+            d === "teslim_edildi" ||
+
+            d === "teslim edildi" ||
+
+            d === "teslimedildi"
+
+        );
+
+    }
+        /* =================================================
+       İSTATİSTİKLERİ GÜNCELLE
+    ================================================= */
+
+    function istatistikleriGuncelle() {
+
+        const toplam =
+            tumPaketler.length;
+
+
+        const bekleyen =
+            tumPaketler.filter(
+                paket =>
+                    bekleyenMi(
+                        paket
+                    )
+            ).length;
+
+
+        const dagitim =
+            tumPaketler.filter(
+                paket =>
+                    dagitimdaMi(
+                        paket
+                    )
+            ).length;
+
+
+        const teslim =
+            tumPaketler.filter(
+                paket =>
+                    teslimEdildiMi(
+                        paket
+                    )
+            ).length;
+
+
+        toplamPaket.textContent =
+            toplam;
+
+
+        bekleyenPaket.textContent =
+            bekleyen;
+
+
+        dagitimPaket.textContent =
+            dagitim;
+
+
+        teslimPaket.textContent =
+            teslim;
+
+    }
+
+
+    /* =================================================
+       SON TESLİMATLARI GÖSTER
+    ================================================= */
+
+    function sonTeslimatlariGoster() {
+
+        const teslimatlar =
+            tumPaketler
+                .filter(
+                    paket =>
+                        teslimEdildiMi(
+                            paket
+                        )
+                )
+                .sort(
+                    (a, b) =>
+                        paketZamani(b) -
+                        paketZamani(a)
+                )
+                .slice(
+                    0,
+                    10
+                );
+
+
+        if (
+            teslimatlar.length === 0
+        ) {
+
+            recentList.innerHTML = `
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        📦
+                    </div>
+
+                    <div class="empty-title">
+                        Henüz teslim edilen paket yok
+                    </div>
+
+                    <div class="empty-text">
+                        Teslim edilen paketler burada
+                        görüntülenecek.
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        recentList.innerHTML =
+            teslimatlar
+                .map(
+                    paket =>
+                        sonTeslimatKarti(
+                            paket
+                        )
+                )
+                .join("");
+
+    }
+
+
+    /* =================================================
+       SON TESLİMAT KARTI
+    ================================================= */
+
+    function sonTeslimatKarti(
+        paket
+    ) {
+
+        const musteri =
+            musteriAdi(
+                paket
+            );
+
+
+        const tur =
+            paket.siparisTuru ||
+            paket.siparisTürü ||
+            paket.tur ||
+            paket.tip ||
+            "Teslimat";
+
+
+        const tarih =
+            tarihFormatla(
+                paket
+            );
+
+
+        return `
+
+            <div class="recent-item">
+
+                <div class="recent-icon">
+                    ✅
+                </div>
+
+
+                <div class="recent-content">
+
+                    <div class="recent-name">
+
+                        ${escapeHtml(
+                            musteri
+                        )}
+
+                    </div>
+
+
+                    <div class="recent-type">
+
+                        ${escapeHtml(
+                            tur
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="recent-time">
+
+                    ${escapeHtml(
+                        tarih
+                    )}
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =================================================
+       MÜŞTERİ ADI
+    ================================================= */
+
+    function musteriAdi(
+        paket
+    ) {
+
+        if (
+            paket.musteriAdSoyad
+        ) {
+
+            return paket.musteriAdSoyad;
+
+        }
+
+
+        if (
+            paket.musteriAdi
+        ) {
+
+            return paket.musteriAdi;
+
+        }
+
+
+        const ad =
+            paket.musteriAd ||
+            paket.ad ||
+            "";
+
+
+        const soyad =
+            paket.musteriSoyad ||
+            paket.soyad ||
+            "";
+
+
+        const sonuc =
+            (
+                String(ad) +
+                " " +
+                String(soyad)
+            ).trim();
+
+
+        return (
+            sonuc ||
+            "Müşteri bilgisi yok"
+        );
+
+    }
+
+
+    /* =================================================
+       TARİH FORMATLA
+    ================================================= */
+
+    function tarihFormatla(
+        paket
+    ) {
+
+        const zaman =
+            paketZamani(
+                paket
+            );
+
+
+        if (!zaman) {
+
+            return "Tarih yok";
+
+        }
+
+
+        const tarih =
+            new Date(
+                zaman
+            );
+
+
+        return (
+            tarih.toLocaleDateString(
+                "tr-TR",
+                {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                }
+            )
+            +
+            " "
+            +
+            tarih.toLocaleTimeString(
+                "tr-TR",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            )
+        );
+
+    }
+
+
+    /* =================================================
+       HTML GÜVENLİĞİ
+    ================================================= */
+
+    function escapeHtml(
+        value
+    ) {
+
+        return String(
+            value ?? ""
+        )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+    }
+
+
+    /* =================================================
+       YENİ PAKET
+    ================================================= */
+
+    window.paketOlustur =
+        function() {
+
+            window.location.href =
+                "paket-ekle.html";
+
+        };
+
+
+    /* =================================================
+       PAKETLER
+    ================================================= */
+
+    window.paketlerim =
+        function() {
+
+            window.location.href =
+                "paketler.html";
+
+        };
+
+
+    /* =================================================
+       ANA SAYFA
+    ================================================= */
+
+    window.anaSayfa =
+        function() {
+
+            window.location.href =
+                "isletme.html";
+
+        };
+
+
+    /* =================================================
+       PROFİL
+    ================================================= */
+
+    window.profil =
+        function() {
+
+            window.location.href =
+                "profil.html";
+
+        };
+
+
+    /* =================================================
+       ÇIKIŞ
+    ================================================= */
+
+    window.cikisYap =
+        async function() {
+
+            try {
+
+                if (
+                    paketUnsubscribe
+                ) {
+
+                    paketUnsubscribe();
+
+                }
+
+
+                await signOut(
+                    auth
+                );
+
+
+                window.location.href =
+                    "index.html";
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Çıkış hatası:",
+                    error
+                );
+
+
+                alert(
+                    "Çıkış yapılamadı."
+                );
+
+            }
+
+        };
+
+
+</script>
+
+
+</body>
+
+</html>
