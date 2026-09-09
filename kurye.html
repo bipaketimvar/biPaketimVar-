@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paketimvar - Kurye Paneli</title>
+    
+    <!-- Tailwind CSS ve FontAwesome CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --success-bg: #f0fdf4;
+            --success-text: #16a34a;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #f1f5f9;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding-bottom: 84px;
+        }
+
+        .package-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(15,23,42,.03);
+        }
+
+        .package-card.new-package {
+            animation: kartSalla .55s ease-in-out infinite alternate;
+        }
+
+        @keyframes kartSalla {
+            from { transform: translateX(-2px); }
+            to { transform: translateX(2px); }
+        }
+
+        .package-card.aktif-paket {
+            border: 2px solid var(--primary);
+        }
+
+        .business-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+        }
+
+        .business-label {
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .business-name {
+            color: var(--text-main);
+            font-size: 12px;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .fee-box {
+            text-align: right;
+        }
+
+        .fee-label {
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .fee-value {
+            color: var(--success-text);
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .package-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .status-bekliyor { background: #fef3c7; color: #92400e; }
+        .status-atandi { background: #dbeafe; color: #1d4ed8; }
+        .status-alindi { background: #e0e7ff; color: #4338ca; }
+        .status-yolda { background: #ede9fe; color: #6d28d9; }
+
+        .route-box {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            background: #fff;
+        }
+
+        .route-row {
+            display: flex;
+            gap: 9px;
+            padding: 9px;
+        }
+
+        .route-row + .route-row {
+            border-top: 1px solid var(--border-color);
+        }
+
+        .route-icon {
+            width: 26px;
+            height: 26px;
+            flex: 0 0 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .route-label {
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .route-address {
+            color: #334155;
+            font-size: 11px;
+            line-height: 1.4;
+            margin-top: 2px;
+        }
+
+        .package-actions { display: flex; gap: 7px; margin-top: 8px; }
+        .package-action { flex: 1; min-height: 38px; border: 0; border-radius: 10px; font-size: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        
+        .accept-btn, .step-btn { width: 100%; min-height: 42px; margin-top: 8px; border: 0; border-radius: 10px; color: #fff; font-size: 11px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .accept-btn { background: var(--success-text); }
+        .step-btn { background: var(--primary); }
+        
+        .map-btn { background: var(--primary-light); color: var(--primary); }
+        .call-btn { background: #f0fdf4; color: var(--success-text); }
+        .detail-btn { background: #f1f5f9; color: #475569; }
+
+        .empty-box { text-align: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px 18px; }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 4px;
+            z-index: 1000;
+        }
+        .nav-item {
+            flex: 1;
+            background: none; border: none;
+            display: flex; flex-direction: column; align-items: center;
+            font-size: 10px; font-weight: 700; color: var(--text-muted);
+            cursor: pointer; gap: 2px; padding: 4px;
+            white-space: nowrap;
+        }
+        .nav-item.active { color: var(--primary); }
+        .nav-item .icon { font-size: 18px; }
+
+        .message {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .message.show { display: block; }
+        .message.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .message.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    </style>
+</head>
+
+<body>
+    <!-- ================= NİZAMİ ÜST BAR (HEADER) ================= -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 flex justify-between items-center sticky top-0 z-50 h-14 shadow-sm">
+        <!-- LOGO -->
+        <a href="kurye.html" class="flex items-center h-10 w-32 overflow-hidden">
+            <img src="logo.png" alt="biPaketimVar" class="max-h-full w-auto object-contain mix-blend-multiply origin-left">
+        </a>
+
+        <!-- SAĞ BUTONLAR -->
+        <div class="flex items-center gap-2">
+            <!-- BİLDİRİM BUTONU -->
+            <button id="bildirimBtn" type="button" class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 transition active:scale-95">
+                <i class="fa-solid fa-bell text-xs"></i>
+            </button>
+
+            <!-- ÇIKIŞ BUTONU -->
+            <button id="cikisBtn" type="button" class="flex items-center gap-1.5 bg-red-50 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold border border-red-100 transition active:scale-95">
+                <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                <span>Çıkış</span>
+            </button>
+        </div>
+    </header>
+
+    <main style="padding:16px; max-width:480px; margin:0 auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div>
+                <h2 id="welcomeText" style="margin:0; font-size:17px; font-weight:800; color:var(--text-main);">Merhaba</h2>
+                <div style="color:var(--text-muted); font-size:11px; margin-top:2px;">Aktif ve Müsait Paketler</div>
+            </div>
+            <div style="background:var(--primary-light); color:var(--primary); padding:6px 10px; border-radius:10px; font-size:11px; font-weight:800;">
+                📦 <span id="poolCount">0</span> Havuzda
+            </div>
+        </div>
+
+        <div id="newPackageAlert" style="display:none; background:var(--success-text); color:#fff; border-radius:12px; padding:10px; margin-bottom:12px; text-align:center; font-size:12px; font-weight:800;">
+            🔔 YENİ PAKET EKLENDİ!
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div id="packagesList">
+            <div class="empty-box">
+                <div style="font-size:32px;">⏳</div>
+                <div style="font-size:13px; font-weight:800; margin-top:8px;">Paketler yükleniyor</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Bekleyen paketler kontrol ediliyor...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Alt Navigasyon -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" id="homeBtn">
+            <span class="icon">🏠</span> Ana Sayfa
+        </button>
+        <button class="nav-item" id="historyBtn">
+            <span class="icon">📜</span> Geçmiş
+        </button>
+        <button class="nav-item" id="earningsBtn">
+            <span class="icon">💰</span> Kazanç
+        </button>
+        <button class="nav-item" id="profileBtn">
+            <span class="icon">👤</span> Profil
+        </button>
+    </nav>
+
+    <!-- DETAY MODALI -->
+    <div id="detailModal" style="position:fixed; inset:0; z-index:9999; display:none; align-items:flex-end; justify-content:center; padding:12px; background:rgba(15,23,42,.48);">
+        <div style="width:100%; max-width:460px; max-height:88vh; overflow-y:auto; background:#fff; border-radius:18px; padding:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0; font-size:15px; font-weight:800;">📦 Paket Detayı</h3>
+                <button id="closeModalBtn" style="border:none; background:#f1f5f9; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">✕ Kapat</button>
+            </div>
+            <div id="modalContent" style="font-size:11px; color:#334155; line-height:1.6;">
+                Detaylar yükleniyor...
+            </div>
+        </div>
+    </div>
+    <!-- ================= JAVASCRIPT KODLARI ================= -->
+    <script type="module">
+        import {
+            auth,
+            db,
+            onAuthStateChanged,
+            collection,
+            onSnapshot,
+            doc,
+            getDoc,
+            updateDoc,
+            serverTimestamp,
+            signOut
+        } from "./firebase.js";
+
+        let aktifKullanici = null;
+        let tumPaketler = [];
+        let unsubscribe = null;
+        let sesAcik = true;
+
+        const welcomeText = document.getElementById("welcomeText");
+        const poolCount = document.getElementById("poolCount");
+        const packagesList = document.getElementById("packagesList");
+        const message = document.getElementById("message");
+        const newPackageAlert = document.getElementById("newPackageAlert");
+        const detailModal = document.getElementById("detailModal");
+        const modalContent = document.getElementById("modalContent");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+
+        // Güvenli Bildirim ve Çıkış Dinleyicileri
+        document.addEventListener("DOMContentLoaded", () => {
+            const cikisBtn = document.getElementById('cikisBtn');
+            const bildirimBtn = document.getElementById('bildirimBtn');
+
+            if (cikisBtn) {
+                cikisBtn.addEventListener('click', async () => {
+                    if (unsubscribe) unsubscribe();
+                    await signOut(auth);
+                    window.location.href = "index.html";
+                });
+            }
+
+            if (bildirimBtn) {
+                bildirimBtn.addEventListener('click', () => {
+                    alert("Henüz yeni bildiriminiz bulunmuyor.");
+                });
+            }
+        });
+
+        function mesajGoster(text, type = "error") {
+            if (!message) return;
+            message.textContent = text;
+            message.className = "message show " + type;
+            setTimeout(() => { message.className = "message"; }, 3500);
+        }
+
+        onAuthStateChanged(auth, async function(user) {
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            aktifKullanici = user;
+            await kuryeBilgisiniGetir(user.uid);
+            paketleriDinle();
+        });
+
+        async function kuryeBilgisiniGetir(uid) {
+            try {
+                const ref = doc(db, "kullanicilar", uid);
+                const snap = await getDoc(ref);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    const ad = data.adSoyad || data.kuryeAdi || "Kurye";
+                    welcomeText.textContent = "Merhaba, " + ad;
+                }
+            } catch (e) {
+                console.error("Kurye bilgi hatası:", e);
+            }
+        }
+
+        function paketleriDinle() {
+            if (unsubscribe) unsubscribe();
+
+            const paketRef = collection(db, "paketler");
+            unsubscribe = onSnapshot(paketRef, function(snapshot) {
+                let eskiUzunluk = tumPaketler.length;
+                tumPaketler = [];
+
+                snapshot.forEach(function(item) {
+                    const d = item.data();
+                    const durum = d.durum || "bekliyor";
+
+                    if (durum === "teslim_edildi" || durum === "iptal") return;
+
+                    tumPaketler.push({
+                        id: item.id,
+                        ...d
+                    });
+                });
+
+                if (tumPaketler.length > eskiUzunluk && eskiUzunluk > 0 && sesAcik) {
+                    newPackageAlert.style.display = "block";
+                    setTimeout(() => { newPackageAlert.style.display = "none"; }, 4000);
+                }
+
+                paketleriGoster();
+            }, function(error) {
+                console.error("Paket dinleme hatası:", error);
+                packagesList.innerHTML = `<div class="empty-box"><div style="font-size:32px;">⚠️</div><div style="font-size:13px; font-weight:800; margin-top:8px;">Bağlantı Hatası</div><div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Paketler yüklenemedi.</div></div>`;
+            });
+        }
+
+        function paketleriGoster() {
+            const filtrelenmis = tumPaketler.filter(p => {
+                const d = p.durum || "bekliyor";
+                const havuzdaMi = (d === "bekliyor" || d === "bekleyen") && !p.kuryeId;
+                const benimAktifPaketim = (p.kuryeId === aktifKullanici.uid && d !== "teslim_edildi");
+                return havuzdaMi || benimAktifPaketim;
+            });
+
+            poolCount.textContent = filtrelenmis.filter(p => {
+                const d = p.durum || "bekliyor";
+                return (d === "bekliyor" || d === "bekleyen") && !p.kuryeId;
+            }).length;
+
+            if (filtrelenmis.length === 0) {
+                packagesList.innerHTML = `
+                    <div class="empty-box">
+                        <div style="font-size:32px;">📭</div>
+                        <div style="font-size:13px; font-weight:800; margin-top:8px;">Şuan müsait paket yok</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Yeni paketler eklendiğinde burada görünecek.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            packagesList.innerHTML = filtrelenmis.map(paket => kuryePaketKarti(paket)).join("");
+            butonlariBagla(filtrelenmis);
+        }
+
+        function kuryePaketKarti(paket) {
+            const durum = paket.durum || "bekliyor";
+            const benimPaketim = (paket.kuryeId === aktifKullanici.uid);
+            const paketAciklama = paket.paketAciklama || "Standart Paket";
+            const isletmeAdi = paket.isletmeAdi || "İşletme";
+            const isletmeAdres = paket.isletmeAdres || "-";
+            const musteriAdi = paket.musteriAdi || "Müşteri";
+            const musteriTelefon = paket.musteriTelefon || "";
+            const musteriAdres = paket.musteriAdres || "-";
+            const ucret = paket.kuryeUcreti || paket.ucret || "50 ₺";
+
+            let durumMetni = "Bekliyor (Havuzda)";
+            let durumClass = "status-bekliyor";
+            let cardClass = "";
+
+            if (durum === "kurye_atandi") {
+                durumMetni = "Kurye Atandı (Alım Bekleniyor)";
+                durumClass = "status-atandi";
+                cardClass = "aktif-paket";
+            } else if (durum === "paket_alindi") {
+                durumMetni = "Paket Alındı (Yolda)";
+                durumClass = "status-alindi";
+                cardClass = "aktif-paket";
+            } else if (durum === "teslimata_cikti") {
+                durumMetni = "Teslimata Çıkıldı";
+                durumClass = "status-yolda";
+                cardClass = "aktif-paket";
+            }
+
+            return `
+                <div class="package-card ${cardClass}" data-id="${paket.id}">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                        <div>
+                            <div style="font-size:13px; font-weight:800; color:var(--text-main);">📦 ${escapeHtml(paketAciklama)}</div>
+                            <span class="package-status ${durumClass}">${durumMetni}</span>
+                        </div>
+                        <div class="fee-box">
+                            <div class="fee-label">KURYE ÜCRETİ</div>
+                            <div class="fee-value">${escapeHtml(ucret)}</div>
+                        </div>
+                    </div>
+
+                    <div class="business-box">
+                        <div>🏪</div>
+                        <div style="flex:1;">
+                            <div class="business-label">İŞLETME</div>
+                            <div class="business-name">${escapeHtml(isletmeAdi)}</div>
+                        </div>
+                    </div>
+
+                    <div class="route-box">
+                        <div class="route-row">
+                            <div class="route-icon">🏪</div>
+                            <div style="flex:1;">
+                                <div class="route-label">ALIŞ ADRESİ</div>
+                                <div class="route-address">${escapeHtml(isletmeAdres)}</div>
+                            </div>
+                        </div>
+                        <div class="route-row">
+                            <div class="route-icon">📍</div>
+                            <div style="flex:1;">
+                                <div class="route-label">TESLİMAT ADRESİ (${escapeHtml(musteriAdi)})</div>
+                                <div class="route-address">${escapeHtml(musteriAdres)}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${!benimPaketim ? `
+                        <button class="accept-btn" data-action="accept" data-id="${paket.id}">
+                            🚀 Paketi Kabul Et ve Üstlen
+                        </button>
+                    ` : `
+                        ${durum === "kurye_atandi" ? `
+                            <button class="step-btn" data-action="alindi" data-id="${paket.id}">
+                                📦 İşletmeden Paketi Aldım
+                            </button>
+                        ` : ""}
+                        ${durum === "paket_alindi" || durum === "teslimata_cikti" ? `
+                            <button class="step-btn" style="background:var(--success-text);" data-action="teslim" data-id="${paket.id}">
+                                ✅ Paketi Müşteriye Teslim Et
+                            </button>
+                        ` : ""}
+                        <div class="package-actions">
+                            <button class="package-action map-btn" data-action="map" data-adres="${escapeAttr(musteriAdres)}">
+                                🗺️ Haritada Aç
+                            </button>
+                            ${musteriTelefon ? `
+                                <button class="package-action call-btn" data-action="call" data-tel="${escapeAttr(musteriTelefon)}">
+                                    📞 Ara
+                                </button>
+                            ` : ""}
+                            <button class="package-action detail-btn" data-action="detail" data-id="${paket.id}">
+                                🔍 Detay
+                            </button>
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        function butonlariBagla(liste) {
+            liste.forEach(paket => {
+                const kart = document.querySelector(`[data-id="${paket.id}"]`);
+                if (!kart) return;
+
+                const acceptBtn = kart.querySelector('[data-action="accept"]');
+                if (acceptBtn) {
+                    acceptBtn.onclick = async () => {
+                        try {
+                            await updateDoc(doc(db, "paketler", paket.id), {
+                                kuryeId: aktifKullanici.uid,
+                                durum: "kurye_atandi",
+                                guncellenme: serverTimestamp()
+                            });
+                            mesajGoster("Paket başarıyla üstlenildi!", "success");
+                        } catch (e) {
+                            mesajGoster("Paket kabul edilemedi.");
+                        }
+                    };
+                }
+
+                const alindiBtn = kart.querySelector('[data-action="alindi"]');
+                if (alindiBtn) {
+                    alindiBtn.onclick = async () => {
+                        try {
+                            await updateDoc(doc(db, "paketler", paket.id), {
+                                durum: "paket_alindi",
+                                guncellenme: serverTimestamp()
+                            });
+                            mesajGoster("Paket alındı olarak işaretlendi.", "success");
+                        } catch (e) {
+                            mesajGoster("Güncellenemedi.");
+                        }
+                    };
+                }
+
+                const teslimBtn = kart.querySelector('[data-action="teslim"]');
+                if (teslimBtn) {
+                    teslimBtn.onclick = async () => {
+                        try {
+                            await updateDoc(doc(db, "paketler", paket.id), {
+                                durum: "teslim_edildi",
+                                teslimTarihi: serverTimestamp(),
+                                guncellenme: serverTimestamp()
+                            });
+                            mesajGoster("Tebrikler! Paket teslim edildi.", "success");
+                        } catch (e) {
+                            mesajGoster("Teslimat onaylanamadı.");
+                        }
+                    };
+                }
+
+                const mapBtn = kart.querySelector('[data-action="map"]');
+                if (mapBtn) {
+                    mapBtn.onclick = () => {
+                        const adres = mapBtn.getAttribute("data-adres");
+                        window.location.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(adres);
+                    };
+                }
+
+                const callBtn = kart.querySelector('[data-action="call"]');
+                if (callBtn) {
+                    callBtn.onclick = () => {
+                        window.location.href = "tel:" + callBtn.getAttribute("data-tel");
+                    };
+                }
+
+                const detailBtn = kart.querySelector('[data-action="detail"]');
+                if (detailBtn) {
+                    detailBtn.onclick = () => {
+                        modalContent.innerHTML = `
+                            <p><strong>Paket ID:</strong> ${paket.id}</p>
+                            <p><strong>Açıklama:</strong> ${escapeHtml(paket.paketAciklama || "-")}</p>
+                            <p><strong>İşletme:</strong> ${escapeHtml(paket.isletmeAdi || "-")}</p>
+                            <p><strong>İşletme Adres:</strong> ${escapeHtml(paket.isletmeAdres || "-")}</p>
+                            <p><strong>Müşteri:</strong> ${escapeHtml(paket.musteriAdi || "-")}</p>
+                            <p><strong>Müşteri Tel:</strong> ${escapeHtml(paket.musteriTelefon || "-")}</p>
+                            <p><strong>Müşteri Adres:</strong> ${escapeHtml(paket.musteriAdres || "-")}</p>
+                        `;
+                        detailModal.style.display = "flex";
+                    };
+                }
+            });
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.onclick = () => detailModal.style.display = "none";
+        }
+
+        // Alt Navigasyon Yönlendirmeleri
+        const homeBtn = document.getElementById("homeBtn");
+        const historyBtn = document.getElementById("historyBtn");
+        const earningsBtn = document.getElementById("earningsBtn");
+        const profileBtn = document.getElementById("profileBtn");
+
+        if (homeBtn) homeBtn.onclick = () => window.location.href = "kurye.html";
+        if (historyBtn) historyBtn.onclick = () => window.location.href = "gecmis.html";
+        if (earningsBtn) earningsBtn.onclick = () => window.location.href = "kazanc.html";
+        if (profileBtn) profileBtn.onclick = () => window.location.href = "profil.html";
+
+        function escapeHtml(value) {
+            return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+        function escapeAttr(value) { return escapeHtml(value); }
+    </script>
+</body>
+</html>

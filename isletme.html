@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paketimvar - İşletme Paneli</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between pb-20">
+
+    <!-- ÜST BAR -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-2 flex justify-between items-center sticky top-0 z-50 h-16 shadow-sm">
+        <a href="isletme.html" class="flex items-center h-full overflow-visible">
+            <img src="logo.png" alt="biPaketimVar" class="h-full w-auto object-contain mix-blend-multiply py-0.5">
+        </a>
+        <button onclick="cikisYap()" class="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 px-3.5 py-2 rounded-xl text-xs font-semibold border border-red-100 transition active:scale-95">
+            <i class="fa-solid fa-right-from-bracket text-xs"></i>
+            <span>Çıkış</span>
+        </button>
+    </header>
+
+
+
+    <!-- YÜKLENİYOR EKRANI -->
+    <div id="loading" class="flex flex-col items-center justify-center p-12 text-slate-500 font-medium">
+        <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-2"></i>
+        İşletme bilgileriniz yükleniyor...
+    </div>
+
+    <!-- ANA PANEL -->
+    <main id="panel" class="hidden max-w-2xl w-full mx-auto p-4">
+        
+        <!-- 1. SEKME: ANA SAYFA -->
+        <div id="tab-anasayfa" class="space-y-4">
+            
+            <!-- KARŞILAMA KARTI -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-5 rounded-2xl shadow-md">
+                <div class="text-xs uppercase tracking-wider opacity-80 mb-1">İşletme Paneli</div>
+                <h2 id="hosgeldin" class="text-xl font-bold">Hoş geldiniz</h2>
+                <p class="text-xs opacity-90 mt-1 leading-relaxed">Paketlerinizi buradan hızlıca oluşturabilir ve teslimat durumlarını takip edebilirsiniz.</p>
+            </div>
+
+            <!-- ANASAYFA BANNER & YENİ PAKET -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="relative cursor-pointer" onclick="paketOlustur()">
+                    <img src="anasayfa.png" alt="Paketimvar" class="w-full h-auto object-cover max-h-48">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                        <button type="button" onclick="event.stopPropagation(); paketOlustur()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-lg flex items-center gap-2 transition">
+                            ➕ Paket Oluştur
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- İSTATİSTİKLER -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
+                    📊 Genel Durum
+                </h3>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <div class="text-[11px] text-slate-500 font-medium">Toplam Paket</div>
+                        <div id="toplamPaket" class="text-xl font-extrabold text-slate-900 mt-1">0</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <div class="text-[11px] text-amber-600 font-medium">Bekleyen</div>
+                        <div id="bekleyenPaket" class="text-xl font-extrabold text-amber-600 mt-1">0</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <div class="text-[11px] text-blue-600 font-medium">Dağıtımda</div>
+                        <div id="dagitimPaket" class="text-xl font-extrabold text-blue-600 mt-1">0</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <div class="text-[11px] text-emerald-600 font-medium">Teslim Edildi</div>
+                        <div id="teslimPaket" class="text-xl font-extrabold text-emerald-600 mt-1">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAKET YÖNETİMİ KARTI -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-sm text-slate-900">📦 Paket Yönetimi</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Aktif ve geçmiş tüm paketlerinizi görüntüleyin.</p>
+                </div>
+                <button onclick="paketlerim()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition whitespace-nowrap">
+                    Tümünü Gör
+                </button>
+            </div>
+
+            <!-- SON TESLİMATLAR -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-sm text-slate-900 mb-3">✅ Son Teslimatlar</h3>
+                <div id="recentList" class="space-y-2 max-h-60 overflow-y-auto">
+                    <div class="text-center py-6 text-slate-400 text-xs">
+                        ⏳ Teslimatlar yükleniyor...
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- 2. SEKME: İŞLETME BİLGİLERİ VE KREDİ -->
+        <div id="tab-isletme" class="space-y-4 hidden">
+            
+            <!-- İŞLETME BİLGİLERİ -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-store text-blue-600"></i> İşletme Bilgileri
+                </h3>
+                
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="text-slate-400 block mb-1">İşletme Adı</label>
+                        <input type="text" id="inputIsletmeAdi" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-medium text-slate-800 focus:outline-none" readonly>
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-1">Telefon Numarası</label>
+                        <input type="text" id="inputTelefon" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-medium text-slate-800 focus:outline-none" readonly>
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-1">Adres</label>
+                        <textarea id="inputAdres" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-medium text-slate-800 focus:outline-none" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KREDİ VE ABONELİK BİLGİLERİ -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-wallet text-emerald-600"></i> Kredi ve Abonelik Bilgileri
+                </h3>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl">
+                        <div class="text-[11px] text-emerald-700 font-medium">Kalan Paket Hakkı</div>
+                        <div id="krediMiktari" class="text-2xl font-extrabold text-emerald-800 mt-1">0</div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl">
+                        <div class="text-[11px] text-blue-700 font-medium">Abonelik Durumu</div>
+                        <div id="abonelikDurumu" class="text-sm font-extrabold text-blue-800 mt-2">Standart Paket</div>
+                    </div>
+                </div>
+
+                <button onclick="krediYukle()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i> Kredi Yükle / Paket Satın Al
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ALT MENÜ -->
+    <nav class="bg-white border-t border-slate-200 fixed bottom-0 left-0 right-0 z-40 shadow-lg">
+        <div class="max-w-md mx-auto flex justify-around py-2">
+            <button id="btn-tab-anasayfa" onclick="sekmeDegistir('anasayfa')" class="flex flex-col items-center text-blue-600">
+                <i class="fa-solid fa-house text-base"></i>
+                <span class="text-[10px] font-medium mt-0.5">Ana Sayfa</span>
+            </button>
+            <button onclick="paketOlustur()" class="flex flex-col items-center text-slate-400 hover:text-blue-600 transition">
+                <i class="fa-solid fa-square-plus text-base"></i>
+                <span class="text-[10px] font-medium mt-0.5">Paket Oluştur</span>
+            </button>
+            <button onclick="paketlerim()" class="flex flex-col items-center text-slate-400 hover:text-blue-600 transition">
+                <i class="fa-solid fa-boxes-stacked text-base"></i>
+                <span class="text-[10px] font-medium mt-0.5">Paketler</span>
+            </button>
+            <button id="btn-tab-isletme" onclick="sekmeDegistir('isletme')" class="flex flex-col items-center text-slate-400 hover:text-blue-600 transition">
+                <i class="fa-solid fa-store text-base"></i>
+                <span class="text-[10px] font-medium mt-0.5">İşletme</span>
+            </button>
+        </div>
+    </nav>
+    <!-- SCRIPTS -->
+    <script type="module">
+        import {
+            auth,
+            db,
+            onAuthStateChanged,
+            doc,
+            getDoc,
+            collection,
+            query,
+            where,
+            onSnapshot,
+            signOut
+        } from "./firebase.js";
+
+        const loading = document.getElementById("loading");
+        const panel = document.getElementById("panel");
+        const hosgeldin = document.getElementById("hosgeldin");
+        const toplamPaket = document.getElementById("toplamPaket");
+        const bekleyenPaket = document.getElementById("bekleyenPaket");
+        const dagitimPaket = document.getElementById("dagitimPaket");
+        const teslimPaket = document.getElementById("teslimPaket");
+        const recentList = document.getElementById("recentList");
+
+        const inputIsletmeAdi = document.getElementById("inputIsletmeAdi");
+        const inputTelefon = document.getElementById("inputTelefon");
+        const inputAdres = document.getElementById("inputAdres");
+        const krediMiktari = document.getElementById("krediMiktari");
+        const abonelikDurumu = document.getElementById("abonelikDurumu");
+
+        let paketUnsubscribe = null;
+        let tumPaketler = [];
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+            await isletmeBilgileriniYukle(user.uid);
+            paketleriDinle(user.uid);
+        });
+
+        async function isletmeBilgileriniYukle(uid) {
+            try {
+                const ref = doc(db, "kullanicilar", uid);
+                const snap = await getDoc(ref);
+                if (!snap.exists()) {
+                    alert("İşletme hesabınız bulunamadı.");
+                    await signOut(auth);
+                    window.location.href = "index.html";
+                    return;
+                }
+                const data = snap.data();
+                if (data.tip !== "isletme") {
+                    alert("Bu alan sadece işletmeler içindir.");
+                    return;
+                }
+                
+                hosgeldin.textContent = "Merhaba, " + (data.isletmeAdi || "İşletmem");
+                
+                // İşletme & Kredi Bilgilerini Doldur
+                inputIsletmeAdi.value = data.isletmeAdi || "";
+                inputTelefon.value = data.telefon || data.tel || "Belirtilmemiş";
+                inputAdres.value = data.adres || "Adres girilmemiş";
+                krediMiktari.textContent = data.kredi ?? data.paketHakki ?? 0;
+                abonelikDurumu.textContent = data.abonelikDurumu || "Standart Paket";
+
+                loading.classList.add("hidden");
+                panel.classList.remove("hidden");
+            } catch (error) {
+                console.error("Hata:", error);
+                loading.innerHTML = "❌ Bilgiler yüklenemedi.";
+            }
+        }
+
+        function paketleriDinle(uid) {
+            const q = query(collection(db, "paketler"), where("isletmeId", "==", uid));
+            if (paketUnsubscribe) paketUnsubscribe();
+
+            paketUnsubscribe = onSnapshot(q, (snapshot) => {
+                tumPaketler = [];
+                snapshot.forEach((docSnap) => {
+                    tumPaketler.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                istatistikleriGuncelle();
+                sonTeslimatlariGoster();
+            });
+        }
+
+        function istatistikleriGuncelle() {
+            toplamPaket.textContent = tumPaketler.length;
+            bekleyenPaket.textContent = tumPaketler.filter(p => ["bekliyor", "bekleyen", "kurye_bekliyor"].includes(String(p.durum).toLowerCase())).length;
+            dagitimPaket.textContent = tumPaketler.filter(p => ["kurye_atandi", "paket_alindi", "teslimata_cikti"].includes(String(p.durum).toLowerCase())).length;
+            teslimPaket.textContent = tumPaketler.filter(p => ["teslim_edildi", "teslim edildi"].includes(String(p.durum).toLowerCase())).length;
+        }
+
+        function sonTeslimatlariGoster() {
+            const teslimatlar = tumPaketler.filter(p => ["teslim_edildi", "teslim edildi"].includes(String(p.durum).toLowerCase())).slice(0, 5);
+            if (teslimatlar.length === 0) {
+                recentList.innerHTML = `<div class="text-center py-4 text-slate-400 text-xs">Henüz teslim edilen paket yok.</div>`;
+                return;
+            }
+            recentList.innerHTML = teslimatlar.map(p => `
+                <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-600 font-bold">✅</span>
+                        <div>
+                            <div class="font-bold text-slate-800">${p.musteriAdSoyad || p.musteriAdi || "Müşteri"}</div>
+                            <div class="text-[10px] text-slate-500">${p.siparisTuru || "Teslimat"}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // SEKME DEĞİŞTİRME MEKANİZMASI
+        window.sekmeDegistir = (sekme) => {
+            const tabAnasayfa = document.getElementById("tab-anasayfa");
+            const tabIsletme = document.getElementById("tab-isletme");
+            const btnAnasayfa = document.getElementById("btn-tab-anasayfa");
+            const btnIsletme = document.getElementById("btn-tab-isletme");
+
+            if (sekme === 'anasayfa') {
+                tabAnasayfa.classList.remove("hidden");
+                tabIsletme.classList.add("hidden");
+                btnAnasayfa.className = "flex flex-col items-center text-blue-600";
+                btnIsletme.className = "flex flex-col items-center text-slate-400 hover:text-blue-600 transition";
+            } else if (sekme === 'isletme') {
+                tabAnasayfa.classList.add("hidden");
+                tabIsletme.classList.remove("hidden");
+                btnAnasayfa.className = "flex flex-col items-center text-slate-400 hover:text-blue-600 transition";
+                btnIsletme.className = "flex flex-col items-center text-blue-600";
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.paketOlustur = () => window.location.href = "paket-ekle.html";
+        window.paketlerim = () => window.location.href = "paketler.html";
+        window.krediYukle = () => {
+            alert("Kredi yükleme sayfasına yönlendiriliyorsunuz.");
+        };
+        window.cikisYap = async () => {
+            if (paketUnsubscribe) paketUnsubscribe();
+            await signOut(auth);
+            window.location.href = "index.html";
+        };
+    </script>
+</body>
+</html>

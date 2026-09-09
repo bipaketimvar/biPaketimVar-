@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paketimvar - Paketlerim</title>
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between pb-24">
+
+       <!-- ÜST BAR -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 flex justify-between items-center sticky top-0 z-40 h-14 shadow-sm">
+        <div class="flex items-center gap-3 h-full">
+            <button onclick="goBack()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition active:scale-95 shrink-0 border border-slate-200/50">
+                <i class="fa-solid fa-arrow-left text-xs"></i>
+            </button>
+            <a href="isletme.html" class="flex items-center h-full">
+                <img src="logo.png" alt="biPaketimVar" class="h-10 w-auto object-contain mix-blend-multiply scale-125 origin-left">
+            </a>
+        </div>
+        <button onclick="goPage('paket-ekle.html')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm shadow-blue-200 transition active:scale-95 shrink-0">
+            <i class="fa-solid fa-plus text-[10px]"></i>
+            <span>Yeni Paket</span>
+        </button>
+    </header>
+
+
+    <!-- ANA İÇERİK -->
+    <main class="max-w-2xl w-full mx-auto p-4 space-y-4">
+
+        <!-- BAŞLIK -->
+        <div>
+            <h1 class="text-xl font-black text-slate-900">Paketlerim</h1>
+            <p class="text-xs text-slate-500 mt-0.5">Oluşturduğunuz tüm paketleri canlı takip edin ve yönetin.</p>
+        </div>
+
+        <!-- ARAMA VE FİLTRE BAR SİSTEMİ -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <!-- ARAMA INPUT -->
+            <div class="relative sm:col-span-2">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="searchInput" oninput="filtrele()" placeholder="Müşteri adı, tel veya adres ara..." class="w-full bg-white border border-slate-200 focus:border-blue-600 focus:outline-none rounded-xl pl-9 pr-3 py-2.5 text-xs font-medium text-slate-800 shadow-sm transition">
+            </div>
+
+            <!-- DURUM FİLTRESİ -->
+            <div class="relative">
+                <select id="statusFilter" onchange="filtrele()" class="w-full bg-white border border-slate-200 focus:border-blue-600 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-medium text-slate-700 shadow-sm transition appearance-none pr-8 cursor-pointer">
+                    <option value="hepsi">Tüm Durumlar</option>
+                    <option value="bekliyor">⏳ Bekleyen</option>
+                    <option value="dagitimda">🚚 Dağıtımda</option>
+                    <option value="teslim_edildi">✅ Teslim Edildi</option>
+                    <option value="iptal">❌ İptal Edildi</option>
+                </select>
+                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+            </div>
+        </div>
+
+        <!-- PAKET LİSTESİ KONTEYNIRI -->
+        <div id="paketListesi" class="space-y-3">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center text-slate-400 text-xs">
+                <i class="fa-solid fa-spinner fa-spin text-2xl text-blue-600 mb-2"></i>
+                <p>Paketleriniz yükleniyor...</p>
+            </div>
+        </div>
+
+    </main>
+    <!-- DETAY MODALI -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white w-full max-w-lg rounded-t-3xl sm:rounded-2xl p-5 space-y-4 shadow-2xl transform translate-y-full sm:translate-y-0 transition-transform duration-300 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-box text-blue-600"></i> Paket Detayı
+                </h3>
+                <button onclick="modalKapat()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+
+            <div id="modalContent" class="space-y-3 text-xs">
+                <!-- Dinamik Modal İçeriği Dolacak -->
+            </div>
+
+            <button onclick="modalKapat()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">
+                Kapat
+            </button>
+        </div>
+    </div>
+
+    <!-- ALT MENÜ -->
+    <nav class="bg-white border-t border-slate-200 fixed bottom-0 left-0 right-0 z-40 shadow-lg">
+        <div class="max-w-md mx-auto flex justify-around py-2">
+            <button onclick="goPage('isletme.html')" class="flex flex-col items-center text-slate-400 hover:text-blue-600 transition">
+                <i class="fa-solid fa-house text-base"></i>
+                <span class="text-[10px] font-medium mt-0.5">Ana Sayfa</span>
+            </button>
+            <button onclick="goPage('paket-ekle.html')" class="flex flex-col items-center text-slate-400 hover:text-blue-600 transition">
+                <i class="fa-solid fa-square-plus text-base"></i>
+                <span class="text-[10px] font-medium mt-0.5">Paket Oluştur</span>
+            </button>
+            <button onclick="goPage('paketler.html')" class="flex flex-col items-center text-blue-600">
+                <i class="fa-solid fa-boxes-stacked text-base"></i>
+                <span class="text-[10px] font-medium mt-0.5">Paketler</span>
+            </button>
+            <button onclick="goPage('isletme.html')" class="flex flex-col items-center text-slate-400 hover:text-blue-600 transition">
+                <i class="fa-solid fa-store text-base"></i>
+                <span class="text-[10px] font-medium mt-0.5">İşletme</span>
+            </button>
+        </div>
+    </nav>
+    <!-- SCRIPTS -->
+    <script type="module">
+        import {
+            auth,
+            db,
+            onAuthStateChanged,
+            collection,
+            query,
+            where,
+            onSnapshot
+        } from "./firebase.js";
+
+        const paketListesi = document.getElementById("paketListesi");
+        const searchInput = document.getElementById("searchInput");
+        const statusFilter = document.getElementById("statusFilter");
+        const detailModal = document.getElementById("detailModal");
+        const modalContent = document.getElementById("modalContent");
+
+        let tumPaketler = [];
+
+        // AUTH KONTROL VE LİSTELEME
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+            paketleriGetir(user.uid);
+        });
+
+        function paketleriGetir(uid) {
+            const q = query(collection(db, "paketler"), where("isletmeId", "==", uid));
+
+            onSnapshot(q, (snapshot) => {
+                tumPaketler = [];
+                snapshot.forEach((docSnap) => {
+                    tumPaketler.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // Tarihe göre yeniden eskiye sırala
+                tumPaketler.sort((a, b) => (b.olusturmaTarihi?.toMillis() || 0) - (a.olusturmaTarihi?.toMillis() || 0));
+
+                filtrele();
+            }, (err) => {
+                console.error("Paket çekme hatası:", err);
+                paketListesi.innerHTML = `
+                    <div class="bg-red-50 p-6 rounded-2xl border border-red-100 text-center text-red-600 text-xs">
+                        ❌ Paketler yüklenirken bir sorun oluştu.
+                    </div>
+                `;
+            });
+        }
+
+        // FİLTRELEME MANTIĞI
+        window.filtrele = () => {
+            const aramaMetni = searchInput.value.toLowerCase().trim();
+            const seciliDurum = statusFilter.value;
+
+            const filtrelenmis = tumPaketler.filter(p => {
+                const musteri = (p.musteriAdSoyad || p.musteriAdi || "").toLowerCase();
+                const tel = (p.musteriTelefon || p.telefon || "").toLowerCase();
+                const adres = (p.teslimatAdresi || p.adres || "").toLowerCase();
+
+                const aramaUyum = musteri.includes(aramaMetni) || tel.includes(aramaMetni) || adres.includes(aramaMetni);
+
+                const rawDurum = String(p.durum || "").toLowerCase();
+                let durumUyum = true;
+
+                if (seciliDurum === "bekliyor") {
+                    durumUyum = ["bekliyor", "bekleyen", "kurye_bekliyor"].includes(rawDurum);
+                } else if (seciliDurum === "dagitimda") {
+                    durumUyum = ["kurye_atandi", "paket_alindi", "teslimata_cikti"].includes(rawDurum);
+                } else if (seciliDurum === "teslim_edildi") {
+                    durumUyum = ["teslim_edildi", "teslim edildi"].includes(rawDurum);
+                } else if (seciliDurum === "iptal") {
+                    durumUyum = ["iptal", "iptal_edildi"].includes(rawDurum);
+                }
+
+                return aramaUyum && durumUyum;
+            });
+
+            kartlariCiz(filtrelenmis);
+        };
+
+        // KARTLARI EKRANA BASTIR
+        function kartlariCiz(liste) {
+            if (liste.length === 0) {
+                paketListesi.innerHTML = `
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center text-slate-400 text-xs">
+                        <i class="fa-solid fa-box-open text-3xl mb-2 text-slate-300"></i>
+                        <p>Aramanıza uygun paket bulunamadı.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            paketListesi.innerHTML = liste.map(p => {
+                const badge = durumBadgeAl(p.durum);
+                const kuryeAdi = p.kuryeAdSoyad || p.kuryeAdi || "Atanmadı";
+                const ucret = p.kuryeUcreti || p.ucret || 0;
+                const ad = p.musteriAdSoyad || p.musteriAdi || "İsimsiz Müşteri";
+                const adres = p.teslimatAdresi || p.adres || "Adres Belirtilmemiş";
+
+                return `
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3 hover:border-slate-300 transition">
+                        <!-- ÜST BAŞLIK & ROZET -->
+                        <div class="flex justify-between items-start gap-2 border-b border-slate-100 pb-2.5">
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                                    <i class="fa-solid fa-user-tag text-blue-600 text-xs"></i> ${ad}
+                                </h3>
+                                <div class="text-[11px] text-slate-500 font-medium flex items-center gap-1 mt-0.5">
+                                    <i class="fa-solid fa-motorcycle text-slate-400"></i> Kurye: <span class="text-slate-700">${kuryeAdi}</span>
+                                </div>
+                            </div>
+                            <span class="${badge.class}">${badge.text}</span>
+                        </div>
+
+                        <!-- ADRES BİLGİSİ -->
+                        <div class="text-xs text-slate-600 flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-location-dot text-red-500 text-sm mt-0.5"></i>
+                            <span class="line-clamp-2 leading-relaxed">${adres}</span>
+                        </div>
+
+                        <!-- ÜCRET & BUTONLAR -->
+                        <div class="flex items-center justify-between pt-1">
+                            <div>
+                                <span class="text-[10px] text-slate-400 font-medium block">Kurye Ücreti</span>
+                                <span class="text-emerald-600 font-extrabold text-sm">₺${ucret}</span>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button onclick="haritadaAc('${encodeURIComponent(adres)}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition">
+                                    📍 Harita
+                                </button>
+                                <button onclick="detayGoster('${p.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition">
+                                    🔎 Detay
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // ROZET TASARIMLARI
+        function durumBadgeAl(durum) {
+            const d = String(durum || "").toLowerCase();
+
+            if (["teslim_edildi", "teslim edildi"].includes(d)) {
+                return { class: "bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1", text: "✅ Teslim Edildi" };
+            }
+            if (["kurye_atandi", "paket_alindi", "teslimata_cikti"].includes(d)) {
+                return { class: "bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1", text: "🚚 Dağıtımda" };
+            }
+            if (["iptal", "iptal_edildi"].includes(d)) {
+                return { class: "bg-red-50 text-red-700 border border-red-200 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1", text: "❌ İptal" };
+            }
+            return { class: "bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1", text: "⏳ Bekliyor" };
+        }
+
+        // MAPS VE MODAL YARDIMCILARI
+        window.haritadaAc = (adres) => {
+            window.open(`https://www.google.com/maps/search/?api=1&query=${adres}`, '_blank');
+        };
+
+        window.detayGoster = (id) => {
+            const p = tumPaketler.find(item => item.id === id);
+            if (!p) return;
+
+            modalContent.innerHTML = `
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
+                    <span class="text-[10px] text-slate-400 uppercase font-bold">Müşteri Bilgileri</span>
+                    <div class="font-bold text-slate-800">${p.musteriAdSoyad || p.musteriAdi || "-"}</div>
+                    <div class="text-slate-600">${p.musteriTelefon || p.telefon || "-"}</div>
+                </div>
+
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
+                    <span class="text-[10px] text-slate-400 uppercase font-bold">Teslimat Adresi</span>
+                    <div class="text-slate-700 leading-relaxed">${p.teslimatAdresi || p.adres || "-"}</div>
+                </div>
+
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
+                    <span class="text-[10px] text-slate-400 uppercase font-bold">Paket İçeriği & Notlar</span>
+                    <div><strong class="text-slate-700">İçerik:</strong> ${p.paketAciklama || "Yok"}</div>
+                    <div><strong class="text-slate-700">Kurye Notu:</strong> ${p.kuryeNotu || "Yok"}</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-emerald-50 border border-emerald-100 p-2.5 rounded-xl">
+                        <span class="text-[10px] text-emerald-700 font-bold block">Kurye Ücreti</span>
+                        <span class="font-extrabold text-emerald-800 text-sm">₺${p.kuryeUcreti || 0}</span>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-xl">
+                        <span class="text-[10px] text-blue-700 font-bold block">Sipariş Tutarı</span>
+                        <span class="font-extrabold text-blue-800 text-sm">₺${p.siparisTutari || 0}</span>
+                    </div>
+                </div>
+
+                <div class="text-[11px] text-slate-500 pt-1">
+                    <strong>Ödeme Tipi:</strong> ${p.odemeSekli || "Belirtilmemiş"}
+                </div>
+            `;
+
+            detailModal.classList.remove("opacity-0", "pointer-events-none");
+            detailModal.children[0].classList.remove("translate-y-full");
+        };
+
+        window.modalKapat = () => {
+            detailModal.classList.add("opacity-0", "pointer-events-none");
+            detailModal.children[0].classList.add("translate-y-full");
+        };
+
+        window.goBack = () => history.back();
+        window.goPage = (url) => window.location.href = url;
+    </script>
+</body>
+</html>

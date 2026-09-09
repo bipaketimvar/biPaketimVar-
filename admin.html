@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>biPaketimVar - Yönetim Paneli</title>
+<style>
+:root{
+  --primary:#5b21d6;
+  --primary2:#7c3aed;
+  --orange:#ff8a00;
+  --ink:#17152b;
+  --muted:#6b7280;
+  --line:#e8e8ef;
+  --bg:#f6f6fb;
+  --card:#fff;
+  --success:#059669;
+  --danger:#dc2626;
+  --warning:#d97706;
+  --shadow:0 10px 30px rgba(29,20,70,.07);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#17112f;color:#fff;position:fixed;inset:0 auto 0 0;padding:20px 14px;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px 22px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:15px}
+.brand img{width:42px;height:42px;object-fit:contain;border-radius:12px;background:#fff}
+.brand strong{font-size:19px}.brand span{color:#ff8a00}
+.brand small{display:block;color:#b8b1ce;font-size:10px;margin-top:3px}
+.nav{display:grid;gap:5px}
+.nav button{border:0;background:transparent;color:#cfc8df;text-align:left;padding:12px 13px;border-radius:11px;font-weight:750;font-size:13px}
+.nav button:hover,.nav button.active{background:linear-gradient(135deg,#6d28d9,#4c1d95);color:#fff}
+.sidebar-footer{position:absolute;left:14px;right:14px;bottom:15px}
+.logout{width:100%;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:#fff;padding:11px;border-radius:10px;font-weight:750}
+.main{margin-left:250px;width:calc(100% - 250px);padding:25px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+.top h1{margin:0;font-size:25px}.top p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.admin-badge{background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:12px;font-size:11px;font-weight:800}
+.loading{max-width:460px;margin:15vh auto;text-align:center;background:#fff;padding:35px;border-radius:18px;box-shadow:var(--shadow)}
+.hidden{display:none!important}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow)}
+.stat{padding:17px}.stat-top{display:flex;justify-content:space-between;align-items:center}.stat-icon{width:40px;height:40px;border-radius:12px;background:#f1eafe;display:grid;place-items:center;font-size:19px}.stat-label{font-size:11px;color:var(--muted);margin-top:12px}.stat-value{font-size:25px;font-weight:900;margin-top:2px}
+.grid2{display:grid;grid-template-columns:1.3fr .7fr;gap:14px}.panel{padding:17px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.panel-head h2{margin:0;font-size:15px}.sub{color:var(--muted);font-size:10px}
+.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.quick button{padding:15px;border:1px solid var(--line);background:#fff;border-radius:13px;text-align:left}.quick strong{display:block;font-size:12px}.quick span{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.section{display:none}.section.active{display:block}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select{height:40px;border:1px solid #dddde7;border-radius:10px;background:#fff;padding:0 11px;min-width:170px;outline:none}.toolbar input:focus{border-color:var(--primary2)}
+.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;font-size:11px}.primary{background:linear-gradient(135deg,var(--primary2),#4c1d95);color:#fff}.light{background:#f1f1f6;color:#332c4b}.success{background:#ecfdf5;color:#047857}.danger{background:#fef2f2;color:#b91c1c}.orange{background:#fff7ed;color:#c2410c}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th{background:#fafafe;color:#7b748c;text-align:left;font-size:10px;padding:11px;border-bottom:1px solid var(--line)}.table td{padding:11px;border-bottom:1px solid #f0eff5;font-size:11px;vertical-align:middle}.table tr:hover td{background:#fcfbff}
+.person{display:flex;align-items:center;gap:9px}.avatar{width:34px;height:34px;border-radius:10px;background:#eee7ff;display:grid;place-items:center;font-weight:900;color:#5b21d6}.person strong{display:block;font-size:11px}.person small{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:5px 8px;font-size:9px;font-weight:900;white-space:nowrap}.pill.green{background:#ecfdf5;color:#047857}.pill.red{background:#fef2f2;color:#b91c1c}.pill.blue{background:#eff6ff;color:#1d4ed8}.pill.orange{background:#fff7ed;color:#c2410c}.pill.gray{background:#f3f4f6;color:#4b5563}
+.actions{display:flex;gap:5px;flex-wrap:wrap}.actions .btn{padding:7px 9px}
+.empty{text-align:center;padding:35px;color:var(--muted);font-size:12px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,10,30,.48);display:none;align-items:center;justify-content:center;padding:15px;z-index:50}.modal-backdrop.show{display:flex}.modal{background:#fff;width:min(560px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:18px;box-shadow:0 25px 70px rgba(0,0,0,.2)}.modal h3{margin:0 0 4px;font-size:17px}.modal p{margin:0 0 15px;color:var(--muted);font-size:10px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:10px;font-weight:850;color:#4b5563}.field input,.field textarea,.field select{border:1px solid #dddde7;border-radius:10px;padding:10px;background:#fff;outline:none}.field textarea{min-height:75px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+.toast{position:fixed;right:20px;bottom:20px;z-index:80;background:#17112f;color:#fff;padding:12px 15px;border-radius:12px;font-size:11px;font-weight:750;box-shadow:0 15px 35px rgba(0,0,0,.2);display:none}.toast.show{display:block}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:720px){.sidebar{width:70px;padding:12px 8px}.brand{justify-content:center;padding:4px 0 14px}.brand img{width:42px}.brand-text,.nav button span,.logout span{display:none}.nav button{text-align:center;padding:12px 5px;font-size:17px}.sidebar-footer{left:8px;right:8px}.main{margin-left:70px;width:calc(100% - 70px);padding:15px}.top h1{font-size:20px}.admin-badge{display:none}.cards{gap:8px}.stat{padding:13px}.stat-value{font-size:21px}.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="authLoading" class="loading">
+  <div style="font-size:32px">🛡️</div>
+  <h3>Yönetim paneli kontrol ediliyor</h3>
+  <div style="color:#6b7280;font-size:11px">Yetki doğrulanıyor...</div>
+</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="ana.png" alt="biPaketimVar">
+      <div class="brand-text"><strong>biPaketim<span>Var</span></strong><small>YÖNETİM PANELİ</small></div>
+    </div>
+    <nav class="nav">
+      <button class="active" data-section="dashboard">📊 <span>Dashboard</span></button>
+      <button data-section="businesses">🏪 <span>İşletmeler</span></button>
+      <button data-section="couriers">🚚 <span>Kuryeler</span></button>
+      <button data-section="packages">📦 <span>Paketler</span></button>
+      <button data-section="reports">📈 <span>Raporlar</span></button>
+    </nav>
+    <div class="sidebar-footer"><button class="logout" id="logoutBtn">↪ <span>Çıkış Yap</span></button></div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p>biPaketimVar operasyon ve kullanıcı yönetimi</p>
+      </div>
+      <div class="admin-badge">🛡️ <span id="adminEmail">Admin</span></div>
+    </header>
+
+    <section id="dashboard" class="section active">
+      <div class="cards">
+        <div class="card stat"><div class="stat-top"><div class="stat-icon">🏪</div><span class="pill blue">İŞLETME</span></div><div class="stat-label">Toplam işletme</div><div class="stat-value" id="sBusinesses">0</div></div>
+        <div class="card stat"><div class="stat-top"><div class="stat-icon">🚚</div><span class="pill green">KURYE</span></div><div class="stat-label">Toplam kurye</div><div class="stat-value" id="sCouriers">0</div></div>
+        <div class="card stat"><div class="stat-top"><div class="stat-icon">📦</div><span class="pill orange">PAKET</span></div><div class="stat-label">Toplam paket</div><div class="stat-value" id="sPackages">0</div></div>
+        <div class="card stat"><div class="stat-top"><div class="stat-icon">💰</div><span class="pill purple">JETON</span></div><div class="stat-label">İşletmelerdeki toplam jeton</div><div class="stat-value" id="sTokens">0</div></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card panel">
+          <div class="panel-head"><div><h2>Operasyon özeti</h2><div class="sub">Anlık paket durumları</div></div><button class="btn light" id="refreshBtn">↻ Yenile</button></div>
+          <div class="cards" style="margin:0;grid-template-columns:repeat(4,1fr)">
+            <div class="stat" style="box-shadow:none;border:1px solid var(--line)"><div class="stat-label">Bekliyor</div><div class="stat-value" id="sWaiting">0</div></div>
+            <div class="stat" style="box-shadow:none;border:1px solid var(--line)"><div class="stat-label">Dağıtımda</div><div class="stat-value" id="sDelivery">0</div></div>
+            <div class="stat" style="box-shadow:none;border:1px solid var(--line)"><div class="stat-label">Teslim</div><div class="stat-value" id="sDelivered">0</div></div>
+            <div class="stat" style="box-shadow:none;border:1px solid var(--line)"><div class="stat-label">Aktif işletme</div><div class="stat-value" id="sActiveBusinesses">0</div></div>
+          </div>
+        </div>
+        <div class="card panel">
+          <div class="panel-head"><div><h2>Hızlı işlemler</h2><div class="sub">Yönetim kısayolları</div></div></div>
+          <div class="quick">
+            <button data-go="businesses"><strong>🏪 İşletmeler</strong><span>Jeton ve hesap yönetimi</span></button>
+            <button data-go="couriers"><strong>🚚 Kuryeler</strong><span>Aktiflik kontrolü</span></button>
+            <button data-go="packages"><strong>📦 Paketler</strong><span>Durum ve detaylar</span></button>
+            <button id="exportQuick"><strong>⬇️ Dışa aktar</strong><span>CSV raporu oluştur</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="businesses" class="section">
+      <div class="card panel">
+        <div class="panel-head"><div><h2>İşletme Yönetimi</h2><div class="sub" id="businessCount">0 kayıt</div></div><button class="btn primary" id="exportBusinesses">⬇ CSV</button></div>
+        <div class="toolbar"><input id="businessSearch" placeholder="İşletme, e-posta veya telefon ara..."><select id="businessStatus"><option value="all">Tüm durumlar</option><option value="active">Aktif</option><option value="inactive">Pasif</option></select></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>İŞLETME</th><th>İLETİŞİM</th><th>JETON</th><th>ÜCRETSİZ KULLANIM</th><th>DURUM</th><th>İŞLEMLER</th></tr></thead><tbody id="businessTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="couriers" class="section">
+      <div class="card panel">
+        <div class="panel-head"><div><h2>Kurye Yönetimi</h2><div class="sub" id="courierCount">0 kayıt</div></div><button class="btn primary" id="exportCouriers">⬇ CSV</button></div>
+        <div class="toolbar"><input id="courierSearch" placeholder="Kurye, e-posta veya telefon ara..."><select id="courierStatus"><option value="all">Tüm durumlar</option><option value="active">Aktif</option><option value="inactive">Pasif</option></select></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>KURYE</th><th>İLETİŞİM</th><th>DURUM</th><th>SON GÖRÜLEN</th><th>İŞLEMLER</th></tr></thead><tbody id="courierTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="packages" class="section">
+      <div class="card panel">
+        <div class="panel-head"><div><h2>Paket Yönetimi</h2><div class="sub" id="packageCount">0 kayıt</div></div><button class="btn primary" id="exportPackages">⬇ CSV</button></div>
+        <div class="toolbar"><input id="packageSearch" placeholder="Kod, müşteri, işletme veya kurye ara..."><select id="packageStatus"><option value="all">Tüm durumlar</option><option value="waiting">Bekleyen</option><option value="delivery">Dağıtımda</option><option value="delivered">Teslim edildi</option></select></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>PAKET</th><th>İŞLETME</th><th>MÜŞTERİ</th><th>TUTAR</th><th>DURUM</th><th>KURYE</th><th>İŞLEMLER</th></tr></thead><tbody id="packageTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="reports" class="section">
+      <div class="card panel">
+        <div class="panel-head"><div><h2>Raporlar</h2><div class="sub">Bu oturumda Firebase'den yüklenen verilerin özeti</div></div></div>
+        <div class="cards" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat"><div class="stat-label">İşletme başına ortalama paket</div><div class="stat-value" id="rAvg">0</div></div>
+          <div class="stat"><div class="stat-label">Teslimat oranı</div><div class="stat-value" id="rRate">%0</div></div>
+          <div class="stat"><div class="stat-label">Aktif kurye</div><div class="stat-value" id="rActiveCourier">0</div></div>
+        </div>
+        <div class="toolbar">
+          <button class="btn primary" id="reportAll">⬇ Tüm verileri CSV indir</button>
+        </div>
+        <div style="padding:12px;background:#fafafe;border:1px solid var(--line);border-radius:12px;font-size:10px;color:#6b7280;line-height:1.6">
+          Not: Yönetim paneli mevcut veri modelinizdeki <b>kullanicilar</b> ve <b>paketler</b> koleksiyonlarıyla çalışacak şekilde hazırlanmıştır. İşletme hesabında <b>active</b>, <b>tokens</b> ve <b>freeOrdersUsed</b> alanları yoksa panel bunları güvenli varsayılanlarla gösterir ve yönetim sırasında oluşturur.
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="modalBackdrop" class="modal-backdrop">
+  <div class="modal">
+    <h3 id="modalTitle">Düzenle</h3>
+    <p id="modalSubtitle"></p>
+    <div id="modalBody"></div>
+    <div class="modal-actions"><button class="btn light" id="modalCancel">Vazgeç</button><button class="btn primary" id="modalSave">Kaydet</button></div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script type="module">
+import { 
+  auth, db, onAuthStateChanged, signOut, 
+  collection, getDocs, getDoc, doc, updateDoc, deleteDoc 
+} from "./firebase.js";
+
+const $ = id => document.getElementById(id);
+let currentAdmin = null;
+let users = [];
+let businesses = [];
+let couriers = [];
+let packages = [];
+let modalAction = null;
+
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const num = v => Number.isFinite(Number(v)) ? Number(v) : 0;
+const isActive = u => u.active !== false;
+const tokens = u => num(u.tokens ?? u.jeton ?? u.jetons);
+const freeUsed = u => num(u.freeOrdersUsed ?? u.ucretsizKullanilan ?? u.ucretsizSiparis);
+const userName = u => u.isletmeAdi || u.adSoyad || u.kuryeAdi || u.email || "İsimsiz";
+const customerName = p => p.musteriAdSoyad || p.musteriAdi || p.musteriAd || p.ad || "Müşteri bilgisi yok";
+const packageCode = p => p.paketKodu || p.packageCode || p.kod || p.kodNo || p.kodNumarasi || p.code || "—";
+const packageStatus = p => String(p.durum || p.status || "").toLocaleLowerCase("tr-TR");
+const courierName = p => p.kuryeAdi || p.kuryeAdSoyad || p.kuryeAd || p.kurye || p.kuryeIsmi || "Atanmadı";
+const money = v => num(v).toLocaleString("tr-TR",{minimumFractionDigits:0,maximumFractionDigits:2}) + " TL";
+
+function dateVal(v){
+  if(!v) return 0;
+  try { if(typeof v.toMillis==="function") return v.toMillis(); if(typeof v.toDate==="function") return v.toDate().getTime(); const d=new Date(v); return isNaN(d.getTime())?0:d.getTime(); } catch{return 0}
+}
+function dateText(v){ const n=dateVal(v); return n?new Date(n).toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}):"—"; }
+
+function normalizedStatus(p){
+  const d=packageStatus(p);
+  if(["teslim_edildi","teslim edildi","teslimedildi","delivered"].includes(d)) return "delivered";
+  if(["kurye_atandi","kurye atandi","paket_alindi","paket alindi","teslimata_cikti","teslimata cikti","accepted","picked","in_delivery","dagitimda"].includes(d)) return "delivery";
+  return "waiting";
+}
+
+function statusPill(p){
+  const n=normalizedStatus(p);
+  if(n==="delivered") return '<span class="pill green">● Teslim edildi</span>';
+  if(n==="delivery") return '<span class="pill orange">● Dağıtımda</span>';
+  return '<span class="pill blue">● Bekliyor</span>';
+}
+
+function showToast(text){ $("toast").textContent=text; $("toast").classList.add("show"); setTimeout(()=> $("toast").classList.remove("show"),2600); }
+
+async function loadData(){
+  try{
+    const [us,ps]=await Promise.all([getDocs(collection(db,"kullanicilar")),getDocs(collection(db,"paketler"))]);
+    users=us.docs.map(x=>({id:x.id,...x.data()}));
+    packages=ps.docs.map(x=>({id:x.id,...x.data()}));
+    businesses=users.filter(u=>u.tip==="isletme" || u.role==="business");
+    couriers=users.filter(u=>u.tip==="kurye" || u.role==="courier");
+    renderAll();
+  }catch(err){
+    console.error(err);
+    showToast("Veriler alınamadı. Firestore Rules yetkisini kontrol edin.");
+  }
+}
+
+function renderAll(){
+  $("sBusinesses").textContent=businesses.length;
+  $("sCouriers").textContent=couriers.length;
+  $("sPackages").textContent=packages.length;
+  $("sTokens").textContent=businesses.reduce((a,b)=>a+tokens(b),0);
+  $("sWaiting").textContent=packages.filter(p=>normalizedStatus(p)==="waiting").length;
+  $("sDelivery").textContent=packages.filter(p=>normalizedStatus(p)==="delivery").length;
+  $("sDelivered").textContent=packages.filter(p=>normalizedStatus(p)==="delivered").length;
+  $("sActiveBusinesses").textContent=businesses.filter(isActive).length;
+  $("rAvg").textContent=businesses.length?(packages.length/businesses.length).toFixed(1):"0";
+  $("rRate").textContent=packages.length?"%"+Math.round(packages.filter(p=>normalizedStatus(p)==="delivered").length/packages.length*100):"%0";
+  $("rActiveCourier").textContent=couriers.filter(isActive).length;
+  renderBusinesses(); renderCouriers(); renderPackages();
+}
+
+function renderBusinesses(){
+  const q=$("businessSearch").value.trim().toLocaleLowerCase("tr-TR");
+  const st=$("businessStatus").value;
+  const arr=businesses.filter(u=>{
+    const hay=[userName(u),u.email,u.telefon,u.phone,u.adres].join(" ").toLocaleLowerCase("tr-TR");
+    return (!q||hay.includes(q)) && (st==="all"||(st==="active"&&isActive(u))||(st==="inactive"&&!isActive(u)));
+  });
+  $("businessCount").textContent=arr.length+" / "+businesses.length+" kayıt";
+  $("businessTable").innerHTML=arr.length?arr.map(u=>`
+    <tr>
+      <td><div class="person"><div class="avatar">🏪</div><div><strong>${esc(userName(u))}</strong><small>${esc(u.id)}</small></div></div></td>
+      <td>${esc(u.email||"—")}<br><small>${esc(u.telefon||u.phone||"—")}</small></td>
+      <td><b>${tokens(u)}</b> <button class="btn orange" data-edit-token="${esc(u.id)}">+ / −</button></td>
+      <td>${freeUsed(u)} / 10</td>
+      <td>${isActive(u)?'<span class="pill green">● Aktif</span>':'<span class="pill red">● Pasif</span>'}</td>
+      <td><div class="actions"><button class="btn light" data-edit-business="${esc(u.id)}">Düzenle</button><button class="btn ${isActive(u)?"danger":"success"}" data-toggle-user="${esc(u.id)}">${isActive(u)?"Pasifleştir":"Aktifleştir"}</button></div></td>
+    </tr>`).join(""):'<tr><td colspan="6"><div class="empty">İşletme bulunamadı.</div></td></tr>';
+}
+
+function renderCouriers(){
+  const q=$("courierSearch").value.trim().toLocaleLowerCase("tr-TR");
+  const st=$("courierStatus").value;
+  const arr=couriers.filter(u=>{
+    const hay=[userName(u),u.email,u.telefon,u.phone].join(" ").toLocaleLowerCase("tr-TR");
+    return (!q||hay.includes(q)) && (st==="all"||(st==="active"&&isActive(u))||(st==="inactive"&&!isActive(u)));
+  });
+  $("courierCount").textContent=arr.length+" / "+couriers.length+" kayıt";
+  $("courierTable").innerHTML=arr.length?arr.map(u=>`
+    <tr>
+      <td><div class="person"><div class="avatar">🚚</div><div><strong>${esc(userName(u))}</strong><small>${esc(u.id)}</small></div></div></td>
+      <td>${esc(u.email||"—")}<br><small>${esc(u.telefon||u.phone||"—")}</small></td>
+      <td>${isActive(u)?'<span class="pill green">● Aktif</span>':'<span class="pill red">● Pasif</span>'}</td>
+      <td>${dateText(u.lastSeenAt||u.sonGorulme||u.guncellenme)}</td>
+      <td><div class="actions"><button class="btn ${isActive(u)?"danger":"success"}" data-toggle-user="${esc(u.id)}">${isActive(u)?"Pasifleştir":"Aktifleştir"}</button></div></td>
+    </tr>`).join(""):'<tr><td colspan="5"><div class="empty">Kurye bulunamadı.</div></td></tr>';
+}
+
+function renderPackages(){
+  const q=$("packageSearch").value.trim().toLocaleLowerCase("tr-TR");
+  const st=$("packageStatus").value;
+  const arr=packages.slice().sort((a,b)=>dateVal(b.guncellenme||b.teslimTarihi||b.createdAt||b.tarih||b.olusturmaTarihi)-dateVal(a.guncellenme||a.teslimTarihi||a.createdAt||a.tarih||a.olusturmaTarihi)).filter(p=>{
+    const hay=[packageCode(p),customerName(p),p.isletmeAdi,p.isletme,p.kuryeAdi,courierName(p)].join(" ").toLocaleLowerCase("tr-TR");
+    return (!q||hay.includes(q)) && (st==="all"||normalizedStatus(p)===st);
+  });
+  $("packageCount").textContent=arr.length+" / "+packages.length+" kayıt";
+  $("packageTable").innerHTML=arr.length?arr.map(p=>{
+    const biz=p.isletmeAdi||p.isletme||businesses.find(b=>b.id===(p.isletmeId||p.businessId))?.isletmeAdi||"—";
+    const amount=p.siparisTutari??p.siparisTutar??p.orderAmount??p.tutar??p.toplamTutar;
+    return `<tr>
+      <td><b>${esc(packageCode(p))}</b><br><small>${esc(dateText(p.guncellenme||p.createdAt||p.tarih||p.olusturmaTarihi))}</small></td>
+      <td>${esc(biz)}</td>
+      <td><b>${esc(customerName(p))}</b><br><small>${esc(p.musteriTelefon||p.customerPhone||"")}</small></td>
+      <td>${money(amount)}</td>
+      <td>${statusPill(p)}</td>
+      <td>${esc(courierName(p))}</td>
+      <td><div class="actions"><button class="btn light" data-edit-package="${esc(p.id)}">Düzenle</button><button class="btn danger" data-delete-package="${esc(p.id)}">Sil</button></div></td>
+    </tr>`;
+  }).join(""):'<tr><td colspan="7"><div class="empty">Paket bulunamadı.</div></td></tr>';
+}
+
+function openBusinessModal(id){
+  const u=businesses.find(x=>x.id===id); if(!u)return;
+  $("modalTitle").textContent="İşletme düzenle";
+  $("modalSubtitle").textContent=userName(u)+" hesabının yönetim bilgileri";
+  $("modalBody").innerHTML=`
+    <div class="form-grid">
+      <div class="field"><label>İşletme adı</label><input id="mName" value="${esc(u.isletmeAdi||"")}"></div>
+      <div class="field"><label>Telefon</label><input id="mPhone" value="${esc(u.telefon||"")}"></div>
+      <div class="field full"><label>E-posta</label><input value="${esc(u.email||"")}" disabled></div>
+      <div class="field full"><label>Adres</label><textarea id="mAddress">${esc(u.adres||u.isletmeAdresi||"")}</textarea></div>
+      <div class="field"><label>Jeton</label><input id="mTokens" type="number" min="0" value="${tokens(u)}"></div>
+      <div class="field"><label>Ücretsiz kullanım (0-10)</label><input id="mFree" type="number" min="0" max="10" value="${freeUsed(u)}"></div>
+      <div class="field"><label>Hesap durumu</label><select id="mActive"><option value="true" ${isActive(u)?"selected":""}>Aktif</option><option value="false" ${!isActive(u)?"selected":""}>Pasif</option></select></div>
+    </div>`;
+  modalAction=async()=>{
+    const newTokens = Math.max(0,num($("mTokens").value));
+    await updateDoc(doc(db,"kullanicilar",id),{
+      isletmeAdi:$("mName").value.trim(),telefon:$("mPhone").value.trim(),
+      adres:$("mAddress").value.trim(),isletmeAdresi:$("mAddress").value.trim(),
+      tokens: newTokens, jeton: newTokens, jetons: newTokens,
+      freeOrdersUsed:Math.min(10,Math.max(0,num($("mFree").value))),
+      active:$("mActive").value==="true"
+    });
+    closeModal(); await loadData(); showToast("İşletme güncellendi.");
+  };
+  openModal();
+}
+
+function openTokenModal(id){
+  const u=businesses.find(x=>x.id===id); if(!u)return;
+  $("modalTitle").textContent="Jeton yönetimi";
+  $("modalSubtitle").textContent=userName(u)+" • mevcut: "+tokens(u)+" jeton";
+  $("modalBody").innerHTML=`<div class="form-grid"><div class="field"><label>İşlem</label><select id="tokenOp"><option value="add">Jeton ekle</option><option value="remove">Jeton düş</option><option value="set">Yeni toplamı belirle</option></select></div><div class="field"><label>Miktar</label><input id="tokenAmount" type="number" min="0" value="10"></div></div>`;
+  modalAction=async()=>{
+    const op=$("tokenOp").value, n=Math.max(0,num($("tokenAmount").value)), cur=tokens(u);
+    const val=op==="add"?cur+n:op==="remove"?Math.max(0,cur-n):n;
+    await updateDoc(doc(db,"kullanicilar",id),{tokens:val, jeton:val, jetons:val});
+    closeModal(); await loadData(); showToast("Jeton bakiyesi güncellendi: "+val);
+  };
+  openModal();
+}
+
+function openPackageModal(id){
+  const p=packages.find(x=>x.id===id); if(!p)return;
+  $("modalTitle").textContent="Paket düzenle";
+  $("modalSubtitle").textContent="Kod: "+packageCode(p);
+  const current=p.durum||p.status||"bekliyor";
+  $("modalBody").innerHTML=`<div class="form-grid">
+    <div class="field"><label>Müşteri adı</label><input id="pmCustomer" value="${esc(customerName(p))}"></div>
+    <div class="field"><label>Müşteri telefon</label><input id="pmPhone" value="${esc(p.musteriTelefon||p.customerPhone||"")}"></div>
+    <div class="field full"><label>Teslimat adresi</label><textarea id="pmAddress">${esc(p.musteriAdres||p.customerAddress||p.adres||"")}</textarea></div>
+    <div class="field"><label>Sipariş tutarı</label><input id="pmAmount" type="number" min="0" value="${num(p.orderAmount??p.siparisTutari??p.siparisTutar??p.tutar)}"></div>
+    <div class="field"><label>Kurye ücreti</label><input id="pmFee" type="number" min="0" value="${num(p.courierFee??p.kuryeUcreti)}"></div>
+    <div class="field"><label>Ödeme</label><select id="pmPayment"><option value="cash">Nakit</option><option value="online">Online</option></select></div>
+    <div class="field"><label>Durum</label><select id="pmStatus">
+      <option value="${esc(current)}">${esc(current)}</option><option value="bekliyor">bekliyor</option><option value="kurye_atandi">kurye_atandi</option><option value="paket_alindi">paket_alindi</option><option value="teslimata_cikti">teslimata_cikti</option><option value="teslim_edildi">teslim_edildi</option>
+    </select></div>
+  </div>`;
+  const pay=String(p.paymentMethod||p.odemeYontemi||p.odeme||"").toLowerCase(); if(pay.includes("online")) $("pmPayment").value="online";
+  modalAction=async()=>{
+    const status=$("pmStatus").value;
+    await updateDoc(doc(db,"paketler",id),{
+      musteriAdSoyad:$("pmCustomer").value.trim(),
+      musteriAdi:$("pmCustomer").value.trim(),
+      musteriTelefon:$("pmPhone").value.trim(),
+      customerPhone:$("pmPhone").value.trim(),
+      musteriAdres:$("pmAddress").value.trim(),
+      customerAddress:$("pmAddress").value.trim(),
+      orderAmount:Math.max(0,num($("pmAmount").value)),
+      siparisTutari:Math.max(0,num($("pmAmount").value)),
+      courierFee:Math.max(0,num($("pmFee").value)),
+      kuryeUcreti:Math.max(0,num($("pmFee").value)),
+      paymentMethod:$("pmPayment").value,
+      durum:status,
+      status:status,
+      guncellenme: new Date()
+    });
+    closeModal(); await loadData(); showToast("Paket güncellendi.");
+  };
+  openModal();
+}
+
+function openModal(){ $("modalBackdrop").classList.add("show"); }
+function closeModal(){ $("modalBackdrop").classList.remove("show"); modalAction=null; }
+$("modalCancel").onclick=closeModal;
+$("modalSave").onclick=async()=>{ if(!modalAction)return; $("modalSave").disabled=true; try{await modalAction()}catch(e){console.error(e);showToast("İşlem başarısız. Rules veya yetkiyi kontrol edin.")}finally{$("modalSave").disabled=false} };
+
+async function toggleUser(id){
+  const u=users.find(x=>x.id===id); if(!u)return;
+  const next=!isActive(u);
+  try{await updateDoc(doc(db,"kullanicilar",id),{active:next}); showToast(next?"Hesap aktifleştirildi.":"Hesap pasifleştirildi."); await loadData();}catch(e){console.error(e);showToast("Hesap durumu değiştirilemedi.");}
+}
+async function deletePackage(id){
+  if(!confirm("Bu paketi kalıcı olarak silmek istediğinize emin misiniz?"))return;
+  try{await deleteDoc(doc(db,"paketler",id));showToast("Paket silindi.");await loadData();}catch(e){console.error(e);showToast("Paket silinemedi.")}
+}
+
+function csvEscape(v){const s=String(v??"");return '"'+s.replace(/"/g,'""')+'"'}
+function downloadCSV(name,rows){
+  const csv="\ufeff"+rows.map(r=>r.map(csvEscape).join(";")).join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+function exportBusinesses(){downloadCSV("isletmeler.csv",[["İşletme","E-posta","Telefon","Adres","Jeton","Ücretsiz Kullanım","Aktif"],...businesses.map(u=>[userName(u),u.email,u.telefon,u.adres,tokens(u),freeUsed(u),isActive(u)?"Evet":"Hayır"])])}
+function exportCouriers(){downloadCSV("kuryeler.csv",[["Kurye","E-posta","Telefon","Aktif"],...couriers.map(u=>[userName(u),u.email,u.telefon,isActive(u)?"Evet":"Hayır"])])}
+function exportPackages(){downloadCSV("paketler.csv",[["Kod","İşletme","Müşteri","Telefon","Adres","Tutar","Kurye Ücreti","Ödeme","Durum","Kurye"],...packages.map(p=>[packageCode(p),p.isletmeAdi||p.isletme,customerName(p),p.musteriTelefon||p.customerPhone,p.musteriAdres||p.customerAddress,p.orderAmount??p.siparisTutari,p.courierFee??p.kuryeUcreti,p.paymentMethod||p.odemeYontemi,p.durum||p.status,courierName(p)])])}
+function exportAll(){downloadCSV("bipaketimvar-rapor.csv",[["VERİ TÜRÜ","KOD/ID","AD","E-POSTA","TELEFON","DURUM","JETON","TUTAR"],...businesses.map(u=>["İşletme",u.id,userName(u),u.email,u.telefon,isActive(u)?"Aktif":"Pasif",tokens(u), ""]),...couriers.map(u=>["Kurye",u.id,userName(u),u.email,u.telefon,isActive(u)?"Aktif":"Pasif","",""]),...packages.map(p=>["Paket",p.id,customerName(p),"",p.musteriTelefon||p.customerPhone,p.durum||p.status,"",p.orderAmount??p.siparisTutari])])}
+
+document.querySelectorAll(".nav button").forEach(btn=>btn.onclick=()=>go(btn.dataset.section));
+document.querySelectorAll("[data-go]").forEach(btn=>btn.onclick=()=>go(btn.dataset.go));
+function go(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  $(id).classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.section===id));
+  $("pageTitle").textContent={dashboard:"Dashboard",businesses:"İşletmeler",couriers:"Kuryeler",packages:"Paketler",reports:"Raporlar"}[id]||"Yönetim";
+}
+["businessSearch","businessStatus","courierSearch","courierStatus","packageSearch","packageStatus"].forEach(id=>$(id).addEventListener("input",renderAll));
+["businessStatus","courierStatus","packageStatus"].forEach(id=>$(id).addEventListener("change",renderAll));
+$("refreshBtn").onclick=()=>loadData();
+$("exportBusinesses").onclick=exportBusinesses;$("exportCouriers").onclick=exportCouriers;$("exportPackages").onclick=exportPackages;$("reportAll").onclick=exportAll;$("exportQuick").onclick=exportAll;
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button"); if(!t)return;
+  if(t.dataset.toggleUser) toggleUser(t.dataset.toggleUser);
+  if(t.dataset.editBusiness) openBusinessModal(t.dataset.editBusiness);
+  if(t.dataset.editToken) openTokenModal(t.dataset.editToken);
+  if(t.dataset.editPackage) openPackageModal(t.dataset.editPackage);
+  if(t.dataset.deletePackage) deletePackage(t.dataset.deletePackage);
+});
+
+$("logoutBtn").onclick=async()=>{await signOut(auth);location.href="index.html"};
+
+onAuthStateChanged(auth, async user => {
+  if(!user){location.href="index.html";return}
+  try{
+    const snap = await getDoc(doc(db, "kullanicilar", user.uid));
+    if(!snap.exists()){
+      alert("Yönetici kaydı bulunamadı.");
+      await signOut(auth);
+      location.href="index.html";
+      return;
+    }
+    const d = snap.data();
+    if(d.tip !== "admin" && d.role !== "admin"){
+      alert("Bu hesap yönetim paneline yetkili değil.");
+      location.href="index.html";
+      return;
+    }
+    currentAdmin = user;
+    $("adminEmail").textContent = user.email || "Admin";
+    $("authLoading").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    await loadData();
+  }catch(e){
+    console.error(e);
+    alert("Yönetici doğrulaması başarısız.");
+    await signOut(auth);
+    location.href="index.html";
+  }
+});
+</script>
+</body>
+</html>
