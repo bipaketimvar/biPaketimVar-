@@ -21,18 +21,17 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Android proje oluştur
+      - name: Android projesini oluştur
         shell: bash
         run: |
           set -e
 
           mkdir -p app/src/main/java/com/bipaketimvar/app
-          mkdir -p app/src/main/assets
           mkdir -p app/src/main/res/values
           mkdir -p app/src/main/res/drawable
+          mkdir -p app/src/main/assets
 
           # Web dosyalarını APK içine kopyala
-          cp index.html app/src/main/assets/ 2>/dev/null || true
           cp *.html app/src/main/assets/ 2>/dev/null || true
           cp *.css app/src/main/assets/ 2>/dev/null || true
           cp *.js app/src/main/assets/ 2>/dev/null || true
@@ -41,32 +40,11 @@ jobs:
             \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.webp" \) \
             -exec cp {} app/src/main/assets/ \; || true
 
-          # Uygulama ikonu
-          if [ -f "logo.png" ]; then
-            cp logo.png app/src/main/res/drawable/ic_launcher.png
-          else
-            cat > app/src/main/res/drawable/ic_launcher.xml <<'ICON_EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <vector xmlns:android="http://schemas.android.com/apk/res/android"
-              android:width="108dp"
-              android:height="108dp"
-              android:viewportWidth="108"
-              android:viewportHeight="108">
+          # --------------------------------------------------
+          # SETTINGS
+          # --------------------------------------------------
 
-              <path
-                  android:fillColor="#7B2CBF"
-                  android:pathData="M0,0 L108,0 L108,108 L0,108 Z" />
-
-              <path
-                  android:fillColor="#FFFFFF"
-                  android:pathData="M54,18 C39,18 27,30 27,45 C27,65 54,91 54,91 C54,91 81,65 81,45 C81,30 69,18 54,18 Z M54,36 C48,36 43,41 43,47 C43,53 48,58 54,58 C60,58 65,53 65,47 C65,41 60,36 54,36 Z" />
-
-          </vector>
-          ICON_EOF
-          fi
-
-          # settings.gradle
-          cat > settings.gradle <<'GRADLE_EOF'
+          cat > settings.gradle <<'EOF'
           pluginManagement {
               repositories {
                   google()
@@ -86,17 +64,23 @@ jobs:
 
           rootProject.name = "biPaketimVar"
           include ":app"
-          GRADLE_EOF
+          EOF
 
-          # Root build.gradle
-          cat > build.gradle <<'GRADLE_EOF'
+          # --------------------------------------------------
+          # ROOT BUILD
+          # --------------------------------------------------
+
+          cat > build.gradle <<'EOF'
           plugins {
               id 'com.android.application' version '8.6.1' apply false
           }
-          GRADLE_EOF
+          EOF
 
-          # app/build.gradle
-          cat > app/build.gradle <<'GRADLE_EOF'
+          # --------------------------------------------------
+          # APP BUILD
+          # --------------------------------------------------
+
+          cat > app/build.gradle <<'EOF'
           plugins {
               id 'com.android.application'
           }
@@ -113,16 +97,20 @@ jobs:
                   versionName '1.0'
               }
           }
-          GRADLE_EOF
+          EOF
 
-          # AndroidManifest.xml
-          cat > app/src/main/AndroidManifest.xml <<'MANIFEST_EOF'
+          # --------------------------------------------------
+          # MANIFEST
+          # --------------------------------------------------
+
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission
+                  android:name="android.permission.INTERNET" />
 
-              <!-- Android 13+ bildirim izni -->
-              <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+              <uses-permission
+                  android:name="android.permission.POST_NOTIFICATIONS" />
 
               <application
                   android:theme="@style/AppTheme"
@@ -148,76 +136,127 @@ jobs:
               </application>
 
           </manifest>
-          MANIFEST_EOF
+          EOF
 
-          # Güvenli tema
-          cat > app/src/main/res/values/styles.xml <<'STYLE_EOF'
+          # --------------------------------------------------
+          # STYLE
+          # --------------------------------------------------
+
+          cat > app/src/main/res/values/styles.xml <<'EOF'
           <resources>
 
               <style
                   name="AppTheme"
                   parent="android:style/Theme.Material.Light.NoActionBar">
 
-                  <!-- İçeriğin telefonun üst çubuğunun altından başlamasını sağlar -->
-                  <item name="android:windowActionModeOverlay">true</item>
-
                   <item name="android:fontFamily">sans</item>
 
-                  <item name="android:colorAccent">#7B2CBF</item>
+                  <item name="android:colorAccent">
+                      #7B2CBF
+                  </item>
 
-                  <item name="android:statusBarColor">#7B2CBF</item>
+                  <item name="android:statusBarColor">
+                      #7B2CBF
+                  </item>
 
-                  <item name="android:navigationBarColor">#000000</item>
+                  <item name="android:navigationBarColor">
+                      #000000
+                  </item>
 
-                  <item name="android:windowLightStatusBar">false</item>
-
-                  <!-- Edge-to-edge kapalı -->
-                  <item name="android:windowNoTitle">true</item>
+                  <item name="android:windowLightStatusBar">
+                      false
+                  </item>
 
               </style>
 
           </resources>
-          STYLE_EOF
+          EOF
 
-          # MainActivity.java
-          cat > app/src/main/java/com/bipaketimvar/app/MainActivity.java <<'JAVA_EOF'
+          # --------------------------------------------------
+          # ICON
+          # --------------------------------------------------
+
+          if [ -f "logo.png" ]; then
+
+            cp logo.png \
+              app/src/main/res/drawable/ic_launcher.png
+
+          else
+
+            cat > app/src/main/res/drawable/ic_launcher.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+
+          <vector
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="108dp"
+              android:height="108dp"
+              android:viewportWidth="108"
+              android:viewportHeight="108">
+
+              <path
+                  android:fillColor="#7B2CBF"
+                  android:pathData="
+                  M0,0
+                  L108,0
+                  L108,108
+                  L0,108
+                  Z" />
+
+              <path
+                  android:fillColor="#FFFFFF"
+                  android:pathData="
+                  M54,18
+                  C39,18 27,30 27,45
+                  C27,65 54,91 54,91
+                  C54,91 81,65 81,45
+                  C81,30 69,18 54,18
+                  Z
+                  M54,36
+                  C48,36 43,41 43,47
+                  C43,53 48,58 54,58
+                  C60,58 65,53 65,47
+                  C65,41 60,36 54,36
+                  Z" />
+
+          </vector>
+          EOF
+
+          fi
+
+          # --------------------------------------------------
+          # MAIN ACTIVITY
+          # --------------------------------------------------
+
+          cat > app/src/main/java/com/bipaketimvar/app/MainActivity.java <<'EOF'
           package com.bipaketimvar.app;
 
           import android.Manifest;
           import android.app.Activity;
           import android.app.NotificationChannel;
           import android.app.NotificationManager;
-          import android.content.ActivityNotFoundException;
           import android.content.Intent;
           import android.content.pm.PackageManager;
           import android.net.Uri;
           import android.os.Build;
           import android.os.Bundle;
-          import android.view.Window;
-          import android.view.WindowInsets;
-          import android.view.WindowInsetsController;
-          import android.webkit.WebResourceError;
-          import android.webkit.WebResourceRequest;
           import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
-          import android.widget.Toast;
 
           public class MainActivity extends Activity {
 
               private WebView webView;
 
-              private static final String CHANNEL_ID = "paket_bildirimleri";
+              private static final String CHANNEL_ID =
+                  "paket_bildirimleri";
 
-              private static final int NOTIFICATION_PERMISSION_CODE = 1001;
+              private static final int
+                  NOTIFICATION_PERMISSION_CODE = 100;
 
               @Override
               protected void onCreate(Bundle savedInstanceState) {
+
                   super.onCreate(savedInstanceState);
-
-                  setupStatusBar();
-
-                  createNotificationChannel();
 
                   webView = new WebView(this);
 
@@ -225,56 +264,15 @@ jobs:
 
                   setupWebView();
 
+                  createNotificationChannel();
+
                   requestNotificationPermission();
-
-                  webView.loadUrl(
-                      "https://bipaketimvar.github.io/biPaketimVar-/"
-                  );
               }
 
-
-              /*
-               * Telefonun üst kısmındaki saat/batarya alanı
-               * uygulamanın üzerine binmesin.
-               */
-              private void setupStatusBar() {
-
-                  Window window = getWindow();
-
-                  if (window == null) {
-                      return;
-                  }
-
-                  window.setStatusBarColor(
-                      android.graphics.Color.rgb(123, 44, 191)
-                  );
-
-                  window.setNavigationBarColor(
-                      android.graphics.Color.BLACK
-                  );
-
-                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-
-                      WindowInsetsController controller =
-                          window.getInsetsController();
-
-                      if (controller != null) {
-
-                          controller.setSystemBarsAppearance(
-                              0,
-                              WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-                          );
-                      }
-                  }
-              }
-
-
-              /*
-               * WebView ayarları
-               */
               private void setupWebView() {
 
-                  WebSettings settings = webView.getSettings();
+                  WebSettings settings =
+                      webView.getSettings();
 
                   settings.setJavaScriptEnabled(true);
 
@@ -288,227 +286,117 @@ jobs:
 
                   settings.setMediaPlaybackRequiresUserGesture(false);
 
-                  settings.setJavaScriptCanOpenWindowsAutomatically(true);
+                  webView.setWebViewClient(
+                      new WebViewClient() {
 
-                  settings.setSupportMultipleWindows(false);
+                          @Override
+                          public boolean shouldOverrideUrlLoading(
+                              WebView view,
+                              String url
+                          ) {
 
-                  webView.setWebViewClient(new WebViewClient() {
+                              if (url == null) {
+                                  return false;
+                              }
 
-                      @Override
-                      public boolean shouldOverrideUrlLoading(
-                          WebView view,
-                          WebResourceRequest request
-                      ) {
+                              if (
+                                  url.startsWith("tel:") ||
+                                  url.startsWith("sms:") ||
+                                  url.startsWith("mailto:")
+                              ) {
 
-                          if (request == null) {
-                              return false;
-                          }
+                                  try {
 
-                          return handleUrl(
-                              request.getUrl().toString()
-                          );
-                      }
+                                      Intent intent =
+                                          new Intent(
+                                              Intent.ACTION_VIEW,
+                                              Uri.parse(url)
+                                          );
 
+                                      startActivity(intent);
 
-                      @Override
-                      public boolean shouldOverrideUrlLoading(
-                          WebView view,
-                          String url
-                      ) {
-
-                          return handleUrl(url);
-                      }
-
-
-                      @Override
-                      public void onReceivedError(
-                          WebView view,
-                          WebResourceRequest request,
-                          WebResourceError error
-                      ) {
-
-                          if (request != null && request.isForMainFrame()) {
-
-                              Toast.makeText(
-                                  MainActivity.this,
-                                  "İnternet bağlantısı kontrol ediliyor...",
-                                  Toast.LENGTH_SHORT
-                              ).show();
-                          }
-                      }
-
-                  });
-              }
-
-
-              /*
-               * Telefon, WhatsApp, Google Maps ve diğer
-               * Android bağlantılarını güvenli şekilde aç.
-               */
-              private boolean handleUrl(String url) {
-
-                  if (url == null || url.trim().isEmpty()) {
-                      return false;
-                  }
-
-                  try {
-
-                      String lowerUrl = url.toLowerCase();
-
-                      // Normal web sitesi
-                      if (
-                          lowerUrl.startsWith("http://") ||
-                          lowerUrl.startsWith("https://")
-                      ) {
-
-                          return false;
-                      }
-
-
-                      // Telefon
-                      if (
-                          lowerUrl.startsWith("tel:") ||
-                          lowerUrl.startsWith("telprompt:")
-                      ) {
-
-                          Intent intent = new Intent(
-                              Intent.ACTION_DIAL,
-                              Uri.parse(url)
-                          );
-
-                          startActivity(intent);
-
-                          return true;
-                      }
-
-
-                      // WhatsApp
-                      if (
-                          lowerUrl.startsWith("whatsapp:") ||
-                          lowerUrl.contains("wa.me")
-                      ) {
-
-                          Intent intent = new Intent(
-                              Intent.ACTION_VIEW,
-                              Uri.parse(url)
-                          );
-
-                          startActivity(intent);
-
-                          return true;
-                      }
-
-
-                      // SMS
-                      if (
-                          lowerUrl.startsWith("sms:")
-                      ) {
-
-                          Intent intent = new Intent(
-                              Intent.ACTION_SENDTO,
-                              Uri.parse(url)
-                          );
-
-                          startActivity(intent);
-
-                          return true;
-                      }
-
-
-                      // E-posta
-                      if (
-                          lowerUrl.startsWith("mailto:")
-                      ) {
-
-                          Intent intent = new Intent(
-                              Intent.ACTION_SENDTO,
-                              Uri.parse(url)
-                          );
-
-                          startActivity(intent);
-
-                          return true;
-                      }
-
-
-                      // Google Maps / harita
-                      if (
-                          lowerUrl.startsWith("geo:") ||
-                          lowerUrl.startsWith("google.navigation:")
-                      ) {
-
-                          Intent intent = new Intent(
-                              Intent.ACTION_VIEW,
-                              Uri.parse(url)
-                          );
-
-                          startActivity(intent);
-
-                          return true;
-                      }
-
-
-                      // intent:// bağlantıları
-                      if (
-                          lowerUrl.startsWith("intent:")
-                      ) {
-
-                          try {
-
-                              Intent intent =
-                                  Intent.parseUri(
-                                      url,
-                                      Intent.URI_INTENT_SCHEME
-                                  );
-
-                              if (intent != null) {
-
-                                  startActivity(intent);
+                                  } catch (Exception ignored) {
+                                  }
 
                                   return true;
                               }
 
-                          } catch (Exception ignored) {
+                              if (
+                                  url.startsWith("whatsapp:")
+                              ) {
 
-                              return true;
+                                  try {
+
+                                      Intent intent =
+                                          new Intent(
+                                              Intent.ACTION_VIEW,
+                                              Uri.parse(url)
+                                          );
+
+                                      startActivity(intent);
+
+                                  } catch (Exception ignored) {
+                                  }
+
+                                  return true;
+                              }
+
+                              if (
+                                  url.startsWith("geo:")
+                              ) {
+
+                                  try {
+
+                                      Intent intent =
+                                          new Intent(
+                                              Intent.ACTION_VIEW,
+                                              Uri.parse(url)
+                                          );
+
+                                      startActivity(intent);
+
+                                  } catch (Exception ignored) {
+                                  }
+
+                                  return true;
+                              }
+
+                              if (
+                                  url.startsWith("intent:")
+                              ) {
+
+                                  try {
+
+                                      Intent intent =
+                                          Intent.parseUri(
+                                              url,
+                                              Intent.URI_INTENT_SCHEME
+                                          );
+
+                                      startActivity(intent);
+
+                                  } catch (Exception ignored) {
+                                  }
+
+                                  return true;
+                              }
+
+                              return false;
                           }
                       }
+                  );
 
-
-                  } catch (ActivityNotFoundException e) {
-
-                      Toast.makeText(
-                          this,
-                          "Bu bağlantıyı açacak uygulama bulunamadı.",
-                          Toast.LENGTH_SHORT
-                      ).show();
-
-                      return true;
-
-                  } catch (Exception e) {
-
-                      Toast.makeText(
-                          this,
-                          "Bağlantı açılamadı.",
-                          Toast.LENGTH_SHORT
-                      ).show();
-
-                      return true;
-                  }
-
-                  return true;
+                  webView.loadUrl(
+                      "https://bipaketimvar.github.io/biPaketimVar-/"
+                  );
               }
 
-
-              /*
-               * Bildirim kanalı.
-               * Android 8+ için gereklidir.
-               */
               private void createNotificationChannel() {
 
-                  if (Build.VERSION.SDK_INT <
-                      Build.VERSION_CODES.O) {
-
+                  if (
+                      Build.VERSION.SDK_INT <
+                      Build.VERSION_CODES.O
+                  ) {
                       return;
                   }
 
@@ -523,7 +411,6 @@ jobs:
                           return;
                       }
 
-
                       NotificationChannel channel =
                           new NotificationChannel(
                               CHANNEL_ID,
@@ -531,94 +418,53 @@ jobs:
                               NotificationManager.IMPORTANCE_HIGH
                           );
 
-
                       channel.setDescription(
-                          "Yeni paket ve sipariş bildirimleri"
+                          "Yeni paket bildirimleri"
                       );
-
 
                       channel.enableVibration(true);
 
-
                       channel.setShowBadge(true);
 
-
-                      manager.createNotificationChannel(channel);
+                      manager.createNotificationChannel(
+                          channel
+                      );
 
                   } catch (Exception ignored) {
-
-                      // Bildirim kanalı oluşturulamazsa
-                      // uygulamanın açılmasını engelleme.
                   }
               }
 
-
-              /*
-               * Android 13 ve üzeri için bildirim izni.
-               *
-               * İzin verilmezse uygulama çökmeyecek.
-               */
               private void requestNotificationPermission() {
 
-                  if (Build.VERSION.SDK_INT <
-                      Build.VERSION_CODES.TIRAMISU) {
-
+                  if (
+                      Build.VERSION.SDK_INT <
+                      Build.VERSION_CODES.TIRAMISU
+                  ) {
                       return;
                   }
-
 
                   try {
 
                       if (
                           checkSelfPermission(
-                              Manifest.permission.POST_NOTIFICATIONS
-                          )
-                          != PackageManager.PERMISSION_GRANTED
+                              Manifest.permission
+                                  .POST_NOTIFICATIONS
+                          ) != PackageManager.PERMISSION_GRANTED
                       ) {
 
                           requestPermissions(
                               new String[]{
-                                  Manifest.permission.POST_NOTIFICATIONS
+                                  Manifest.permission
+                                      .POST_NOTIFICATIONS
                               },
                               NOTIFICATION_PERMISSION_CODE
                           );
                       }
 
                   } catch (Exception ignored) {
-
-                      // İzin penceresi açılamazsa
-                      // uygulama kapanmayacak.
                   }
               }
 
-
-              @Override
-              public void onRequestPermissionsResult(
-                  int requestCode,
-                  String[] permissions,
-                  int[] grantResults
-              ) {
-
-                  super.onRequestPermissionsResult(
-                      requestCode,
-                      permissions,
-                      grantResults
-                  );
-
-                  if (
-                      requestCode ==
-                      NOTIFICATION_PERMISSION_CODE
-                  ) {
-
-                      // Kullanıcı izin vermese bile
-                      // uygulama normal şekilde çalışmaya devam eder.
-                  }
-              }
-
-
-              /*
-               * Geri tuşu
-               */
               @Override
               public void onBackPressed() {
 
@@ -635,18 +481,12 @@ jobs:
                   }
               }
 
-
-              /*
-               * Activity kapanırken WebView'i temizle.
-               */
               @Override
               protected void onDestroy() {
 
                   if (webView != null) {
 
                       webView.stopLoading();
-
-                      webView.setWebViewClient(null);
 
                       webView.destroy();
 
@@ -656,13 +496,21 @@ jobs:
                   super.onDestroy();
               }
           }
-          JAVA_EOF
+          EOF
+
+      # --------------------------------------------------
+      # GRADLE
+      # --------------------------------------------------
 
       - name: Gradle kur
         uses: gradle/actions/setup-gradle@v4
 
       - name: APK oluştur
         run: gradle assembleDebug
+
+      # --------------------------------------------------
+      # APK
+      # --------------------------------------------------
 
       - name: APK'yi yükle
         uses: actions/upload-artifact@v4
