@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<title>Paketimvar - Kurye Paneli</title>
+<style>
+:root {
+  --primary: #5b21d6;
+  --primary-light: #f1eafe;
+  --orange: #ff8a00;
+  --orange-light: #fff7ed;
+  --ink: #17152b;
+  --muted: #6b7280;
+  --line: #eef0f5;
+  --bg: #f8f9fc;
+  --card: #ffffff;
+  --success: #059669;
+  --danger: #dc2626;
+  --shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); padding-bottom: 75px; }
+
+/* Yanıp Sönme (Pulse) Efekti */
+@keyframes pulseGlow {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 138, 0, 0.4); border-color: var(--orange); }
+  50% { transform: scale(1.01); box-shadow: 0 0 16px 4px rgba(255, 138, 0, 0.35); border-color: var(--orange); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 138, 0, 0); }
+}
+
+.card.pulse-anim {
+  animation: pulseGlow 1.8s infinite ease-in-out;
+}
+
+@keyframes alertDrop {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Üst Bar (Header) - Sığmama Sorunu Giderildi */
+.header {
+  background: #ffffff;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 60px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  gap: 8px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.brand img {
+  height: 28px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.notif-btn {
+  background: var(--orange-light);
+  color: var(--orange);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 11px;
+  border: 1px solid #ffedd5;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.notif-btn.active-notif {
+  background: var(--success);
+  color: #fff;
+  border-color: #047857;
+}
+
+.logout-btn {
+  background: #fef2f2;
+  color: var(--danger);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 11px;
+  border: 1px solid #fee2e2;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+/* Ana İçerik Alanı */
+.main { padding: 12px; max-width: 480px; margin: 0 auto; }
+.top-welcome { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.top-welcome h2 { font-size: 17px; font-weight: 800; }
+.top-welcome p { font-size: 11px; color: var(--muted); }
+.pool-badge { background: #eff6ff; color: #1d4ed8; padding: 4px 10px; border-radius: 20px; font-weight: 800; font-size: 11px; }
+
+/* Paket Kartı */
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  transition: all 0.3s ease;
+}
+.card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.pill { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; }
+.pill.purple { background: var(--primary-light); color: var(--primary); }
+.pill.orange { background: var(--orange-light); color: var(--orange); }
+
+.fee-wrap { text-align: right; }
+.fee-val { font-size: 18px; font-weight: 900; color: var(--success); line-height: 1; }
+.fee-label { font-size: 9px; color: var(--muted); font-weight: 700; }
+
+.package-title { font-size: 13px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+
+/* Adres Bilgi Kutuları */
+.info-box { background: #f8f9fc; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; }
+.info-box label { display: block; font-size: 9px; color: var(--muted); font-weight: 800; text-transform: uppercase; margin-bottom: 2px; }
+.info-box .title { font-size: 12px; font-weight: 700; color: var(--ink); }
+.info-box .sub { font-size: 11px; color: #4b5563; margin-top: 1px; }
+
+/* Buton Düzeni */
+.btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+.btn-grid.full { grid-template-columns: 1fr; }
+
+.btn {
+  padding: 9px 6px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 11px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  cursor: pointer;
+}
+.btn.primary { background: var(--primary); color: #fff; }
+.btn.success { background: var(--success); color: #fff; }
+.btn.light { background: #f1f3f9; color: #374151; }
+.btn.orange { background: var(--orange); color: #fff; }
+.btn.call { background: #f3f4f6; color: #1f2937; grid-column: span 2; margin-bottom: 2px; }
+
+/* Şık Boş Durum Tasarımı */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.empty-state .icon { font-size: 38px; margin-bottom: 8px; }
+.empty-state h3 { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+.empty-state p { font-size: 11px; color: var(--muted); }
+
+.loading { text-align: center; padding: 30px 15px; color: var(--muted); font-size: 12px; background: #fff; border-radius: 12px; }
+
+/* Alt Gezinme Menüsü */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--line); display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
+.nav-item { display: flex; flex-direction: column; align-items: center; color: var(--muted); font-size: 9px; text-decoration: none; font-weight: 700; cursor: pointer; }
+.nav-item.active { color: var(--primary); }
+.nav-item span { font-size: 16px; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <img src="logo.png" alt="Paketimvar" onerror="this.style.display='none'">
+    <span class="brand-text">Paketimvar</span>
+  </div>
+  <div class="header-actions">
+    <button class="notif-btn" id="notifBtn">🔔 Bildirim</button>
+    <button class="logout-btn" id="logoutBtn">🚪 Çıkış</button>
+  </div>
+</div>
+<main class="main">
+  <div class="top-welcome">
+    <div>
+      <h2 id="courierNameDisplay">Merhaba, Kurye</h2>
+      <p id="subTitleText">Aktif ve Müsait Paketler</p>
+    </div>
+    <div class="pool-badge" id="poolBadge">0 Paket</div>
+  </div>
+
+  <div id="packageContainer">
+    <div class="loading">⏳ Paketler yükleniyor...</div>
+  </div>
+</main>
+
+<nav class="bottom-nav">
+  <a data-tab="home" class="nav-item active"><span>🏠</span>Ana Sayfa</a>
+  <a data-tab="history" class="nav-item"><span>📜</span>Geçmiş</a>
+  <a data-tab="earnings" class="nav-item"><span>💰</span>Kazanç</a>
+  <a data-tab="profile" class="nav-item"><span>👤</span>Profil</a>
+</nav>
+
+<script type="module">
+import { 
+  auth, db, onAuthStateChanged, signOut, 
+  kuryePaketleriniDinle, kuryeGecmisPaketleriniGetir, paketiUstlenSafe, kuryeAdimGuncelle 
+} from "./firebase.js";
+
+const $ = id => document.getElementById(id);
+let currentCourier = null;
+let lastPoolCount = null;
+let activeTab = 'home';
+let notificationAudioContext = null;
+let notificationSoundReady = false;
+let lastAlertAt = 0;
+let rawPackagesCache = [];
+let historyPackagesCache = [];
+let unsubscribePackages = null;
+let historyLoadToken = 0;
+let packageAlertInterval = null;
+
+function initApp(user) {
+  currentCourier = user;
+  $("courierNameDisplay").textContent = "Merhaba, " + (user.displayName || "Kurye");
+
+  updateNotifButtonUI();
+
+  // Aynı sayfada kullanıcı değişirse eski listener'ı kapat.
+  if (typeof unsubscribePackages === "function") {
+    try { unsubscribePackages(); } catch (e) {}
+  }
+
+  unsubscribePackages = kuryePaketleriniDinle(user.uid, (paketler) => {
+    rawPackagesCache = Array.isArray(paketler) ? paketler : [];
+
+    const poolPackages = rawPackagesCache.filter(p =>
+      !p.kuryeId && normalizeStatus(p) === "bekliyor"
+    );
+    const currentPoolCount = poolPackages.length;
+
+    if (lastPoolCount !== null && currentPoolCount > lastPoolCount) {
+      triggerNewPackageAlert();
+    }
+
+    // Havuzda bekleyen paket olduğu sürece 7 saniyede bir tekrar bildir.
+    if (currentPoolCount > 0) {
+      startPackageAlertLoop();
+    } else {
+      stopPackageAlertLoop();
+    }
+
+    lastPoolCount = currentPoolCount;
+
+    renderCurrentView();
+  });
+
+  loadHistory(user.uid);
+}
+
+async function loadHistory(uid) {
+  const token = ++historyLoadToken;
+  try {
+    const result = await kuryeGecmisPaketleriniGetir(uid);
+    if (token !== historyLoadToken) return;
+    historyPackagesCache = Array.isArray(result) ? result : [];
+    renderCurrentView();
+  } catch (e) {
+    console.error("Kurye geçmişi yüklenemedi:", e);
+    historyPackagesCache = [];
+    renderCurrentView();
+  }
+}
+
+function normalizeStatus(p = {}) {
+  const value = String(p.durum ?? p.status ?? "").toLowerCase().trim();
+
+  if (["delivered", "teslim", "tamamlandi", "tamamlandı", "teslim_edildi"].includes(value)) {
+    return "teslim_edildi";
+  }
+  if (["cancelled", "canceled", "iptal", "cancel"].includes(value)) {
+    return "iptal";
+  }
+  if (["paket_alindi", "package_picked", "teslimat_hazir", "yolda_musteriye", "teslimata_cikti"].includes(value)) {
+    return "paket_alindi";
+  }
+  if (["yolda", "kurye_atandi", "assigned", "accepted"].includes(value)) {
+    return "yolda";
+  }
+  return value || "bekliyor";
+}
+
+function courierIdOf(p = {}) {
+  return String(p.kuryeId ?? p.courierId ?? p.assignedCourierId ?? "").trim();
+}
+
+function isCompleted(p = {}) {
+  return normalizeStatus(p) === "teslim_edildi";
+}
+
+function isMine(p = {}) {
+  return courierIdOf(p) === String(currentCourier?.uid || "");
+}
+
+function safeText(value, fallback = "") {
+  const v = String(value ?? "").trim();
+  return v || fallback;
+}
+
+function money(value, fallback = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+// Alt Menü Sekme Yönetimi
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.onclick = (e) => {
+    e.preventDefault();
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+    item.classList.add('active');
+    activeTab = item.getAttribute('data-tab');
+    renderCurrentView();
+  };
+});
+
+function renderCurrentView() {
+  const container = $("packageContainer");
+  const subTitle = $("subTitleText");
+  const poolBadge = $("poolBadge");
+
+  if (activeTab === 'home') {
+    subTitle.textContent = "Aktif ve Müsait Paketler";
+    renderHomePackages(rawPackagesCache);
+  } 
+  else if (activeTab === 'history') {
+    subTitle.textContent = "Tamamlanan Teslimat Geçmişiniz";
+    poolBadge.textContent = "Geçmiş";
+    
+    const historyList = historyPackagesCache;
+
+    if (historyList.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📜</div>
+          <h3>Henüz Geçmiş Kaydınız Yok</h3>
+          <p>Tamamladığınız teslimatlar burada listelenecektir.</p>
+        </div>
+      `;
+    } else {
+      container.innerHTML = historyList.map(p => {
+        const status = normalizeStatus(p);
+        const customer = safeText(p.musteriAdi ?? p.musteriAdSoyad ?? p.aliciAd ?? p.customerName, "Müşteri");
+        const address = safeText(p.teslimatAdresi ?? p.varisAdresi ?? p.musteriAdresi ?? p.customerAddress, "Adres belirtilmemiş");
+        const store = safeText(p.isletmeAdi ?? p.businessName, "İşletme");
+        const fee = money(p.kuryeUcreti ?? p.courierFee ?? p.ucret, 0);
+        const code = safeText(p.paketKodu ?? p.orderCode ?? p.id, "-");
+        const dateValue = p.teslimTarihi || p.guncellenmeTarihi || p.updatedAt || p.createdAt;
+        let dateText = "Tarih belirtilmemiş";
+        if (dateValue?.toDate) {
+          dateText = dateValue.toDate().toLocaleString("tr-TR", { dateStyle: "short", timeStyle: "short" });
+        }
+        const isCancelled = status === "iptal";
+        return `
+          <div class="card" style="border-left:4px solid ${isCancelled ? 'var(--danger)' : 'var(--success)'}">
+            <div class="card-top">
+              <span class="pill ${isCancelled ? 'orange' : 'purple'}">${isCancelled ? '❌ İPTAL' : '✅ TESLİM EDİLDİ'}</span>
+              <div class="fee-wrap">
+                <div class="fee-val" style="color:${isCancelled ? 'var(--danger)' : 'var(--success)'}">${fee} TL</div>
+                <div class="fee-label">KURYE ÜCRETİ</div>
+              </div>
+            </div>
+            <div class="package-title">📦 ${escapeHtml(code)}</div>
+            <div class="info-box"><label>🏪 İŞLETME</label><div class="title">${escapeHtml(store)}</div></div>
+            <div class="info-box"><label>👤 MÜŞTERİ</label><div class="title">${escapeHtml(customer)}</div></div>
+            <div class="info-box"><label>📍 TESLİMAT ADRESİ</label><div class="sub">${escapeHtml(address)}</div></div>
+            <div style="font-size:10px;color:var(--muted);margin-top:7px;text-align:right">🕒 ${escapeHtml(dateText)}</div>
+          </div>`;
+      }).join("");
+    }
+  } 
+  else if (activeTab === 'earnings') {
+    subTitle.textContent = "Kazanç Raporu";
+    poolBadge.textContent = "Bakiye";
+    
+    const completed = historyPackagesCache.filter(isCompleted);
+    const totalEarnings = completed.reduce((acc, p) => {
+      return acc + money(p.kuryeUcreti ?? p.courierFee ?? p.ucret, 0);
+    }, 0);
+
+    // Kazançları gün bazında grupla. Tarih için önce teslim tarihi, sonra
+    // güncelleme/oluşturma tarihi kullanılır. Firebase Timestamp desteklenir.
+    const daily = {};
+    completed.forEach(p => {
+      const dateValue = p.teslimTarihi || p.guncellenmeTarihi || p.updatedAt || p.createdAt || p.olusturmaTarihi;
+      let date = null;
+      if (dateValue?.toDate) date = dateValue.toDate();
+      else if (dateValue instanceof Date) date = dateValue;
+      else if (dateValue) {
+        const d = new Date(dateValue);
+        if (!Number.isNaN(d.getTime())) date = d;
+      }
+      if (!date) return;
+      const key = date.toLocaleDateString('en-CA', { timeZone: 'Europe/Istanbul' });
+      if (!daily[key]) daily[key] = { date, count: 0, total: 0 };
+      daily[key].count += 1;
+      daily[key].total += money(p.kuryeUcreti ?? p.courierFee ?? p.ucret, 0);
+    });
+
+    const dailyRows = Object.entries(daily)
+      .sort((a,b) => b[0].localeCompare(a[0]))
+      .map(([key, item]) => {
+        const label = item.date.toLocaleDateString('tr-TR', { day:'2-digit', month:'long', year:'numeric', timeZone:'Europe/Istanbul' });
+        return `
+          <div class="card" style="margin-top:10px;padding:14px 15px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <div>
+                <div style="font-size:14px;font-weight:900;">📅 ${escapeHtml(label)}</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:4px;">${item.count} teslimat</div>
+              </div>
+              <div style="font-size:20px;font-weight:900;color:var(--success);white-space:nowrap;">${item.total.toFixed(2)} TL</div>
+            </div>
+          </div>`;
+      }).join('');
+
+    container.innerHTML = `
+      <div class="card" style="text-align: center; padding: 25px 15px;">
+        <div style="font-size: 11px; color: var(--muted); font-weight: 800; margin-bottom: 4px;">TOPLAM KAZANDINIZ</div>
+        <div style="font-size: 32px; font-weight: 900; color: var(--success); margin-bottom: 12px;">${totalEarnings.toFixed(2)} TL</div>
+        <p style="font-size: 12px; color: var(--muted);">Tamamlanan ${completed.length} teslimat.</p>
+      </div>
+      <div style="font-size:13px;font-weight:900;margin:18px 4px 8px;">GÜNLÜK KAZANÇLAR</div>
+      ${dailyRows || `<div class="empty-state"><div class="icon">💰</div><h3>Henüz kazanç yok</h3><p>Teslim ettiğiniz paketlerin kazancı gün gün burada görünecek.</p></div>`}
+    `;
+  } 
+  else if (activeTab === 'profile') {
+    subTitle.textContent = "Kurye Profil Bilgileri";
+    poolBadge.textContent = "Profil";
+
+    container.innerHTML = `
+      <div class="card" style="padding: 16px;">
+        <div style="font-size: 14px; font-weight: 800; margin-bottom: 12px; color: var(--primary);">👤 Hesap Bilgileri</div>
+        <div class="info-box"><label>AD SOYAD</label><div class="title">${currentCourier?.displayName || 'Kurye'}</div></div>
+        <div class="info-box"><label>E-POSTA</label><div class="title">${currentCourier?.email || 'Belirtilmemiş'}</div></div>
+        <div class="info-box"><label>KULLANICI ID</label><div class="title" style="font-size: 10px; word-break: break-all;">${currentCourier?.uid}</div></div>
+      </div>
+    `;
+  }
+}
+
+function renderHomePackages(packages) {
+  const container = $("packageContainer");
+
+  // Sadece bekleyen havuz paketleri + bu kuryeye atanmış aktif paketler.
+  const visible = (Array.isArray(packages) ? packages : []).filter(p => {
+    const status = normalizeStatus(p);
+    const assignedToMe = isMine(p);
+    const inPool = !courierIdOf(p) && status === "bekliyor";
+    const activeMine = assignedToMe && !["teslim_edildi", "iptal"].includes(status);
+    return inPool || activeMine;
+  });
+
+  const poolCount = visible.filter(p => !courierIdOf(p) && normalizeStatus(p) === "bekliyor").length;
+  $("poolBadge").textContent = poolCount + " Havuzda";
+
+  if (visible.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🛵</div>
+        <h3>Şu An Aktif Paket Yok</h3>
+        <p>Yeni bir sipariş düştüğünde sesli ve görsel olarak uyarılacaksınız.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = visible.map(p => {
+    const mine = isMine(p);
+    const rawStatus = normalizeStatus(p);
+
+    const storeName = safeText(p.isletmeAdi ?? p.businessName, "İşletme");
+    const storeAddr = safeText(
+      p.gorunenAlisAdresi ?? p.isletmeAdresi ?? p.alisAdresi ?? p.cikisAdresi,
+      "Adres belirtilmemiş"
+    );
+    const deliveryAddr = safeText(
+      p.gorunenTeslimatAdresi ?? p.teslimatAdresi ?? p.varisAdresi ?? p.musteriAdresi ?? p.customerAddress,
+      "Teslimat adresi belirtilmemiş"
+    );
+    const customer = safeText(p.musteriAdi ?? p.musteriAdSoyad ?? p.aliciAd ?? p.customerName, "Müşteri");
+    const phone = safeText(p.musteriTelefon ?? p.aliciTelefon ?? p.customerPhone);
+    const content = safeText(p.paketIcerik ?? p.paketKodu ?? p.orderCode, "Sipariş Paketi");
+    const fee = money(p.kuryeUcreti ?? p.courierFee ?? p.ucret, 0);
+
+    const storeNav = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(storeAddr === "Adres belirtilmemiş" ? storeName : storeAddr)}`;
+    const deliveryNav = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(deliveryAddr === "Teslimat adresi belirtilmemiş" ? "" : deliveryAddr)}`;
+
+    let actionButtons = "";
+
+    if (!mine) {
+      actionButtons = `
+        <div class="btn-grid full" style="margin-top:10px;">
+          <button class="btn orange" onclick="handleAccept('${escapeAttr(p.id)}')">✋ Paketi Üstlen</button>
+        </div>`;
+    } else {
+      const phoneBtn = phone
+        ? `<a href="tel:${escapeAttr(phone)}" class="btn call">📞 Müşteriyi Ara</a>`
+        : "";
+
+      const isPickedUp = rawStatus === "paket_alindi";
+
+      if (!isPickedUp) {
+        actionButtons = `
+          ${phoneBtn}
+          <div class="btn-grid">
+            <a href="${storeNav}" target="_blank" rel="noopener" class="btn light">📍 İşletmeye Git</a>
+            <button class="btn primary" onclick="handleStatus('${escapeAttr(p.id)}','paket_alindi')">📦 Teslim Aldım</button>
+          </div>`;
+      } else {
+        actionButtons = `
+          ${phoneBtn}
+          <div class="btn-grid">
+            <a href="${deliveryNav}" target="_blank" rel="noopener" class="btn light">🗺️ Müşteriye Git</a>
+            <button class="btn success" onclick="handleStatus('${escapeAttr(p.id)}','teslim_edildi')">✅ Paketi Teslim Et</button>
+          </div>`;
+      }
+    }
+
+    const cardAnimationClass = !mine ? "pulse-anim" : "";
+    const borderClass = mine ? "var(--primary)" : "var(--orange)";
+
+    return `
+      <div class="card ${cardAnimationClass}" style="border-left:4px solid ${borderClass}">
+        <div class="card-top">
+          <span class="pill ${mine ? "purple" : "orange"}">
+            ${mine ? "🎯 SİZE ATANDI" : "🔔 YENİ HAVUZ PAKETİ"}
+          </span>
+          <div class="fee-wrap">
+            <div class="fee-val">${fee} TL</div>
+            <div class="fee-label">KURYE ÜCRETİ</div>
+          </div>
+        </div>
+
+        <div class="package-title">📦 ${escapeHtml(content)}</div>
+
+        <div class="info-box">
+          <label>🏪 İŞLETME</label>
+          <div class="title">${escapeHtml(storeName)}</div>
+          <div class="sub">${escapeHtml(storeAddr)}</div>
+        </div>
+
+        <div class="info-box">
+          <label>📍 TESLİMAT ADRESİ (${escapeHtml(customer)})</label>
+          <div class="title" style="color:var(--primary);">${escapeHtml(deliveryAddr)}</div>
+        </div>
+
+        ${actionButtons}
+      </div>`;
+  }).join("");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#096;");
+}
+
+// ================================
+// BİLDİRİM + SES + TİTREŞİM SİSTEMİ
+// FCM KULLANMADAN ÇALIŞIR.
+// Kullanıcı bir kez Bildirim butonuna bastığında ses motoru da hazırlanır.
+// ================================
+function updateNotifButtonUI() {
+  const btn = $("notifBtn");
+  if (!("Notification" in window)) {
+    btn.textContent = "🔊 Ses";
+    btn.classList.remove("active-notif");
+    return;
+  }
+
+  if (Notification.permission === "granted") {
+    btn.textContent = "🔔 Açık";
+    btn.classList.add("active-notif");
+    btn.style.opacity = "1";
+  } else if (Notification.permission === "denied") {
+    btn.textContent = "🔕 Kapalı";
+    btn.classList.remove("active-notif");
+    btn.style.opacity = "0.7";
+  } else {
+    btn.textContent = "🔔 Bildirim";
+    btn.classList.remove("active-notif");
+    btn.style.opacity = "1";
+  }
+}
+
+async function prepareNotificationSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return false;
+
+    if (!notificationAudioContext) {
+      notificationAudioContext = new AudioCtx();
+    }
+
+    if (notificationAudioContext.state === "suspended") {
+      await notificationAudioContext.resume();
+    }
+
+    notificationSoundReady = notificationAudioContext.state === "running";
+    return notificationSoundReady;
+  } catch (e) {
+    console.warn("Bildirim sesi hazırlanamadı:", e);
+    notificationSoundReady = false;
+    return false;
+  }
+}
+
+function playPackageSound() {
+  try {
+    const ctx = notificationAudioContext;
+    if (!ctx || ctx.state !== "running") return false;
+
+    const now = ctx.currentTime;
+    const notes = [880, 1175, 880, 1175];
+
+    notes.forEach((frequency, index) => {
+      const start = now + index * 0.18;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(frequency, start);
+
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.22, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.15);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.16);
+    });
+
+    return true;
+  } catch (e) {
+    console.warn("Paket sesi çalınamadı:", e);
+    return false;
+  }
+}
+
+function showVisualPackageAlert() {
+  const old = document.getElementById("newPackageAlert");
+  if (old) old.remove();
+
+  const box = document.createElement("div");
+  box.id = "newPackageAlert";
+  box.style.cssText = `
+    position:fixed;
+    left:12px;
+    right:12px;
+    top:72px;
+    z-index:9999;
+    background:#ff8a00;
+    color:#fff;
+    border-radius:14px;
+    padding:14px 16px;
+    box-shadow:0 8px 25px rgba(0,0,0,.22);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    font-weight:900;
+    animation:alertDrop .35s ease-out;
+  `;
+  box.innerHTML = `
+    <div>
+      <div style="font-size:15px;">🚀 YENİ PAKET!</div>
+      <div style="font-size:11px;font-weight:700;margin-top:3px;">Havuzda yeni teslimat var.</div>
+    </div>
+    <button id="closeNewPackageAlert" style="border:0;background:rgba(255,255,255,.2);color:#fff;border-radius:9px;padding:8px 10px;font-weight:900;">Kapat</button>
+  `;
+  document.body.appendChild(box);
+
+  document.getElementById("closeNewPackageAlert").onclick = () => box.remove();
+  setTimeout(() => { if (box.isConnected) box.remove(); }, 7000);
+}
+
+$("notifBtn").onclick = async () => {
+  // Bu tıklama hem Android/Chrome izin isteğini hem de ses motorunu kullanıcı
+  // etkileşimi içinde başlatır. Böylece otomatik ses engeline takılma ihtimali azalır.
+  await prepareNotificationSound();
+
+  if (!("Notification" in window)) {
+    playPackageSound();
+    alert("Tarayıcınız sistem bildirimlerini desteklemiyor. Sayfa açıkken paket sesi yine kullanılabilir.");
+    return;
+  }
+
+  if (Notification.permission === "denied") {
+    playPackageSound();
+    alert("Bildirim izni daha önce kapatılmış. Chrome site ayarlarından bildirim iznini açmanız gerekiyor.");
+    updateNotifButtonUI();
+    return;
+  }
+
+  let permission = Notification.permission;
+  if (permission !== "granted") {
+    try {
+      permission = await Notification.requestPermission();
+    } catch (e) {
+      console.warn("Bildirim izni alınamadı:", e);
+    }
+  }
+
+  updateNotifButtonUI();
+
+  if (permission === "granted") {
+    // Test sesi
+    playPackageSound();
+    if (navigator.vibrate) navigator.vibrate([120, 80, 120]);
+
+    try {
+      const notification = new Notification("Paketimvar Kurye", {
+        body: "🔊 Bildirim ve paket sesi aktif. Yeni paket geldiğinde uyarılacaksınız.",
+        icon: "logo.png",
+        tag: "bildirim-test"
+      });
+      notification.onclick = () => { window.focus(); notification.close(); };
+    } catch (e) {
+      console.warn("Test bildirimi gösterilemedi:", e);
+    }
+  }
+};
+
+function startPackageAlertLoop() {
+  if (packageAlertInterval) return;
+
+  packageAlertInterval = setInterval(() => {
+    // Listener tarafından güncellenen cache üzerinden tekrar kontrol et.
+    const pendingCount = rawPackagesCache.filter(p =>
+      !p.kuryeId && normalizeStatus(p) === "bekliyor"
+    ).length;
+
+    if (pendingCount > 0) {
+      triggerNewPackageAlert();
+    } else {
+      stopPackageAlertLoop();
+    }
+  }, 7000);
+}
+
+function stopPackageAlertLoop() {
+  if (packageAlertInterval) {
+    clearInterval(packageAlertInterval);
+    packageAlertInterval = null;
+  }
+}
+
+function triggerNewPackageAlert() {
+  // Aynı anda gelen snapshot değişikliklerinde art arda alarm yağmasını önle.
+  const now = Date.now();
+  if (now - lastAlertAt < 1200) return;
+  lastAlertAt = now;
+
+  // Sayfa görünür olsun olmasın ses motoru hazırsa dene.
+  if (notificationSoundReady) {
+    playPackageSound();
+  } else {
+    // Kullanıcı daha önce izin vermiş olabilir; AudioContext'i tekrar uyandırmayı dene.
+    prepareNotificationSound().then(ok => {
+      if (ok) playPackageSound();
+    });
+  }
+
+  if (navigator.vibrate) {
+    try { navigator.vibrate([250, 100, 250, 100, 450]); } catch (e) {}
+  }
+
+  showVisualPackageAlert();
+
+  if ("Notification" in window && Notification.permission === "granted") {
+    try {
+      const notification = new Notification("🚀 Yeni Paket Düştü!", {
+        body: "Havuzda yeni bir teslimat paketi sizi bekliyor.",
+        icon: "logo.png",
+        tag: "yeni-paket-" + Date.now(),
+        requireInteraction: true
+      });
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+      };
+    } catch (e) {
+      console.warn("Yeni paket bildirimi gösterilemedi:", e);
+    }
+  }
+}
+
+window.handleAccept = async (id) => {
+  try {
+    await paketiUstlenSafe(id);
+
+    // Paket başarıyla üstlenildi. Alarm döngüsünü durdur.
+    stopPackageAlertLoop();
+  } catch (e) {
+    alert(e.message);
+  }
+};
+
+window.handleStatus = async (id, newStatus) => {
+  try {
+    await kuryeAdimGuncelle(id, newStatus);
+  } catch (e) {
+    console.error(e);
+    alert(e?.message || "İşlem sırasında hata oluştu!");
+  }
+};
+
+onAuthStateChanged(auth, (user) => {
+  if (user) initApp(user);
+  else location.href = "index.html";
+});
+
+$("logoutBtn").onclick = async () => {
+  stopPackageAlertLoop();
+
+  if (typeof unsubscribePackages === "function") {
+    try { unsubscribePackages(); } catch (e) {}
+  }
+
+  await signOut(auth);
+};
+</script>
+</body>
+</html>

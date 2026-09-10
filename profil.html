@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paketimvar - Kurye Profil Paneli</title>
+    
+    <!-- Tailwind CSS ve FontAwesome CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --success-bg: #f0fdf4;
+            --success-text: #16a34a;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding-bottom: 96px;
+        }
+
+        .profile-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px 20px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+            text-align: center;
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 32px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+            border: 2px solid #dbeafe;
+        }
+
+        .user-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #eff6ff;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        .info-group {
+            text-align: left;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: 2px;
+            word-break: break-all;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            margin-top: 16px;
+        }
+
+        .btn-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            margin-top: 8px;
+            border: 1px solid #fee2e2;
+        }
+
+        /* 4'lü Sabit Alt Navigasyon */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 4px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .nav-item {
+            flex: 1;
+            background: transparent; 
+            border: none;
+            border-radius: 12px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            font-size: 10px; 
+            font-weight: 800; 
+            color: var(--text-muted);
+            cursor: pointer; 
+            gap: 3px; 
+            padding: 6px 4px;
+        }
+
+        .nav-item.active { 
+            background: var(--primary-light);
+            color: var(--primary); 
+        }
+        .nav-item .icon { font-size: 18px; }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= ÜST BAR (HEADER) - PROFİL SAYFASI ================= -->
+<header class="bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 flex justify-between items-center sticky top-0 z-50 h-14 shadow-sm">
+    <div class="flex items-center gap-3">
+        <a href="kurye.html" class="flex items-center h-10 w-28 overflow-hidden">
+            <img src="logo.png" alt="biPaketimVar" class="max-h-full w-auto object-contain mix-blend-multiply origin-left">
+        </a>
+        <span class="text-xs font-bold text-slate-400 border-l border-slate-200 pl-3">Profil</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+        <button id="bildirimBtn" type="button" class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 transition active:scale-95">
+            <i class="fa-solid fa-bell text-xs"></i>
+        </button>
+        <button id="cikisBtn" type="button" class="flex items-center gap-1.5 bg-red-50 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold border border-red-100 transition active:scale-95">
+            <i class="fa-solid fa-right-from-bracket text-xs"></i>
+            <span>Çıkış</span>
+        </button>
+    </div>
+</header>
+
+<main style="padding:16px; max-width:480px; margin:0 auto;">
+    <div class="profile-card">
+        <!-- AVATAR (BAŞ HARF) -->
+        <div class="avatar-circle" id="userAvatar">K</div>
+
+        <!-- KURYE İSMİ -->
+        <div class="user-name" id="userName">Yükleniyor...</div>
+        
+        <div class="status-badge">
+            🛵 Aktif Kurye
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">E-Posta Adresi</div>
+            <div class="info-value" id="userEmail">-</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">Telefon Numarası</div>
+            <div class="info-value" id="userPhone">-</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">Çalışma Durumu</div>
+            <div class="info-value" style="color:#16a34a; display:flex; align-items:center; gap:6px;">
+                <span style="height:8px; width:8px; background:#16a34a; border-radius:50%; display:inline-block;"></span>
+                Müsait / Görev Bekliyor
+            </div>
+        </div>
+
+        <button class="action-btn btn-primary" id="homePageBtn">
+            🏠 Ana Sayfaya Dön
+        </button>
+
+        <button class="action-btn btn-danger" id="logoutPageBtn">
+            🚪 Oturumu Kapat
+        </button>
+    </div>
+</main>
+
+<!-- Sabit Alt Navigasyon -->
+<nav class="bottom-nav">
+    <button class="nav-item" id="homeBtn">
+        <span class="icon">🏠</span> Ana Sayfa
+    </button>
+    <button class="nav-item" id="historyBtn">
+        <span class="icon">📜</span> Geçmiş
+    </button>
+    <button class="nav-item" id="earningsBtn">
+        <span class="icon">💰</span> Kazanç
+    </button>
+    <button class="nav-item active" id="profileBtn">
+        <span class="icon">👤</span> Profil
+    </button>
+</nav>
+<script type="module">
+    import {
+        auth,
+        db,
+        onAuthStateChanged,
+        doc,
+        getDoc,
+        signOut
+    } from "./firebase.js";
+
+    const userNameEl = document.getElementById("userName");
+    const userAvatarEl = document.getElementById("userAvatar");
+    const userEmailEl = document.getElementById("userEmail");
+    const userPhoneEl = document.getElementById("userPhone");
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const cikisBtn = document.getElementById('cikisBtn');
+        const logoutPageBtn = document.getElementById('logoutPageBtn');
+        const bildirimBtn = document.getElementById('bildirimBtn');
+        const homePageBtn = document.getElementById('homePageBtn');
+
+        const cikisIslemi = async () => {
+            await signOut(auth);
+            window.location.href = "index.html";
+        };
+
+        if (cikisBtn) cikisBtn.addEventListener('click', cikisIslemi);
+        if (logoutPageBtn) logoutPageBtn.addEventListener('click', cikisIslemi);
+
+        if (bildirimBtn) {
+            bildirimBtn.addEventListener('click', () => {
+                alert("Henüz yeni bildiriminiz bulunmuyor.");
+            });
+        }
+
+        if (homePageBtn) {
+            homePageBtn.addEventListener('click', () => {
+                window.location.href = "kurye.html";
+            });
+        }
+    });
+
+    onAuthStateChanged(auth, async function(user) {
+        if (!user) {
+            window.location.href = "index.html";
+            return;
+        }
+
+        // 1. Varsayılan e-posta ve bilinen temel verileri aktar
+        userEmailEl.textContent = user.email || "-";
+        userPhoneEl.textContent = user.phoneNumber || "-";
+
+        let kuryeAdi = user.displayName || "";
+
+        try {
+            // 2. Firestore 'kullanicilar' koleksiyonundan kuryenin tam adını ve telefonunu çek
+            const docRef = doc(db, "kullanicilar", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if (data.adSoyad) kuryeAdi = data.adSoyad;
+                if (data.ad && data.soyad) kuryeAdi = `${data.ad} ${data.soyad}`;
+                if (data.telefon) userPhoneEl.textContent = data.telefon;
+            }
+        } catch (error) {
+            console.error("Kullanıcı verileri alınırken hata:", error);
+        }
+
+        // Eğer veritabanında da isim bulunamadıysa e-postadan veya varsayılan bir isim türet
+        if (!kuryeAdi && user.email) {
+            const emailPrefix = user.email.split("@")[0];
+            kuryeAdi = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+        }
+
+        kuryeAdi = kuryeAdi || "Kurye";
+
+        // DOM Elemanlarını Güncelle
+        userNameEl.textContent = kuryeAdi;
+        userAvatarEl.textContent = kuryeAdi.charAt(0).toUpperCase();
+    });
+
+    // Alt Navigasyon Yönlendirmeleri
+    document.getElementById("homeBtn").onclick = () => window.location.href = "kurye.html";
+    document.getElementById("historyBtn").onclick = () => window.location.href = "gecmis.html";
+    document.getElementById("earningsBtn").onclick = () => window.location.href = "kazanc.html";
+    document.getElementById("profileBtn").onclick = () => window.location.href = "profil.html";
+</script>
+
+</body>
+</html>

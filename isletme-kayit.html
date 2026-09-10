@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Paketimvar - İşletme Kayıt</title>
+
+<link
+    rel="stylesheet"
+    href="style.css"
+>
+
+<style>
+
+body {
+    min-height: 100vh;
+    margin: 0;
+}
+
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.register-container {
+    width: 100%;
+    max-width: 430px;
+}
+
+.register-logo {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.register-logo .logo {
+    font-size: 27px;
+    font-weight: 900;
+}
+
+.register-logo p {
+    margin: 7px 0 0;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.register-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow:
+        0 8px 30px rgba(15, 23, 42, .06);
+}
+
+.register-title {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.register-title strong {
+    display: block;
+    font-size: 17px;
+    color: #111827;
+}
+
+.register-title span {
+    display: block;
+    color: #6b7280;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.form-group {
+    margin-bottom: 13px;
+}
+
+.form-group label {
+    display: block;
+    color: #374151;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 11px 12px;
+    font-size: 13px;
+    outline: none;
+    font-family: inherit;
+}
+
+.form-group input {
+    min-height: 44px;
+}
+
+.form-group textarea {
+    min-height: 75px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #2563eb;
+}
+
+.register-submit {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.register-submit:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.back-button {
+    width: 100%;
+    min-height: 42px;
+    margin-top: 9px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.message {
+    display: none;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.message.show {
+    display: block;
+}
+
+.message.error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.message.success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="register-page">
+
+<div class="register-container">
+
+
+<!-- LOGO -->
+
+<div class="register-logo">
+
+<div class="logo">
+📦 Paketim<span>var</span>
+</div>
+
+<p>
+İşletme hesabınızı oluşturun
+</p>
+
+</div>
+
+
+<!-- MESAJ -->
+
+<div
+    id="message"
+    class="message"
+></div>
+
+
+<!-- KAYIT -->
+
+<div class="register-card">
+
+
+<div class="register-title">
+
+<strong>
+İşletme Kaydı
+</strong>
+
+<span>
+Bilgilerinizi girerek işletme hesabınızı oluşturun.
+</span>
+
+</div>
+
+
+
+<!-- İŞLETME ADI -->
+
+<div class="form-group">
+
+<label for="isletmeAdi">
+İşletme Adı
+</label>
+
+<input
+    id="isletmeAdi"
+    type="text"
+    placeholder="İşletme adınız"
+    autocomplete="organization"
+>
+
+</div>
+
+
+
+<!-- TELEFON -->
+
+<div class="form-group">
+
+<label for="telefon">
+Telefon
+</label>
+
+<input
+    id="telefon"
+    type="tel"
+    inputmode="tel"
+    placeholder="05XX XXX XX XX"
+    autocomplete="tel"
+    maxlength="11"
+>
+
+</div>
+
+
+
+<!-- E-POSTA -->
+
+<div class="form-group">
+
+<label for="email">
+E-posta
+</label>
+
+<input
+    id="email"
+    type="email"
+    placeholder="ornek@email.com"
+    autocomplete="email"
+>
+
+</div>
+
+
+
+<!-- ŞİFRE -->
+
+<div class="form-group">
+
+<label for="sifre">
+Şifre
+</label>
+
+<input
+    id="sifre"
+    type="password"
+    placeholder="En az 6 karakter"
+    autocomplete="new-password"
+>
+
+</div>
+
+
+
+<!-- ŞİFRE TEKRAR -->
+
+<div class="form-group">
+
+<label for="sifreTekrar">
+Şifre Tekrar
+</label>
+
+<input
+    id="sifreTekrar"
+    type="password"
+    placeholder="Şifrenizi tekrar girin"
+    autocomplete="new-password"
+>
+
+</div>
+
+
+
+<!-- ADRES -->
+
+<div class="form-group">
+
+<label for="adres">
+İşletme Adresi
+</label>
+
+<textarea
+    id="adres"
+    placeholder="Paketlerin alınacağı işletme adresini yazın"
+></textarea>
+
+</div>
+
+
+
+<!-- KAYIT BUTONU -->
+
+<button
+    id="kayitBtn"
+    class="btn btn-primary register-submit"
+>
+🏪 İşletme Kaydı Oluştur
+</button>
+
+
+
+<!-- GERİ -->
+
+<button
+    id="geriBtn"
+    class="btn btn-light back-button"
+>
+← Giriş Sayfasına Dön
+</button>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+
+/* =====================================================
+   FIREBASE
+===================================================== */
+
+import {
+    auth,
+    db
+} from "./firebase.js";
+
+
+import {
+    createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+    doc,
+    setDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+
+/* =====================================================
+   ELEMENTLER
+===================================================== */
+
+const isletmeAdi =
+    document.getElementById(
+        "isletmeAdi"
+    );
+
+
+const telefon =
+    document.getElementById(
+        "telefon"
+    );
+
+
+const email =
+    document.getElementById(
+        "email"
+    );
+
+
+const sifre =
+    document.getElementById(
+        "sifre"
+    );
+
+
+const sifreTekrar =
+    document.getElementById(
+        "sifreTekrar"
+    );
+
+
+const adres =
+    document.getElementById(
+        "adres"
+    );
+
+
+const kayitBtn =
+    document.getElementById(
+        "kayitBtn"
+    );
+
+
+const geriBtn =
+    document.getElementById(
+        "geriBtn"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+
+/* =====================================================
+   MESAJ
+===================================================== */
+
+function mesaj(
+    text,
+    type = "error"
+) {
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message show " +
+        type;
+
+}
+
+
+
+/* =====================================================
+   TELEFON TEMİZLE
+===================================================== */
+
+function telefonTemizle(
+    value
+) {
+
+    let temiz =
+        String(value || "")
+        .replace(
+            /\D/g,
+            ""
+        );
+
+
+    if (
+        temiz.startsWith("90") &&
+        temiz.length === 12
+    ) {
+
+        temiz =
+            "0" +
+            temiz.substring(2);
+
+    }
+
+
+    if (
+        temiz.length === 10 &&
+        temiz.startsWith("5")
+    ) {
+
+        temiz =
+            "0" +
+            temiz;
+
+    }
+
+
+    return temiz;
+
+}
+
+
+
+/* =====================================================
+   TELEFON FORMAT
+===================================================== */
+
+telefon.addEventListener(
+    "input",
+    function() {
+
+        let rakamlar =
+            telefonTemizle(
+                this.value
+            );
+
+
+        this.value =
+            rakamlar.substring(
+                0,
+                11
+            );
+
+    }
+);
+
+
+
+/* =====================================================
+   KAYIT
+===================================================== */
+
+async function kayitOl() {
+
+
+    const ad =
+        isletmeAdi.value.trim();
+
+
+    const tel =
+        telefonTemizle(
+            telefon.value
+        );
+
+
+    const mail =
+        email.value
+        .trim()
+        .toLowerCase();
+
+
+    const pass =
+        sifre.value;
+
+
+    const pass2 =
+        sifreTekrar.value;
+
+
+    const isletmeAdres =
+        adres.value.trim();
+
+
+
+    /* =================================================
+       KONTROLLER
+    ================================================= */
+
+    if (!ad) {
+
+        mesaj(
+            "İşletme adını girin."
+        );
+
+        isletmeAdi.focus();
+
+        return;
+
+    }
+
+
+    if (
+        tel.length !== 11 ||
+        !tel.startsWith("05")
+    ) {
+
+        mesaj(
+            "Geçerli bir telefon numarası girin."
+        );
+
+        telefon.focus();
+
+        return;
+
+    }
+
+
+    if (!mail) {
+
+        mesaj(
+            "E-posta adresinizi girin."
+        );
+
+        email.focus();
+
+        return;
+
+    }
+
+
+    if (
+        !mail.includes("@")
+    ) {
+
+        mesaj(
+            "Geçerli bir e-posta adresi girin."
+        );
+
+        email.focus();
+
+        return;
+
+    }
+
+
+    if (!pass) {
+
+        mesaj(
+            "Şifre oluşturun."
+        );
+
+        sifre.focus();
+
+        return;
+
+    }
+
+
+    if (pass.length < 6) {
+
+        mesaj(
+            "Şifre en az 6 karakter olmalıdır."
+        );
+
+        sifre.focus();
+
+        return;
+
+    }
+
+
+    if (pass !== pass2) {
+
+        mesaj(
+            "Şifreler eşleşmiyor."
+        );
+
+        sifreTekrar.focus();
+
+        return;
+
+    }
+
+
+    if (!isletmeAdres) {
+
+        mesaj(
+            "İşletme adresini girin."
+        );
+
+        adres.focus();
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       BUTON
+    ================================================= */
+
+    kayitBtn.disabled =
+        true;
+
+    kayitBtn.textContent =
+        "Kayıt oluşturuluyor...";
+
+
+
+    try {
+
+
+        /* =============================================
+           FIREBASE AUTH
+        ============================================== */
+
+        const sonuc =
+            await createUserWithEmailAndPassword(
+                auth,
+                mail,
+                pass
+            );
+
+
+        const uid =
+            sonuc.user.uid;
+
+
+
+        /* =============================================
+           FIRESTORE İŞLETME KAYDI
+        ============================================== */
+
+        await setDoc(
+            doc(
+                db,
+                "kullanicilar",
+                uid
+            ),
+            {
+
+                uid: uid,
+
+                tip: "isletme",
+
+                role: "business",
+
+                isletmeAdi: ad,
+
+                telefon: tel,
+
+                email: mail,
+
+                adres: isletmeAdres,
+
+                active: true,
+
+                tokens: 0,
+
+                freeOrdersUsed: 0,
+
+                olusturmaTarihi:
+                    serverTimestamp(),
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+
+        /* =============================================
+           BAŞARILI
+        ============================================== */
+
+        mesaj(
+            "İşletme hesabınız başarıyla oluşturuldu.",
+            "success"
+        );
+
+
+        kayitBtn.textContent =
+            "Kayıt Başarılı";
+
+
+        setTimeout(
+            function() {
+
+                window.location.href =
+                    "isletme.html";
+
+            },
+            1200
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "İşletme kayıt hatası:",
+            error
+        );
+
+
+        let hata =
+            "Kayıt sırasında bir hata oluştu.";
+
+
+        if (
+            error.code ===
+            "auth/email-already-in-use"
+        ) {
+
+            hata =
+                "Bu e-posta adresi zaten kayıtlı.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/invalid-email"
+        ) {
+
+            hata =
+                "Geçerli bir e-posta adresi girin.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/weak-password"
+        ) {
+
+            hata =
+                "Şifre çok zayıf. En az 6 karakter kullanın.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "auth/network-request-failed"
+        ) {
+
+            hata =
+                "İnternet bağlantınızı kontrol edin.";
+
+        }
+
+
+        else if (
+            error.code ===
+            "permission-denied"
+        ) {
+
+            hata =
+                "Firebase erişim izni reddedildi. Rules kontrol edilmeli.";
+
+        }
+
+
+        mesaj(
+            hata,
+            "error"
+        );
+
+
+        kayitBtn.disabled =
+            false;
+
+        kayitBtn.textContent =
+            "🏪 İşletme Kaydı Oluştur";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   KAYIT BUTONU
+===================================================== */
+
+kayitBtn.addEventListener(
+    "click",
+    kayitOl
+);
+
+
+
+/* =====================================================
+   ENTER
+===================================================== */
+
+sifreTekrar.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            kayitOl();
+
+        }
+
+    }
+);
+
+
+
+/* =====================================================
+   GERİ
+===================================================== */
+
+geriBtn.addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "index.html";
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

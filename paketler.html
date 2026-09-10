@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>biPaketimVar - Paketlerim</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--blue:#2563eb;--blue2:#1d4ed8;--text:#172033;--muted:#64748b;--bg:#f3f6fb;--line:#e5eaf1;--green:#059669}
+*{box-sizing:border-box}
+body{background:var(--bg)}
+.page{width:min(100% - 20px,900px);margin:auto;padding:14px 0 105px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.back{width:42px;height:42px;border:1px solid var(--line);background:#fff;border-radius:13px;font-size:22px;color:#475569;box-shadow:0 3px 12px rgba(15,23,42,.05)}
+.title{flex:1}.title h1{margin:0;font-size:23px;color:var(--text)}.title p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.refresh{width:42px;height:42px;border:1px solid var(--line);background:#fff;border-radius:13px;font-size:20px;color:#475569}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px 15px;box-shadow:0 6px 22px rgba(15,23,42,.05)}
+.stat-label{font-size:10px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px}.stat-value{font-size:21px;font-weight:950;color:var(--text);margin-top:4px}.stat.fee .stat-value{color:var(--green)}
+.tabs-wrap{background:#fff;border:1px solid var(--line);border-radius:17px;padding:6px;margin-bottom:11px;box-shadow:0 6px 22px rgba(15,23,42,.04);overflow-x:auto}
+.tabs{display:flex;gap:5px;min-width:max-content}
+.tab{border:0;background:transparent;color:#64748b;padding:10px 13px;border-radius:12px;font-size:11px;font-weight:900;white-space:nowrap;cursor:pointer}.tab.active{background:#eaf1ff;color:var(--blue2)}.count{display:inline-flex;min-width:20px;height:20px;padding:0 6px;align-items:center;justify-content:center;border-radius:99px;background:#eef2f7;margin-left:5px;font-size:9px}.tab.active .count{background:#d7e5ff;color:var(--blue2)}
+.filters{background:#fff;border:1px solid var(--line);border-radius:17px;padding:10px;margin-bottom:12px;box-shadow:0 6px 22px rgba(15,23,42,.04)}
+.search{position:relative}.search span{position:absolute;left:12px;top:11px;font-size:17px;color:#94a3b8}.search input{width:100%;border:1px solid #dce3ec;border-radius:12px;padding:12px 12px 12px 39px;outline:0;font-size:12px;background:#f8fafc}.search input:focus{border-color:#8fb0ef;background:#fff}
+.filter-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.select{border:1px solid #dce3ec;background:#fff;border-radius:12px;padding:11px;font-size:11px;color:#334155;font-weight:800;outline:0}
+.results{display:flex;justify-content:space-between;align-items:center;margin:3px 3px 9px}.results strong{font-size:12px;color:var(--text)}.results span{font-size:10px;color:var(--muted)}
+.pkg{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:10px;box-shadow:0 6px 22px rgba(15,23,42,.05)}
+.pkg-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.customer{font-size:15px;font-weight:950;color:var(--text)}.code{font-size:10px;font-weight:950;color:var(--blue);margin-top:3px;letter-spacing:1.5px}.status{font-size:9px;font-weight:950;padding:7px 9px;border-radius:999px;background:#eff6ff;color:var(--blue2);white-space:nowrap}.status.wait{background:#fff7df;color:#a16207}.status.done{background:#e8faf4;color:#047857}
+.meta{margin-top:11px;padding-top:10px;border-top:1px solid #eef2f7;color:#64748b;font-size:11px;line-height:1.65}.meta b{color:#475569}.address{margin-top:9px;background:#f8fafc;border-radius:12px;padding:10px;color:#475569;font-size:11px}.date{margin-top:9px;color:#64748b;font-size:10px;font-weight:800}.fee-row{display:flex;justify-content:space-between;align-items:end;margin-top:10px}.fee-label{font-size:9px;color:#94a3b8;font-weight:900}.fee-value{font-size:16px;color:var(--green);font-weight:950}.actions{display:flex;gap:7px;margin-top:10px}.actions button{flex:1;border:0;border-radius:11px;padding:10px;font-size:10px;font-weight:900;background:#eef4ff;color:var(--blue2)}.actions button.detail{background:#f1f5f9;color:#475569}
+.empty{background:#fff;border:1px dashed #cbd5e1;border-radius:17px;padding:38px 15px;text-align:center;color:#64748b;font-size:12px}.loading{padding:30px;text-align:center;color:#64748b;font-size:12px}.hidden{display:none!important}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:20}
+@media(min-width:650px){.stats{grid-template-columns:1fr 1fr}.filter-row{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.tab{padding:9px 10px}.filter-row{grid-template-columns:1fr}.pkg{padding:13px}}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="top">
+    <button class="back" id="back">←</button>
+    <div class="title"><h1>📦 Paketlerim</h1><p>Tüm siparişlerinizi tek ekrandan yönetin.</p></div>
+    <button class="refresh" id="refresh" title="Yenile">↻</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Toplam Paket</div><div class="stat-value" id="totalPackage">0</div></div>
+    <div class="stat fee"><div class="stat-label">Toplam Kurye Ücreti</div><div class="stat-value" id="totalFee">₺0</div></div>
+  </div>
+
+  <div class="tabs-wrap">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="all">Tümü <span class="count" id="countAll">0</span></button>
+      <button class="tab" data-tab="waiting">Bekleyen <span class="count" id="countWaiting">0</span></button>
+      <button class="tab" data-tab="active">Dağıtımda <span class="count" id="countActive">0</span></button>
+      <button class="tab" data-tab="done">Teslim Edildi <span class="count" id="countDone">0</span></button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="search"><span>⌕</span><input id="search" placeholder="Müşteri, telefon, kod veya adres ara..." autocomplete="off"></div>
+    <div class="filter-row">
+      <select class="select" id="dateFilter">
+        <option value="all">📅 Tüm tarihler</option>
+        <option value="today">Bugün</option>
+        <option value="7">Son 7 gün</option>
+        <option value="30">Son 30 gün</option>
+      </select>
+      <select class="select" id="sortFilter">
+        <option value="new">Yeni → Eski</option>
+        <option value="old">Eski → Yeni</option>
+        <option value="feeHigh">Ücret: Yüksek → Düşük</option>
+        <option value="feeLow">Ücret: Düşük → Yüksek</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="results"><strong id="resultTitle">Tüm Paketler</strong><span id="resultInfo">0 paket</span></div>
+  <div id="loading" class="loading">Paketler yükleniyor...</div>
+  <div id="list"></div>
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-item" onclick="location.href='isletme.html'"><span class="icon">🏠</span>Ana Sayfa</button>
+  <button class="nav-item" onclick="location.href='paket-ekle.html'"><span class="icon">➕</span>Paket Oluştur</button>
+  <button class="nav-item active"><span class="icon">📦</span>Paketler</button>
+  <button class="nav-item" onclick="location.href='profil.html'"><span class="icon">👤</span>Profil</button>
+</nav>
+
+<script type="module">
+import {auth,db,onAuthStateChanged,collection,query,where,onSnapshot} from './firebase.js';
+const $=id=>document.getElementById(id);
+let all=[],unsub=null,currentTab='all';
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const customer=p=>p.musteriAdSoyad||p.musteriAdi||[p.musteriAd,p.musteriSoyad].filter(Boolean).join(' ')||p.customerName||'Müşteri';
+const phone=p=>p.musteriTelefon||p.aliciTelefon||p.customerPhone||'';
+const code=p=>p.paketKodu||p.kod||p.packageCode||'—';
+const address=p=>p.musteriAdres||p.teslimatAdresi||p.musteriAdresi||p.customerAddress||p.varisAdresi||'';
+const courier=p=>p.kuryeAdi||p.courierName||'';
+const fee=p=>Number(p.kuryeUcreti??p.courierFee??p.ucret??0)||0;
+const rawStatus=p=>String(p.durum||p.status||'bekliyor').toLowerCase().trim();
+function statusGroup(p){const s=rawStatus(p);if(['teslim_edildi','teslim','delivered'].includes(s))return'done';if(['bekliyor','waiting','pending'].includes(s))return'waiting';return'active'}
+function statusText(p){const s=rawStatus(p);return({bekliyor:'Kurye Bekleniyor',waiting:'Kurye Bekleniyor',pending:'Kurye Bekleniyor',kurye_atandi:'Kurye Atandı',paket_alindi:'Paket Alındı',teslimata_cikti:'Teslimatta',yolda:'Kurye Yolda',teslim_edildi:'Teslim Edildi',teslim:'Teslim Edildi',delivered:'Teslim Edildi'})[s]||s||'Bilinmiyor'}
+function timeValue(v){if(!v)return null;if(typeof v.toDate==='function')return v.toDate();if(typeof v.toMillis==='function')return new Date(v.toMillis());if(typeof v==='object'&&typeof v.seconds==='number')return new Date(v.seconds*1000);if(v instanceof Date)return v;const d=new Date(v);return Number.isNaN(d.getTime())?null:d}
+function packageDate(p){return timeValue(p.tarih)||timeValue(p.createdAt)||timeValue(p.olusturmaTarihi)||timeValue(p.guncellenme)||timeValue(p.updatedAt)}
+function formatDate(p){const d=packageDate(p);if(!d)return'Tarih / saat yok';return d.toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}
+function inDateRange(p){const v=$('dateFilter').value;if(v==='all')return true;const d=packageDate(p);if(!d)return false;const now=new Date();if(v==='today')return d.toDateString()===now.toDateString();const days=Number(v);const start=new Date(now);start.setHours(0,0,0,0);start.setDate(start.getDate()-days+1);return d>=start&&d<=now}
+function matchesSearch(p){const q=$('search').value.trim().toLocaleLowerCase('tr-TR');if(!q)return true;return[customer(p),phone(p),code(p),address(p),courier(p),p.isletmeAdi].join(' ').toLocaleLowerCase('tr-TR').includes(q)}
+function filtered(){let data=all.filter(p=>(currentTab==='all'||statusGroup(p)===currentTab)&&inDateRange(p)&&matchesSearch(p));const sort=$('sortFilter').value;data.sort((a,b)=>{const da=packageDate(a)?.getTime()||0,db=packageDate(b)?.getTime()||0;if(sort==='old')return da-db;if(sort==='feeHigh')return fee(b)-fee(a);if(sort==='feeLow')return fee(a)-fee(b);return db-da});return data}
+function updateCounts(){const c={all:all.length,waiting:0,active:0,done:0};all.forEach(p=>c[statusGroup(p)]++);$('countAll').textContent=c.all;$('countWaiting').textContent=c.waiting;$('countActive').textContent=c.active;$('countDone').textContent=c.done;$('totalPackage').textContent=all.length.toLocaleString('tr-TR');$('totalFee').textContent='₺'+all.reduce((s,p)=>s+fee(p),0).toLocaleString('tr-TR',{maximumFractionDigits:2})}
+function render(){updateCounts();const data=filtered();const titles={all:'Tüm Paketler',waiting:'Bekleyen Paketler',active:'Dağıtımdaki Paketler',done:'Teslim Edilen Paketler'};$('resultTitle').textContent=titles[currentTab];$('resultInfo').textContent=data.length+' paket';if(!data.length){$('list').innerHTML='<div class="empty">📦<br><br>Seçtiğiniz kriterlere uygun paket bulunamadı.</div>';return}$('list').innerHTML=data.map(p=>{const g=statusGroup(p);return`<article class="pkg"><div class="pkg-top"><div><div class="customer">${esc(customer(p))}</div><div class="code">${esc(code(p))}</div></div><span class="status ${g==='waiting'?'wait':g==='done'?'done':''}">${esc(statusText(p))}</span></div><div class="meta"><b>🚚 Kurye:</b> ${esc(courier(p)||'Henüz atanmadı')}</div><div class="address">📍 ${esc(address(p)||'Adres belirtilmemiş')}</div><div class="date">🗓️ ${esc(formatDate(p))}</div><div class="fee-row"><div><div class="fee-label">KURYE ÜCRETİ</div><div class="fee-value">₺${fee(p).toLocaleString('tr-TR',{maximumFractionDigits:2})}</div></div></div><div class="actions"><button data-map="${esc(address(p))}">📍 Haritada Aç</button><button class="detail" data-detail="${esc(p.id)}">🔎 Detay</button></div></article>`}).join('');document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{const a=b.dataset.map;if(a)location.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a)});document.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>{const p=all.find(x=>x.id===b.dataset.detail);if(p)alert(`Paket: ${code(p)}\nMüşteri: ${customer(p)}\nTelefon: ${phone(p)||'Yok'}\nDurum: ${statusText(p)}\nAdres: ${address(p)||'Yok'}\nKurye: ${courier(p)||'Atanmadı'}\nKurye ücreti: ₺${fee(p).toLocaleString('tr-TR')}\nTarih / Saat: ${formatDate(p)}`)})}
+
+document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');currentTab=btn.dataset.tab;render()});$('search').oninput=render;$('dateFilter').onchange=render;$('sortFilter').onchange=render;$('back').onclick=()=>location.href='isletme.html';$('refresh').onclick=()=>{const b=$('refresh');b.textContent='⟳';setTimeout(()=>b.textContent='↻',500);render()};
+onAuthStateChanged(auth,async u=>{if(!u){location.href='index.html';return}try{const q=query(collection(db,'paketler'),where('isletmeId','==',u.uid));unsub=onSnapshot(q,s=>{all=s.docs.map(d=>({id:d.id,...d.data()}));$('loading').classList.add('hidden');render()},e=>{$('loading').textContent='Paketler alınamadı: '+e.message})}catch(e){$('loading').textContent='Paketler alınamadı.'}});
+window.addEventListener('beforeunload',()=>{if(unsub)unsub()});
+</script>
+</body>
+</html>

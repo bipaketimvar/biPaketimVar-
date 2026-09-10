@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paketimvar - Kurye Geçmiş Paneli</title>
+    
+    <!-- Tailwind CSS ve FontAwesome CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --success-bg: #f0fdf4;
+            --success-text: #16a34a;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding-bottom: 96px;
+        }
+
+        .package-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+        }
+
+        .business-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+        }
+
+        .business-label {
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .business-name {
+            color: var(--text-main);
+            font-size: 12px;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .fee-box {
+            text-align: right;
+        }
+
+        .fee-label {
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .fee-value {
+            color: var(--success-text);
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .package-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .route-box {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            background: #fff;
+        }
+
+        .route-row {
+            display: flex;
+            gap: 9px;
+            padding: 9px;
+        }
+
+        .route-row + .route-row {
+            border-top: 1px solid var(--border-color);
+        }
+
+        .route-icon {
+            width: 26px;
+            height: 26px;
+            flex: 0 0 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .route-label {
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .route-address {
+            color: #334155;
+            font-size: 11px;
+            line-height: 1.4;
+            margin-top: 2px;
+        }
+
+        .package-actions { 
+            display: flex; 
+            gap: 8px; 
+        }
+        
+        .package-action { 
+            flex: 1; 
+            min-height: 38px; 
+            border: 0; 
+            border-radius: 10px; 
+            font-size: 11px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 6px; 
+        }
+
+        .map-btn { background: var(--primary-light); color: var(--primary); }
+        .home-btn { background: #f1f5f9; color: #475569; }
+
+        .empty-box { 
+            text-align: center; 
+            background: #fff; 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 36px 18px; 
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 4px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .nav-item {
+            flex: 1;
+            background: transparent; 
+            border: none;
+            border-radius: 12px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            font-size: 10px; 
+            font-weight: 800; 
+            color: var(--text-muted);
+            cursor: pointer; 
+            gap: 3px; 
+            padding: 6px 4px;
+        }
+
+        .nav-item.active { 
+            background: var(--primary-light);
+            color: var(--primary); 
+        }
+        .nav-item .icon { font-size: 18px; }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= ÜST BAR (HEADER) - GEÇMİŞ SAYFASI ================= -->
+<header class="bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 flex justify-between items-center sticky top-0 z-50 h-14 shadow-sm">
+    <!-- LOGO VE SAYFA BAŞLIĞI -->
+    <div class="flex items-center gap-3">
+        <a href="kurye.html" class="flex items-center h-10 w-28 overflow-hidden">
+            <img src="logo.png" alt="biPaketimVar" class="max-h-full w-auto object-contain mix-blend-multiply origin-left">
+        </a>
+        <span class="text-xs font-bold text-slate-400 border-l border-slate-200 pl-3">Geçmiş</span>
+    </div>
+
+    <!-- SAĞ BUTONLAR -->
+    <div class="flex items-center gap-2">
+        <!-- BİLDİRİM BUTONU -->
+        <button id="bildirimBtn" type="button" class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 transition active:scale-95">
+            <i class="fa-solid fa-bell text-xs"></i>
+        </button>
+
+        <!-- ÇIKIŞ BUTONU -->
+        <button id="cikisBtn" type="button" class="flex items-center gap-1.5 bg-red-50 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold border border-red-100 transition active:scale-95">
+            <i class="fa-solid fa-right-from-bracket text-xs"></i>
+            <span>Çıkış</span>
+        </button>
+    </div>
+</header>
+
+<main style="padding:16px; max-width:480px; margin:0 auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div>
+            <h2 style="margin:0; font-size:17px; font-weight:800; color:var(--text-main);">Geçmiş Teslimatlar</h2>
+            <div style="color:var(--text-muted); font-size:11px; margin-top:2px;">Tamamladığınız tüm teslimatlar ve kazançlarınız</div>
+        </div>
+        <div style="background:var(--success-bg); color:var(--success-text); padding:6px 10px; border-radius:10px; font-size:11px; font-weight:800;">
+            ✅ <span id="totalCount">0</span> Teslimat
+        </div>
+    </div>
+
+    <div id="message" style="display:none; padding:10px; border-radius:10px; font-size:11px; margin-bottom:12px; text-align:center; font-weight:700;"></div>
+
+    <div id="historyList">
+        <div class="empty-box">
+            <div style="font-size:32px;">⏳</div>
+            <div style="font-size:13px; font-weight:800; margin-top:8px;">Geçmiş yükleniyor</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Tamamlanan paketler getiriliyor...</div>
+        </div>
+    </div>
+</main>
+
+<!-- Tam Oturan 4'lü Alt Navigasyon -->
+<nav class="bottom-nav">
+    <button class="nav-item" id="homeBtn">
+        <span class="icon">🏠</span> Ana Sayfa
+    </button>
+    <button class="nav-item active" id="historyBtn">
+        <span class="icon">📜</span> Geçmiş
+    </button>
+    <button class="nav-item" id="earningsBtn">
+        <span class="icon">💰</span> Kazanç
+    </button>
+    <button class="nav-item" id="profileBtn">
+        <span class="icon">👤</span> Profil
+    </button>
+</nav>
+<script type="module">
+    import {
+        auth,
+        db,
+        onAuthStateChanged,
+        collection,
+        query,
+        where,
+        getDocs,
+        signOut
+    } from "./firebase.js";
+
+    const historyList = document.getElementById("historyList");
+    const totalCount = document.getElementById("totalCount");
+    const message = document.getElementById("message");
+
+    // Buton Etkileşimlerini Bağla
+    document.addEventListener("DOMContentLoaded", () => {
+        const cikisBtn = document.getElementById('cikisBtn');
+        const bildirimBtn = document.getElementById('bildirimBtn');
+
+        if (cikisBtn) {
+            cikisBtn.addEventListener('click', async () => {
+                await signOut(auth);
+                window.location.href = "index.html";
+            });
+        }
+
+        if (bildirimBtn) {
+            bildirimBtn.addEventListener('click', () => {
+                alert("Henüz yeni bildiriminiz bulunmuyor.");
+            });
+        }
+    });
+
+    function mesajGoster(text, type = "error") {
+        if (!message) return;
+        message.textContent = text;
+        message.style.display = "block";
+        message.style.background = type === "success" ? "#f0fdf4" : "#fef2f2";
+        message.style.color = type === "success" ? "#16a34a" : "#dc2626";
+    }
+
+    onAuthStateChanged(auth, async function(user) {
+        if (!user) {
+            window.location.href = "index.html";
+            return;
+        }
+        await gecmisPaketleriGetir(user.uid);
+    });
+
+    async function gecmisPaketleriGetir(kuryeUid) {
+        try {
+            const q = query(
+                collection(db, "paketler"), 
+                where("kuryeId", "==", kuryeUid),
+                where("durum", "==", "teslim_edildi")
+            );
+
+            const querySnapshot = await getDocs(q);
+            let paketler = [];
+
+            querySnapshot.forEach((docItem) => {
+                paketler.push({ id: docItem.id, ...docItem.data() });
+            });
+
+            if (totalCount) {
+                totalCount.textContent = paketler.length;
+            }
+
+            if (paketler.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-box">
+                        <div style="font-size:32px;">📭</div>
+                        <div style="font-size:13px; font-weight:800; margin-top:8px;">Henüz geçmiş teslimatınız yok</div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Tamamladığınız paketler burada listelenecektir.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            historyList.innerHTML = paketler.map(paket => gecmisKartiOlustur(paket)).join("");
+            butonlariBagla(paketler);
+
+        } catch (error) {
+            console.error("Geçmiş paketler yüklenme hatası:", error);
+            mesajGoster("Geçmiş teslimatlar yüklenirken bir hata oluştu.");
+        }
+    }
+
+    function gecmisKartiOlustur(paket) {
+        const paketAciklama = paket.paketAciklama || "Standart Paket";
+        const isletmeAdi = paket.isletmeAdi || "İşletme";
+        const musteriAdi = paket.musteriAdi || "Müşteri";
+        const isletmeAdres = paket.isletmeAdres || "-";
+        const musteriAdres = paket.musteriAdres || "-";
+        
+        const kazanc = paket.kuryeUcreti || paket.ucret || "0 ₺";
+
+        let tarihStr = "Tamamlandı";
+        if (paket.teslimTarihi && paket.teslimTarihi.seconds) {
+            const date = new Date(paket.teslimTarihi.seconds * 1000);
+            tarihStr = date.toLocaleDateString("tr-TR") + " " + date.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
+        }
+
+        return `
+            <div class="package-card" data-id="${paket.id}">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                    <div>
+                        <div style="font-size:13px; font-weight:800; color:var(--text-main);">📦 ${escapeHtml(paketAciklama)}</div>
+                        <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">🕒 ${tarihStr}</div>
+                        <div style="margin-top:6px;"><span class="package-status">✓ Teslim Edildi</span></div>
+                    </div>
+                    <div class="fee-box">
+                        <div class="fee-label">KAZANÇ</div>
+                        <div class="fee-value">${escapeHtml(kazanc)}</div>
+                    </div>
+                </div>
+
+                <div class="business-box">
+                    <div>🏪</div>
+                    <div style="flex:1;">
+                        <div class="business-label">İŞLETME</div>
+                        <div class="business-name">${escapeHtml(isletmeAdi)}</div>
+                    </div>
+                </div>
+
+                <div class="route-box">
+                    <div class="route-row">
+                        <div class="route-icon">🏪</div>
+                        <div style="flex:1;">
+                            <div class="route-label">ALIŞ ADRESİ</div>
+                            <div class="route-address">${escapeHtml(isletmeAdres)}</div>
+                        </div>
+                    </div>
+                    <div class="route-row">
+                        <div class="route-icon">📍</div>
+                        <div style="flex:1;">
+                            <div class="route-label">TESLİMAT ADRESİ (${escapeHtml(musteriAdi)})</div>
+                            <div class="route-address">${escapeHtml(musteriAdres)}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="package-actions">
+                    <button class="package-action map-btn" data-action="map" data-adres="${escapeAttr(musteriAdres)}">
+                        🗺️ Haritada Aç
+                    </button>
+                    <button class="package-action home-btn" data-action="home">
+                        🏠 Ana Sayfa
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function butonlariBagla(liste) {
+        liste.forEach(paket => {
+            const kart = document.querySelector(`[data-id="${paket.id}"]`);
+            if (!kart) return;
+
+            const mapBtn = kart.querySelector('[data-action="map"]');
+            if (mapBtn) {
+                mapBtn.onclick = () => {
+                    const adres = mapBtn.getAttribute("data-adres");
+                    window.location.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(adres);
+                };
+            }
+
+            const homeBtn = kart.querySelector('[data-action="home"]');
+            if (homeBtn) {
+                homeBtn.onclick = () => {
+                    window.location.href = "kurye.html";
+                };
+            }
+        });
+    }
+
+    // Alt Navigasyon Yönlendirmeleri
+    const homeBtn = document.getElementById("homeBtn");
+    const historyBtn = document.getElementById("historyBtn");
+    const earningsBtn = document.getElementById("earningsBtn");
+    const profileBtn = document.getElementById("profileBtn");
+
+    if (homeBtn) homeBtn.onclick = () => window.location.href = "kurye.html";
+    if (historyBtn) historyBtn.onclick = () => window.location.href = "gecmis.html";
+    if (earningsBtn) earningsBtn.onclick = () => window.location.href = "kazanc.html";
+    if (profileBtn) profileBtn.onclick = () => window.location.href = "profil.html";
+
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+    function escapeAttr(value) { return escapeHtml(value); }
+</script>
+
+</body>
+</html>
